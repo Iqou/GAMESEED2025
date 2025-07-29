@@ -1,7 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-[ExecuteInEditMode]
 public class PathGen : MonoBehaviour
 {
     [Header("World Properties")]
@@ -21,7 +20,7 @@ public class PathGen : MonoBehaviour
     public class BuildingOption
     {
         public GameObject prefab;
-        [Range(0f, 1f)] public float spawnChance = 0.2f;
+        [Range(0f, 0.5f)] public float spawnChance = 0.1f;
     }
 
     [Header("Building Prefabs")]
@@ -45,7 +44,17 @@ public class PathGen : MonoBehaviour
     private Transform buildingParent;
 
 
-    [ContextMenu("Generate Path")]
+    void Start()
+    {
+        GeneratePaths();
+    }
+
+    [ContextMenu("Generate (Editor Preview)")]
+    void GenerateEditorPreview()
+    {
+        GeneratePaths();
+    }
+
     public void GeneratePaths()
     {
         // Clear previous
@@ -278,7 +287,7 @@ public class PathGen : MonoBehaviour
 
                 if (prefab != null)
                 {
-                    GameObject obj = (GameObject)Instantiate(prefab, new Vector3(x, 0, y), Quaternion.identity, tileParent);
+                    GameObject obj = (GameObject)Instantiate(prefab, new Vector3(x, -0.2f, y), Quaternion.identity, tileParent);
                     obj.name = $"Tile_{x}_{y}";
                     obj.isStatic = true;
                 }
@@ -323,7 +332,7 @@ public class PathGen : MonoBehaviour
         foreach (var kvp in materialToMesh)
         {
             Mesh subMesh = new Mesh();
-            subMesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32; // 🔥 penting jika vertex banyak
+            subMesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32; 
             subMesh.CombineMeshes(kvp.Value.ToArray(), true, true);
             subMeshes.Add(subMesh);
 
@@ -388,24 +397,31 @@ public class PathGen : MonoBehaviour
                 }
                 if (tooClose) continue;
 
-                // Check distance to nearest alley or main path
+                // Check alley dan main path terdekat
                 int distToAlley = FindNearestDistance(pos, 2);
                 int distToMain = FindNearestDistance(pos, 1);
 
                 bool nearAlley = distToAlley > 0 && distToAlley <= maxDistanceToPath;
                 bool nearMain = distToMain > 0 && distToMain <= maxDistanceToPath;
 
-                bool spawned = false;
 
-                if (nearAlley)
-                    spawned |= TrySpawnBuilding(housePrefabs, pos, 2);
-                if (nearAlley || nearMain)
-                    spawned |= TrySpawnBuilding(shopPrefabs, pos, nearAlley ? 2 : 1);
-                if (nearMain && !nearAlley)
-                    spawned |= TrySpawnBuilding(minimarketPrefabs, pos, 1);
-
-                if (spawned)
+                if (nearAlley && TrySpawnBuilding(housePrefabs, pos, 2))
+                {
                     placedBuildings.Add(pos);
+                    continue;
+                }
+
+                if ((nearAlley || nearMain) && TrySpawnBuilding(shopPrefabs, pos, nearAlley ? 2 : 1))
+                {
+                    placedBuildings.Add(pos);
+                    continue;
+                }
+
+                if (nearMain && !nearAlley && TrySpawnBuilding(minimarketPrefabs, pos, 1))
+                {
+                    placedBuildings.Add(pos);
+                    continue;
+                }
             }
         }
 

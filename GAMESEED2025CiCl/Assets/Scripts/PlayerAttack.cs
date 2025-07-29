@@ -4,7 +4,7 @@ public class PlayerAttack : MonoBehaviour
 {
     public GameObject aoePrefab;
     public float aoeRadius = 7.0f;
-    public float beatInterval = 0.5f;
+    public float beatInterval = 1.0f;
     public float beatWindow = 0.15f;
 
     private float attackCooldownHoreg1 = 1.0f;
@@ -82,6 +82,7 @@ public class PlayerAttack : MonoBehaviour
         if (Time.time >= nextBeatTime)
         {
             nextBeatTime += beatInterval;
+            Debug.Log($"Waktu jedag-jedug: {nextBeatTime}");
         }
     }
 }

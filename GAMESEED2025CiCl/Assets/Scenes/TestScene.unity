@@ -635,6 +635,9 @@ MonoBehaviour:
   aoePrefab: {fileID: 0}
   horegList:
   - {fileID: 4317139164813808105, guid: fb0e2b1b2827dae41a9853d326ef8dff, type: 3}
+  - {fileID: 8409373405339410841, guid: f3b5781c79373a04c966aa3a5bc2644b, type: 3}
+  - {fileID: 6112776111777505151, guid: 9d4f5e219a8f0b74f825a94d76ccd742, type: 3}
+  - {fileID: 4511054157176022709, guid: 806c68388926c164a957e17446dd01b5, type: 3}
   beatInterval: 1
   beatWindow: 0.15
 --- !u!1 &1453635425

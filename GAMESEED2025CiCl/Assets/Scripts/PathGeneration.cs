@@ -16,11 +16,23 @@ public class PathGen : MonoBehaviour
     public GameObject LeftSide;
     public GameObject RightSide;
 
+    [Header("Corner Prefabs")]
+    public GameObject outerCornerTopLeft; // ┛
+    public GameObject outerCornerTopRight; // ┗
+    public GameObject outerCornerBottomLeft; // ┓
+    public GameObject outerCornerBottomRight; // ┏
+    public GameObject innerCornerTopLeft; // ┍
+    public GameObject innerCornerTopRight; // ┑
+    public GameObject innerCornerBottomLeft; // ┕
+    public GameObject innerCornerBottomRight; // ┙
+
+
     [System.Serializable]
     public class BuildingOption
     {
         public GameObject prefab;
         [Range(0f, 0.5f)] public float spawnChance = 0.1f;
+        public Vector2 footprintSize = Vector2.one; // Add this to specify building size
     }
 
     [Header("Building Prefabs")]
@@ -31,12 +43,12 @@ public class PathGen : MonoBehaviour
     [Header("Building Placement Settings")]
     [Range(1, 10)]
     public int minDistanceBetweenBuildings = 2;
-
     [Range(1, 10)]
     public int maxDistanceToPath = 3;
 
-    [Header("Optimization")]
-    public bool combineAfterGenerate = true;
+    
+
+    private bool combineAfterGenerate = true;
 
     private int[,] grid;
     private List<List<Vector2Int>> mainPaths = new List<List<Vector2Int>>();
@@ -270,31 +282,59 @@ public class PathGen : MonoBehaviour
         {
             for (int y = 0; y < size; y++)
             {
-                GameObject prefab = grassPrefab;
+                // Handle path tiles
                 if (grid[x, y] == 1 || grid[x, y] == 2)
                 {
+                    // Check adjacent tiles (4-way)
                     bool top = IsPathPrefab(x, y + 1);
                     bool bottom = IsPathPrefab(x, y - 1);
                     bool left = IsPathPrefab(x - 1, y);
                     bool right = IsPathPrefab(x + 1, y);
 
-                    if (!top && bottom) prefab = TopSide;
-                    else if (top && !bottom) prefab = BottomSide;
-                    else if (left && !right) prefab = RightSide;
-                    else if (!left && right) prefab = LeftSide;
-                    else prefab = pathPrefab;
-                }
+                    // Check diagonal tiles for inner corners
+                    bool topLeft = IsPathPrefab(x - 1, y + 1);
+                    bool topRight = IsPathPrefab(x + 1, y + 1);
+                    bool bottomLeft = IsPathPrefab(x - 1, y - 1);
+                    bool bottomRight = IsPathPrefab(x + 1, y - 1);
 
-                if (prefab != null)
+                    GameObject prefab = pathPrefab; // Default to center path
+
+                    // Straight edges
+                    if (!top && bottom && left && right) prefab = TopSide;
+                    else if (top && !bottom && left && right) prefab = BottomSide;
+                    else if (top && bottom && !left && right) prefab = LeftSide;
+                    else if (top && bottom && left && !right) prefab = RightSide;
+
+                    // Outer corners (L-shapes)
+                    else if (!top && !left && bottom && right) prefab = outerCornerTopLeft;
+                    else if (!top && !right && bottom && left) prefab = outerCornerTopRight;
+                    else if (!bottom && !left && top && right) prefab = outerCornerBottomLeft;
+                    else if (!bottom && !right && top && left) prefab = outerCornerBottomRight;
+
+                    // Inner corners (concave)
+                    else if (top && left && !topLeft && right && bottom) prefab = innerCornerTopLeft;
+                    else if (top && right && !topRight && left && bottom) prefab = innerCornerTopRight;
+                    else if (bottom && left && !bottomLeft && top && right) prefab = innerCornerBottomLeft;
+                    else if (bottom && right && !bottomRight && top && left) prefab = innerCornerBottomRight;
+
+                    // Spawn the selected path prefab
+                    if (prefab != null)
+                    {
+                        GameObject obj = Instantiate(prefab, new Vector3(x, -0.2f, y), Quaternion.identity, tileParent);
+                        obj.name = $"Path_{x}_{y}_{prefab.name}";
+                        obj.isStatic = true;
+                    }
+                }
+                else // Handle grass tiles
                 {
-                    GameObject obj = (GameObject)Instantiate(prefab, new Vector3(x, -0.2f, y), Quaternion.identity, tileParent);
-                    obj.name = $"Tile_{x}_{y}";
-                    obj.isStatic = true;
+                    // Spawn grass prefab
+                    GameObject grassObj = Instantiate(grassPrefab, new Vector3(x, -0.2f, y), Quaternion.identity, tileParent);
+                    grassObj.name = $"Grass_{x}_{y}";
+                    grassObj.isStatic = true;
                 }
             }
         }
     }
-
     void CombineAllTiles()
     {
         MeshFilter[] meshFilters = tileParent.GetComponentsInChildren<MeshFilter>();
@@ -448,15 +488,51 @@ public class PathGen : MonoBehaviour
             return -1; // not found
         }
 
+        bool IsValidBuildingPosition(Vector2Int pos, Vector2 footprintSize, List<Vector2Int> placedBuildings)
+    {
+        // Check distance to other buildings
+        foreach (var placed in placedBuildings)
+        {
+            if (Vector2Int.Distance(pos, placed) < minDistanceBetweenBuildings)
+            {
+                return false;
+            }
+        }
+
+        // Check if building would overlap any path tiles
+        int startX = Mathf.Max(0, pos.x - Mathf.FloorToInt(footprintSize.x/2));
+        int endX = Mathf.Min(size-1, pos.x + Mathf.CeilToInt(footprintSize.x/2));
+        int startY = Mathf.Max(0, pos.y - Mathf.FloorToInt(footprintSize.y/2));
+        int endY = Mathf.Min(size-1, pos.y + Mathf.CeilToInt(footprintSize.y/2));
+
+        for (int x = startX; x <= endX; x++)
+        {
+            for (int y = startY; y <= endY; y++)
+            {
+                if (grid[x, y] != 0) // If any tile in footprint is a path
+                {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
         bool TrySpawnBuilding(List<BuildingOption> prefabList, Vector2Int pos, int targetType)
         {
             foreach (var option in prefabList)
             {
                 if (Random.value <= option.spawnChance)
                 {
+                    // Check if building would fit without overlapping paths
+                    if (!IsValidBuildingPosition(pos, option.footprintSize, placedBuildings))
+                        return false;
+
                     Vector3 worldPos = new Vector3(pos.x, 0f, pos.y);
 
                     // Find direction to path
+                    Vector3Int dir = Vector3Int.forward;
                     Vector3Int[] directions = new Vector3Int[]
                     {
                         new Vector3Int(1, 0, 0),
@@ -464,8 +540,6 @@ public class PathGen : MonoBehaviour
                         new Vector3Int(0, 0, 1),
                         new Vector3Int(0, 0, -1)
                     };
-
-                    Vector3Int dir = Vector3Int.forward;
 
                     foreach (var d in directions)
                     {
@@ -485,10 +559,35 @@ public class PathGen : MonoBehaviour
                     GameObject instance = Instantiate(option.prefab, worldPos, rot, buildingParent);
                     instance.isStatic = true;
                     instance.name = $"Building_{option.prefab.name}_{pos.x}_{pos.y}";
+                    
+                    // Mark the building's footprint as occupied
+                    MarkBuildingFootprint(pos, option.footprintSize);
                     return true;
                 }
             }
             return false;
+        }
+
+        void MarkBuildingFootprint(Vector2Int center, Vector2 buildingSize)
+        {
+            // Calculate half building dimensions
+            int halfWidth = Mathf.FloorToInt(buildingSize.x / 2);
+            int halfHeight = Mathf.FloorToInt(buildingSize.y / 2);
+
+            // Calculate footprint bounds
+            int startX = Mathf.Clamp(center.x - halfWidth, 0, size - 1);
+            int endX = Mathf.Clamp(center.x + halfWidth, 0, size - 1);
+            int startY = Mathf.Clamp(center.y - halfHeight, 0, size - 1);
+            int endY = Mathf.Clamp(center.y + halfHeight, 0, size - 1);
+
+            // Mark all tiles in footprint
+            for (int x = startX; x <= endX; x++)
+            {
+                for (int y = startY; y <= endY; y++)
+                {
+                    placedBuildings.Add(new Vector2Int(x, y));
+                }
+            }
         }
     }
 

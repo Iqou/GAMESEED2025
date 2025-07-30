@@ -414,20 +414,31 @@ MonoBehaviour:
   BottomSide: {fileID: 4642252654156023755, guid: e860e959a878f184c9953c6bc569fde7, type: 3}
   LeftSide: {fileID: 1296373138932157888, guid: 39bcd369a73d69e46915be4968dcefde, type: 3}
   RightSide: {fileID: 1738009515652229918, guid: 5283a3e58825b7c4f84350de9b4ba521, type: 3}
+  outerCornerTopLeft: {fileID: 5831704284178712979, guid: a8f9de65a9bff984f8c56c42210149f4, type: 3}
+  outerCornerTopRight: {fileID: 5831704284178712979, guid: a8f9de65a9bff984f8c56c42210149f4, type: 3}
+  outerCornerBottomLeft: {fileID: 5831704284178712979, guid: a8f9de65a9bff984f8c56c42210149f4, type: 3}
+  outerCornerBottomRight: {fileID: 5831704284178712979, guid: a8f9de65a9bff984f8c56c42210149f4, type: 3}
+  innerCornerTopLeft: {fileID: 7328039627982678230, guid: 7f521a1954d21d6408f7211f171fd1fb, type: 3}
+  innerCornerTopRight: {fileID: 7172386752155311932, guid: 47f1fef35542c3340b0b8c905f1bb8e8, type: 3}
+  innerCornerBottomLeft: {fileID: 6447789150116005006, guid: e3f2f53d69422cf4b92e06f6b76a67ff, type: 3}
+  innerCornerBottomRight: {fileID: 5070497607007238849, guid: 0aa0fa87421b3ff4181117d289de9ebb, type: 3}
   housePrefabs:
   - prefab: {fileID: 919132149155446097, guid: fc78a037781c43249a3c85148af5760e, type: 3}
     spawnChance: 0
+    footprintSize: {x: 1, y: 1}
   - prefab: {fileID: 919132149155446097, guid: ae7e6932813b166449692ace65663cd4, type: 3}
     spawnChance: 0.198
+    footprintSize: {x: 2, y: 2}
   shopPrefabs:
   - prefab: {fileID: 7494598436834584326, guid: 5fb7d3295497322469664ad7ca52f20e, type: 3}
-    spawnChance: 0.008
+    spawnChance: 0.01
+    footprintSize: {x: 8, y: 4}
   minimarketPrefabs:
   - prefab: {fileID: 7494598436834584326, guid: d7cf6461d8a0a854f9ba334c3aac0bd2, type: 3}
-    spawnChance: 0.006
-  minDistanceBetweenBuildings: 5
+    spawnChance: 0.013
+    footprintSize: {x: 2, y: 2}
+  minDistanceBetweenBuildings: 4
   maxDistanceToPath: 3
-  combineAfterGenerate: 1
 --- !u!4 &1083226501
 Transform:
   m_ObjectHideFlags: 0
@@ -448,5 +459,5 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 75481422}
-  - {fileID: 1083226501}
   - {fileID: 631858008}
+  - {fileID: 1083226501}

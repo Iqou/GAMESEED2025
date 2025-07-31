@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4427484725424297663}
   - component: {fileID: 1485849433881333941}
   - component: {fileID: 2402997990487557258}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Jalan_Base
   m_TagString: Untagged
   m_Icon: {fileID: 0}

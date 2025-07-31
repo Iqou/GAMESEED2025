@@ -611,24 +611,6 @@ public class PathGen : MonoBehaviour
 
                     Quaternion rot = Quaternion.LookRotation(new Vector3(dir.x, 0, dir.z));
                     GameObject instance = Instantiate(option.prefab, worldPos, rot, buildingParent);
-                    if (instance.GetComponent<Collider>() == null)
-                    {
-                        var mesh = instance.GetComponentInChildren<MeshFilter>();
-                        if (mesh != null)
-                        {
-                            MeshCollider meshCollider = instance.AddComponent<MeshCollider>();
-                            meshCollider.sharedMesh = mesh.sharedMesh;
-                        }
-                        else
-                        {
-                            instance.AddComponent<BoxCollider>(); // fallback if no mesh
-                        }
-                    }
-                        if (instance.GetComponent<NavMeshObstacle>() == null)
-                    {
-                    var obstacle = instance.AddComponent<NavMeshObstacle>();
-                    obstacle.carving = true; // This lets it carve holes in the navmesh at runtime
-                    }
                     instance.isStatic = true;
                     instance.name = $"Building_{option.prefab.name}_{pos.x}_{pos.y}";
                     

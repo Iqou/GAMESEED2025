@@ -70,7 +70,9 @@ public class RealHoreg : MonoBehaviour
         {
             if (hits.CompareTag("NPC"))
             {
-                Debug.Log($"{hits.name} Duarr kena damage dari Real Horeg");
+                desibelOutput = Random.Range(minDesibelOutput, maxDesibelOutput);
+                Debug.Log($"{hits.name} Duarr kena damage dari Real Horeg, damage {desibelOutput} dB");
+                aoeInstance.transform.localScale = new Vector3(areaJangkauan, 0.1f, areaJangkauan);
             }
         }
 

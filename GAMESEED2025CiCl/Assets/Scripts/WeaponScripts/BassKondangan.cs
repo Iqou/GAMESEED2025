@@ -57,6 +57,7 @@ public class BassKondangan : MonoBehaviour
         Vector3 spawnPos = owner.position + owner.forward * 1.5f;
         Quaternion spawnRot = Quaternion.LookRotation(owner.forward);
         aoeInstance = GameObject.Instantiate(aoePrefab, spawnPos, spawnRot);
+        aoeInstance.transform.localScale = new Vector3(areaJangkauan, 0.1f, areaJangkauan);
 
         attackPos = spawnPos;
     }
@@ -64,13 +65,13 @@ public class BassKondangan : MonoBehaviour
 
     public void Explosion()
     {
-        //Rigidbody rigidbody = GetComponent<Rigidbody>();
+        Rigidbody rigidbody = GetComponent<Rigidbody>();
 
-        //if (rigidbody != null)
-        //{
-        //    Vector3 knockbackDirection = -transform.forward;
-        //    rigidbody.AddForce(knockbackDirection * knockbackForce, ForceMode.Impulse);
-        //}
+        if (rigidbody != null)
+        {
+            Vector3 knockbackDirection = -transform.forward;
+            rigidbody.AddForce(knockbackDirection * knockbackForce, ForceMode.Impulse);
+        }
 
         Collider[] hit = Physics.OverlapSphere(attackPos, areaJangkauan);
 
@@ -78,7 +79,8 @@ public class BassKondangan : MonoBehaviour
         {
             if (hits.CompareTag("NPC"))
             {
-                Debug.Log($"{hits.name} Duarr kena damage dari bass kondangan");
+                desibelOutput = Random.Range(minDesibelOutput, maxDesibelOutput);
+                Debug.Log($"{hits.name} Duarr kena damage dari bass kondangan kena damage {desibelOutput} dB");
             }
         }
 

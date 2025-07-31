@@ -57,6 +57,7 @@ public class SubwooferDugem : MonoBehaviour
         Vector3 spawnPos = owner.position + owner.forward * 1.5f;
         Quaternion spawnRot = Quaternion.LookRotation(owner.forward);
         aoeInstance = GameObject.Instantiate(aoePrefab, spawnPos, spawnRot);
+        aoeInstance.transform.localScale = new Vector3(areaJangkauan, 0.1f, areaJangkauan);
 
         attackPos = spawnPos;
     }
@@ -70,7 +71,8 @@ public class SubwooferDugem : MonoBehaviour
         {
             if (hits.CompareTag("NPC"))
             {
-                Debug.Log($"{hits.name} Duarr kena damage dari subwoofer dugem");
+                desibelOutput = Random.Range(minDesibelOutput, maxDesibelOutput);
+                Debug.Log($"{hits.name} Duarr kena damage dari subwoofer dugem damage {desibelOutput} dB");
             }
         }
 

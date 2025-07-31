@@ -668,7 +668,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: de13a7420582ded45a8d7d3f96889aca, type: 3}
       propertyPath: m_Name
-      value: HumanMale_Character
+      value: Player
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -728,6 +728,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e95b97ade843114f9dc1912ff1ac71e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  speed: 4
+  obstacleMask:
+    serializedVersion: 2
+    m_Bits: 1
 --- !u!114 &1281970101
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -742,10 +746,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   aoePrefab: {fileID: 0}
   horegList:
-  - {fileID: 4317139164813808105, guid: fb0e2b1b2827dae41a9853d326ef8dff, type: 3}
-  - {fileID: 8409373405339410841, guid: f3b5781c79373a04c966aa3a5bc2644b, type: 3}
-  - {fileID: 6112776111777505151, guid: 9d4f5e219a8f0b74f825a94d76ccd742, type: 3}
-  - {fileID: 4511054157176022709, guid: 806c68388926c164a957e17446dd01b5, type: 3}
+  - {fileID: 2612908848125322223, guid: fb0e2b1b2827dae41a9853d326ef8dff, type: 3}
+  - {fileID: 7447160595838918263, guid: f3b5781c79373a04c966aa3a5bc2644b, type: 3}
+  - {fileID: 1462489726569395729, guid: 9d4f5e219a8f0b74f825a94d76ccd742, type: 3}
+  - {fileID: 5489858013434526524, guid: 806c68388926c164a957e17446dd01b5, type: 3}
   beatInterval: 1
   beatWindow: 0.15
 --- !u!1 &1453635425
@@ -962,8 +966,8 @@ GameObject:
   - component: {fileID: 2041755242}
   - component: {fileID: 2041755247}
   m_Layer: 6
-  m_Name: Capsule
-  m_TagString: Untagged
+  m_Name: NPC
+  m_TagString: NPC
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1075,7 +1079,7 @@ Transform:
   m_GameObject: {fileID: 2041755241}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -8.54, y: 2.38, z: 6.54}
+  m_LocalPosition: {x: -11.62, y: 4.18, z: 0.96}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1096,10 +1100,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   groundLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 4294967295
   playerLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 4294967295
   range: 10
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

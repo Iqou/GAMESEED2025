@@ -5,7 +5,7 @@ public class PlayerAttack : MonoBehaviour
 {
     public GameObject aoePrefab;
 
-    public List<BaseHoreg> horegList;
+    public List<GameObject> horegList;
     public float beatInterval = 1.0f;
     public float beatWindow = 0.15f;
 
@@ -25,9 +25,39 @@ public class PlayerAttack : MonoBehaviour
 
         bool isOnBeat = Mathf.Abs(Time.time - nextBeatTime) <= beatWindow;
 
-        foreach (BaseHoreg horeg in horegList)
+        foreach (GameObject horeg in horegList)
         {
-            horeg.Attack(Time.time, isOnBeat);
+            ToaRW toa = horeg.GetComponent<ToaRW>();
+            if (toa != null && Input.GetKey(KeyCode.W))
+            {
+                toa.Use(transform);
+                toa.TriggerAOE();
+                continue;
+            }
+
+            BassKondangan kondangan = horeg.GetComponent<BassKondangan>();
+            if (kondangan != null && Input.GetKeyDown(KeyCode.A))
+            {
+                kondangan.Use(transform);
+                kondangan.Explosion();
+                continue;
+            }
+
+            SubwooferDugem dugem = horeg.GetComponent<SubwooferDugem>();
+            if (dugem != null && Input.GetKeyDown(KeyCode.S))
+            {
+                dugem.Use(transform);
+                dugem.ActivateDugem();
+                continue;
+            }
+
+            RealHoreg superHoreg = horeg.GetComponent<RealHoreg>();
+            if (superHoreg != null && Input.GetKeyDown(KeyCode.D))
+            {
+                superHoreg.Use(transform);
+                superHoreg.ShootDaHoreg();
+                continue;
+            }
         }
     }
 
@@ -36,7 +66,7 @@ public class PlayerAttack : MonoBehaviour
         if (Time.time >= nextBeatTime)
         {
             nextBeatTime += beatInterval;
-            Debug.Log($"Waktu jedag-jedug: {nextBeatTime}");
+           //Debug.Log($"Waktu jedag-jedug: {nextBeatTime}");
         }
     }
 }

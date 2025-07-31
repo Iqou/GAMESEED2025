@@ -1,88 +1,111 @@
 using UnityEngine;
 
-public class ToaRW : BaseHoreg
+public class ToaRW : MonoBehaviour
 {
-    public float coneAngle = 45.0f;
-    public float duration = 1.5f;
-    public bool isActive = false;
+    private string namaSpeaker = "Toa RW";
+    private string tier = "Common";
+
+    private float maxDesibelOutput = 70f;
+    private float minDesibelOutput = 80f;
+    private float baseDesibelOutput = 70f;
+    private float desibelOutput;
+    private float areaJangkauan = 5f;
+    private float duration = 0.5f;
+    private float cooldownTime = 4f;
+    private float weight = 2f;
+    private float saweranMultiplier = 1.2f;
+
+    private float lastActiveTime = -999f;
+
+    private int desibelLevel = 1;
+    private int areaLevel = 1;
+    private int cooldownLevel = 1;
+
+    private bool isAttacking = false;
+
+    private Vector3 attackPos;
 
     private GameObject aoeInstance;
+    public GameObject aoePrefab;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        horegName = "ToaRW";
-        cooldownTime = 4.0f;
-        weight = 2.0f;
-        saweranMultiplier = 1.2f;
-        aoeRadius = 1.0f;
-        keyTrigger = KeyCode.W;
-        color = Color.red;
-        minimumDesibeOutput = 70.0f;
-        maximumDesibelOutput = 80.0f;
-    }
-
-
-    public override void Attack(float currentTime, bool isOnBeat)
-    {
-        Update();
+        UpdateStatus();   
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(keyTrigger))
+        if (Input.GetKeyDown(KeyCode.W) && Time.time >= lastActiveTime + cooldownTime && !isAttacking)
         {
-            if (!isActive)
-            {
-                aoeInstance = Instantiate(aoePrefab, this.transform.position, Quaternion.identity);
-                aoeInstance.transform.localScale = new Vector3(aoeRadius, transform.position.y, aoeRadius);
-                TriggerAOE(true);
-            }
-            else
-            {
-                if(aoeInstance != null)
-                {
-                    Destroy(aoeInstance);
-                }
-            }
+            TriggerAOE();
+        } 
+        else if(Input.GetKeyDown(KeyCode.W) && Time.time >= lastActiveTime + cooldownTime && isAttacking)
+        {
+            StopAOE();
+        }
 
-            if (isActive && aoeInstance != null)
-            {
-                Vector3 mousePos = GetMousePos();
-                Vector3 direction = (mousePos - this.transform.position).normalized;
-
-                Quaternion lookRotation = Quaternion.LookRotation(direction);
-                transform.rotation = Quaternion.Euler(0f, lookRotation.eulerAngles.y, 0f);
-
-                aoeInstance.transform.position = transform.position;
-                aoeInstance.transform.rotation = Quaternion.Euler(0f, lookRotation.eulerAngles.y, 0f);
-            }
+        if (isAttacking)
+        {
+            MouseRotator();
         }
     }
 
-    private Vector3 GetMousePos()
+    void UpdateStatus()
     {
-        Ray rayCast = Camera.main.ScreenPointToRay(Input.mousePosition);
-        Plane plane = new Plane(Vector3.up, Vector3.zero);
-
-        if (plane.Raycast(rayCast, out float distance))
-        {
-            return rayCast.GetPoint(distance);
-        }
-
-        return transform.position + transform.forward * 5f;
+        desibelOutput = baseDesibelOutput + (desibelLevel - 1) * 2f;
+        areaJangkauan += (areaLevel - 1) * 1.5f;
+        cooldownTime = Mathf.Max(1f, cooldownTime - (cooldownLevel - 1) * 0.5f);
     }
 
-    protected override void TriggerAOE(bool isOnBeat)
+    public void Use(Transform owner)
     {
-        desibelOutput = Random.Range(minimumDesibeOutput, maximumDesibelOutput);
-        if (isOnBeat)
-        {
-            Debug.Log($"{gameObject.name} Dapat Bonus Beat");
-        }
-        Debug.Log("Toa RW ke Trigger");
+        Vector3 spawnPos = owner.position + owner.forward * 1.5f;
+        Quaternion spawnRot = Quaternion.LookRotation(owner.forward);
+        aoeInstance = GameObject.Instantiate(aoePrefab, spawnPos, spawnRot);
 
-        Destroy(aoeInstance, 2.0f);
+        attackPos = spawnPos;
+    }
+
+
+    public void TriggerAOE()
+    {
+        aoeInstance.SetActive(true);
+
+        Collider[] hit = Physics.OverlapSphere(attackPos, areaJangkauan);
+
+        foreach (Collider hits in hit)
+        {
+            if (hits.CompareTag("NPC"))
+            {
+                Debug.Log($"{hits.name} Duarr kena damage dari TOA");
+            }
+        }
+
+        isAttacking = true;
+        lastActiveTime = Time.time;
+        Destroy(aoeInstance, duration);
+    }
+
+    void StopAOE()
+    {
+        if (aoeInstance != null)
+        {
+            Destroy(aoeInstance);
+        }
+
+        isAttacking = false;
+    }
+
+    void MouseRotator()
+    {
+        Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        mousePos.z = 0f;
+
+        Vector3 direction = (mousePos - transform.position).normalized;
+        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+
+        transform.rotation = Quaternion.Euler(0f, 0f, angle);
     }
 
 

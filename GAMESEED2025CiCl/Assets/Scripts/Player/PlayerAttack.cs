@@ -1,17 +1,15 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class PlayerAttack : MonoBehaviour
 {
     public GameObject aoePrefab;
-    public float aoeRadius = 7.0f;
+
+    public List<GameObject> horegList;
     public float beatInterval = 1.0f;
     public float beatWindow = 0.15f;
 
-    private float attackCooldownHoreg1 = 1.0f;
-    private float attackCooldownHoreg2 = 3.0f;
     private float nextBeatTime = 0.0f;
-    private float nextAttackHoreg1 = 0.0f;
-    private float nextAttackHoreg2 = 0.0f;
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -25,56 +23,42 @@ public class PlayerAttack : MonoBehaviour
     {
         Metronome();
 
-        // Horeg 1
-        if ((Input.GetKeyDown(KeyCode.A)|| Input.GetKeyDown(KeyCode.D)) && Time.time >= nextAttackHoreg1)
+        bool isOnBeat = Mathf.Abs(Time.time - nextBeatTime) <= beatWindow;
+
+        foreach (GameObject horeg in horegList)
         {
-            TriggerAOE("Horeg1", attackCooldownHoreg1);
-            nextAttackHoreg1 = Time.time + attackCooldownHoreg1;
-        }
-
-        // Horeg 2
-        if ((Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.S)) && Time.time >= nextAttackHoreg2)
-        {
-            TriggerAOE("Horeg2", attackCooldownHoreg2);
-            nextAttackHoreg2 = Time.time + attackCooldownHoreg2;
-        }
-    }
-
-    // Untuk Trigger AOE
-    void TriggerAOE(string horeg, float duration)
-    {
-        bool isOnBeat = Mathf.Abs(Time.time - nextBeatTime + beatInterval) <= beatWindow;
-
-        // Instanstiate AOE
-        GameObject aoeInstance = Instantiate(aoePrefab, transform.position, Quaternion.identity);
-
-        // AOE Radius
-        aoeInstance.transform.localScale = new Vector3(aoeRadius, 0.1f, aoeRadius);
-
-        // Kalau On Beat (Dugem)
-        Renderer aoeRenderer = aoeInstance.GetComponent<Renderer>();
-
-        if (isOnBeat)
-        {
-            aoeRenderer.material.color = Color.gold;
-            Debug.Log($"{horeg} On Beat Dapat Bonus");
-        }
-        else
-        {
-            if (horeg == "Horeg1")
+            ToaRW toa = horeg.GetComponent<ToaRW>();
+            if (toa != null && Input.GetKey(KeyCode.W))
             {
-                aoeRenderer.material.color = Color.red;
-            } 
-            else if (horeg == "Horeg2")
-            {
-                aoeRenderer.material.color = Color.blue;
+                toa.Use(transform);
+                toa.TriggerAOE();
+                continue;
             }
 
-            Debug.Log($"{horeg} Normal Attack");
-        }
+            BassKondangan kondangan = horeg.GetComponent<BassKondangan>();
+            if (kondangan != null && Input.GetKeyDown(KeyCode.A))
+            {
+                kondangan.Use(transform);
+                kondangan.Explosion();
+                continue;
+            }
 
-        // Destroy AOE
-        Destroy(aoeInstance, duration);
+            SubwooferDugem dugem = horeg.GetComponent<SubwooferDugem>();
+            if (dugem != null && Input.GetKeyDown(KeyCode.S))
+            {
+                dugem.Use(transform);
+                dugem.ActivateDugem();
+                continue;
+            }
+
+            RealHoreg superHoreg = horeg.GetComponent<RealHoreg>();
+            if (superHoreg != null && Input.GetKeyDown(KeyCode.D))
+            {
+                superHoreg.Use(transform);
+                superHoreg.ShootDaHoreg();
+                continue;
+            }
+        }
     }
 
     void Metronome()
@@ -82,7 +66,7 @@ public class PlayerAttack : MonoBehaviour
         if (Time.time >= nextBeatTime)
         {
             nextBeatTime += beatInterval;
-            Debug.Log($"Waktu jedag-jedug: {nextBeatTime}");
+           //Debug.Log($"Waktu jedag-jedug: {nextBeatTime}");
         }
     }
 }

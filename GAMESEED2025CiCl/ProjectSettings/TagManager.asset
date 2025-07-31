@@ -6,6 +6,7 @@ TagManager:
   tags:
   - MovingArrow
   - Note
+  - NPC
   layers:
   - Default
   - TransparentFX

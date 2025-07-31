@@ -506,6 +506,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 255749581}
   offset: {x: 0, y: 9, z: -5}
+  smoothSpeed: 0.125
 --- !u!114 &2076822473
 MonoBehaviour:
   m_ObjectHideFlags: 0

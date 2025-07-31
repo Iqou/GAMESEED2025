@@ -234,7 +234,7 @@ public class PathGen : MonoBehaviour
         if (ground.GetComponent<NavMeshSurface>() == null)
         {
             var navSurface = ground.AddComponent<NavMeshSurface>();
-            navSurface.collectObjects = CollectObjects.All; // or All
+            navSurface.collectObjects = CollectObjects.Children; // or All
             navSurface.BuildNavMesh();
         }
     }

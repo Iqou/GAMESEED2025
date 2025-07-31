@@ -2,19 +2,20 @@ using UnityEngine;
 
 public class CameraMovement : MonoBehaviour
 {
-
     public GameObject player;
     public Vector3 offset = new Vector3(0, 9, -5);
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
+    [Range(0.01f, 1f)] public float smoothSpeed = 0.125f;
 
-    // Update is called once per frame
+    private Vector3 velocity = Vector3.zero;
+
     void LateUpdate()
     {
-        this.transform.position = player.transform.position + offset;
+        if (player == null) return;
+
+        Vector3 targetPosition = player.transform.position + offset;
+
+        // Smooth follow (sway effect)
+        transform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref velocity, smoothSpeed);
     }
 }

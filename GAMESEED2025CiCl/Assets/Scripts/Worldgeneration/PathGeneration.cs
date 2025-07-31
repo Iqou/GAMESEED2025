@@ -1,5 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
+using Unity.AI.Navigation;
+using UnityEngine.AI;
 
 public class PathGen : MonoBehaviour
 {
@@ -74,9 +76,9 @@ public class PathGen : MonoBehaviour
         tileParent = new GameObject("Tiles").transform;
         tileParent.parent = this.transform;
         GameObject existingCombined = GameObject.Find("CombinedTiles");
-        if (existingCombined != null) 
+        if (existingCombined != null)
         {
-            if (existingCombined.GetComponent<MeshFilter>() != null && 
+            if (existingCombined.GetComponent<MeshFilter>() != null &&
                 existingCombined.GetComponent<MeshRenderer>() != null)
             {
                 DestroyImmediate(existingCombined);
@@ -106,6 +108,7 @@ public class PathGen : MonoBehaviour
         DrawPrefabs();
         if (combineAfterGenerate) CombineAllTiles();
         SpawnBuildings();
+        AddGroundPlaneWithNavMesh();
     }
 
     List<Vector2Int> PathmakerMain(List<Vector2Int> entryList, List<Vector2Int> exitList)
@@ -212,6 +215,28 @@ public class PathGen : MonoBehaviour
                 }
             }
         return pathPoints;
+    }
+
+    void AddGroundPlaneWithNavMesh()
+    {
+        GameObject ground = GameObject.CreatePrimitive(PrimitiveType.Plane);
+        ground.name = "NavGround";
+        ground.transform.position = new Vector3(size / 2f, -0.21f, size / 2f);
+        ground.transform.localScale = new Vector3(size / 10f, 1f, size / 10f); // Plane is 10x10 units by default
+        ground.isStatic = true;
+
+        // Add MeshCollider if not present
+        MeshCollider collider = ground.GetComponent<MeshCollider>();
+        if (collider == null)
+            ground.AddComponent<MeshCollider>();
+
+        // Add NavMeshSurface
+        if (ground.GetComponent<NavMeshSurface>() == null)
+        {
+            var navSurface = ground.AddComponent<NavMeshSurface>();
+            navSurface.collectObjects = CollectObjects.All; // or All
+            navSurface.BuildNavMesh();
+        }
     }
 
     void PathmakerAlley()

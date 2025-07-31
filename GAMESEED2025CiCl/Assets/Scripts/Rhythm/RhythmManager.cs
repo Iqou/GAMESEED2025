@@ -2,6 +2,8 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
+
 
 public class RhythmManager : MonoBehaviour
 {
@@ -18,6 +20,11 @@ public class RhythmManager : MonoBehaviour
     public Transform rightLaneSpawnPoint;
 
     public AudioSource audioSource;
+
+    public TextMeshProUGUI playbackTimerText;
+    public TextMeshProUGUI remainingTimeText;
+
+
 
     public float noteApproachTime = 1.5f; 
 
@@ -117,6 +124,28 @@ public class RhythmManager : MonoBehaviour
             beatmapData = null;
         }
     }
+
+    void Update()
+    {
+        if (audioSource != null && audioSource.isPlaying)
+        {
+            float currentTime = audioSource.time;
+            float duration = audioSource.clip.length;
+
+            if (remainingTimeText != null)
+                remainingTimeText.text = "Remaining: " + FormatTime(duration - currentTime);
+        }
+    }
+
+string FormatTime(float timeInSeconds)
+{
+    int minutes = Mathf.FloorToInt(timeInSeconds / 60f);
+    int seconds = Mathf.FloorToInt(timeInSeconds % 60f);
+    return string.Format("{0:00}:{1:00}", minutes, seconds);
+}
+
+
+
 
     IEnumerator SpawnNotesRoutine()
     {

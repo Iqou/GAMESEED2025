@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3156384393441727392}
   - component: {fileID: 6676722969791164322}
   - component: {fileID: 5209352172302184393}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Rumput_Bottom_L
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,8 +10,19 @@ public class OnClick : MonoBehaviour
     public GameObject Health;
     public float maxDistanceToDestroyOnTooEarlyClick = 5f;
 
+    public Sprite defaultSprite;
+    public Sprite clickedSprite;
+    public float clickAnimationDuration = 0.1f;
+
+    [Tooltip("Jarak maksimum dari target Y untuk mendapatkan 'Perfect'. Sesuaikan di Editor.")]
+    public float perfectWindowDistance = 0.3f;
+    [Tooltip("Jarak maksimum dari target Y untuk mendapatkan 'Good'. Harus lebih besar dari Perfect Window Distance. Sesuaikan di Editor.")]
+    public float goodWindowDistance = 0.7f;
+
     private bool _isTouching;
     private GameObject _currentTouchingArrow;
+    private AudioSource _audioSource;
+    private SpriteRenderer _spriteRenderer;
 
     public bool Touching
     {
@@ -18,22 +30,53 @@ public class OnClick : MonoBehaviour
         private set { _isTouching = value; }
     }
 
+    void Awake()
+    {
+        _spriteRenderer = GetComponent<SpriteRenderer>();
+        if (_spriteRenderer == null)
+        {
+            Debug.LogError("SpriteRenderer component not found on " + gameObject.name + ". Sprite animation will not work.");
+        }
+    }
+
+    void Start()
+    {
+        if (_spriteRenderer != null && defaultSprite != null)
+        {
+            _spriteRenderer.sprite = defaultSprite;
+        }
+    }
+
     void Update()
     {
         if (Input.GetKeyDown(Arrow))
         {
+            StartCoroutine(PlayClickAnimation());
+
             if (Touching && _currentTouchingArrow != null)
             {
-                Debug.Log("HIT! Panah " + _currentTouchingArrow.name + " dihancurkan.", _currentTouchingArrow);
-                Destroy(_currentTouchingArrow);
+                float distance = Mathf.Abs(transform.position.y - _currentTouchingArrow.transform.position.y);
 
+                if (distance <= perfectWindowDistance)
+                {
+                }
+                else if (distance <= goodWindowDistance)
+                {
+                }
+                else
+                {
+                    if (Health != null)
+                    {
+                        Health.GetComponent<Health>().currentHealth -= 5;
+                    }
+                }
+
+                Destroy(_currentTouchingArrow);
                 _currentTouchingArrow = null;
                 Touching = false;
             }
             else
             {
-                Debug.Log("Miss! Klik terlalu cepat!");
-
                 if (Health != null)
                 {
                     Health.GetComponent<Health>().currentHealth -= 10;
@@ -48,13 +91,33 @@ public class OnClick : MonoBehaviour
         }
     }
 
+    IEnumerator PlayClickAnimation()
+    {
+        if (_spriteRenderer != null && clickedSprite != null)
+        {
+            _spriteRenderer.sprite = clickedSprite;
+            yield return new WaitForSeconds(clickAnimationDuration);
+            if (_spriteRenderer != null && defaultSprite != null)
+            {
+                _spriteRenderer.sprite = defaultSprite;
+            }
+        }
+        else if (_spriteRenderer == null)
+        {
+            Debug.LogWarning("SpriteRenderer tidak ditetapkan untuk animasi klik pada " + gameObject.name);
+        }
+        else if (clickedSprite == null)
+        {
+            Debug.LogWarning("Sprite 'Clicked' tidak ditetapkan untuk animasi klik pada " + gameObject.name);
+        }
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("MovingArrow"))
         {
             Touching = true;
             _currentTouchingArrow = collision.gameObject;
-            Debug.Log("Panah masuk area target: " + collision.gameObject.name, collision.gameObject);
         }
     }
 
@@ -66,7 +129,6 @@ public class OnClick : MonoBehaviour
             {
                 Touching = false;
                 _currentTouchingArrow = null;
-                Debug.Log("Panah keluar area target: " + collision.gameObject.name, collision.gameObject);
             }
         }
     }
@@ -111,7 +173,6 @@ public class OnClick : MonoBehaviour
         if (arrowToDestroy != null)
         {
             Destroy(arrowToDestroy);
-            Debug.Log("Panah yang akan datang (" + arrowToDestroy.name + ") dihancurkan karena klik terlalu cepat.", arrowToDestroy);
         }
     }
 }

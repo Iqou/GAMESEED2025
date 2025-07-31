@@ -401,7 +401,7 @@ Transform:
   m_GameObject: {fileID: 406549192}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: -0.0008726012, w: 0.99999964}
-  m_LocalPosition: {x: -4.21, y: -5.23, z: -0.1}
+  m_LocalPosition: {x: 1.72, y: -5.23, z: -0.1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -427,7 +427,8 @@ MonoBehaviour:
   Arrow: 115
   Health: {fileID: 1945059380}
   maxDistanceToDestroyOnTooEarlyClick: 6
-  missSound: {fileID: 8300000, guid: e393e390edbe96940bfcce52c8a746fc, type: 3}
+  clickEffectSprite: {fileID: -629225527, guid: f12ec2ed84848b9498294f1b8e0d2a89, type: 3}
+  clickEffectDisplayTime: 0.1
 --- !u!61 &565766137
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -642,7 +643,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Health: {fileID: 1945059380}
-  missSound: {fileID: 0}
 --- !u!61 &992305455
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -698,7 +698,7 @@ Transform:
   m_GameObject: {fileID: 992305453}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -6.04, y: 5.44, z: -0.1}
+  m_LocalPosition: {x: -0.09, y: 5.44, z: -0.1}
   m_LocalScale: {x: 7, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -729,7 +729,7 @@ Transform:
   m_GameObject: {fileID: 1083913899}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: -0.0008726012, w: 0.99999964}
-  m_LocalPosition: {x: -7.67, y: -5.23, z: -0.1}
+  m_LocalPosition: {x: -1.74, y: -5.23, z: -0.1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -745,7 +745,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2242968422156453226, guid: 1c0f0ef0b808f2543839824f53d7abd5, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -5.34
+      value: 0.5899999
       objectReference: {fileID: 0}
     - target: {fileID: 2242968422156453226, guid: 1c0f0ef0b808f2543839824f53d7abd5, type: 3}
       propertyPath: m_LocalPosition.y
@@ -824,7 +824,8 @@ MonoBehaviour:
   Arrow: 119
   Health: {fileID: 1945059380}
   maxDistanceToDestroyOnTooEarlyClick: 6
-  missSound: {fileID: 8300000, guid: e393e390edbe96940bfcce52c8a746fc, type: 3}
+  clickEffectSprite: {fileID: 398555242, guid: f12ec2ed84848b9498294f1b8e0d2a89, type: 3}
+  clickEffectDisplayTime: 0.1
 --- !u!1 &1183806703
 GameObject:
   m_ObjectHideFlags: 0
@@ -850,7 +851,7 @@ Transform:
   m_GameObject: {fileID: 1183806703}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: -0.0008726012, w: 0.99999964}
-  m_LocalPosition: {x: -5.34, y: -5.23, z: -0.1}
+  m_LocalPosition: {x: 0.5899999, y: -5.23, z: -0.1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -881,7 +882,7 @@ Transform:
   m_GameObject: {fileID: 1185187997}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: -0.0008726012, w: 0.99999964}
-  m_LocalPosition: {x: -6.48, y: -5.23, z: -0.1}
+  m_LocalPosition: {x: -0.55, y: -5.23, z: -0.1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1297,7 +1298,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7923319301036434562, guid: c7464ded880a0ea4eb233f7197f413b0, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -4.21
+      value: 1.72
       objectReference: {fileID: 0}
     - target: {fileID: 7923319301036434562, guid: c7464ded880a0ea4eb233f7197f413b0, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1364,7 +1365,8 @@ MonoBehaviour:
   Arrow: 100
   Health: {fileID: 1945059380}
   maxDistanceToDestroyOnTooEarlyClick: 6
-  missSound: {fileID: 8300000, guid: e393e390edbe96940bfcce52c8a746fc, type: 3}
+  clickEffectSprite: {fileID: 1885475485, guid: f12ec2ed84848b9498294f1b8e0d2a89, type: 3}
+  clickEffectDisplayTime: 0.1
 --- !u!1001 &550250304923401368
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1375,7 +1377,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 367191186244848887, guid: 6122356ef77b0c64196b625e775ef1dc, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -7.67
+      value: -1.74
       objectReference: {fileID: 0}
     - target: {fileID: 367191186244848887, guid: 6122356ef77b0c64196b625e775ef1dc, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1422,6 +1424,22 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 8300000, guid: e393e390edbe96940bfcce52c8a746fc, type: 3}
     - target: {fileID: 3323987798720480510, guid: 6122356ef77b0c64196b625e775ef1dc, type: 3}
+      propertyPath: clickedSprite
+      value: 
+      objectReference: {fileID: 1098952673, guid: f12ec2ed84848b9498294f1b8e0d2a89, type: 3}
+    - target: {fileID: 3323987798720480510, guid: 6122356ef77b0c64196b625e775ef1dc, type: 3}
+      propertyPath: defaultSprite
+      value: 
+      objectReference: {fileID: 140906423, guid: f12ec2ed84848b9498294f1b8e0d2a89, type: 3}
+    - target: {fileID: 3323987798720480510, guid: 6122356ef77b0c64196b625e775ef1dc, type: 3}
+      propertyPath: clickEffectSprite
+      value: 
+      objectReference: {fileID: 1098952673, guid: f12ec2ed84848b9498294f1b8e0d2a89, type: 3}
+    - target: {fileID: 3323987798720480510, guid: 6122356ef77b0c64196b625e775ef1dc, type: 3}
+      propertyPath: visualFeedbackManager
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 3323987798720480510, guid: 6122356ef77b0c64196b625e775ef1dc, type: 3}
       propertyPath: maxDistanceToDestroyOnTooEarlyClick
       value: 6
       objectReference: {fileID: 0}
@@ -1444,7 +1462,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2196057004625757471, guid: 1f8d46e734da3ed46bb6649287af248f, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -6.48
+      value: -0.54999995
       objectReference: {fileID: 0}
     - target: {fileID: 2196057004625757471, guid: 1f8d46e734da3ed46bb6649287af248f, type: 3}
       propertyPath: m_LocalPosition.y

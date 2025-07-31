@@ -4,7 +4,7 @@ using UnityEngine.UI;
 public class Health : MonoBehaviour
 {
     public int currentHealth;
-    public int maxHealth;
+    public int maxHealth = 100;
 
     [Header("UI References")]
     public Image healthBarFillImage;
@@ -14,7 +14,8 @@ public class Health : MonoBehaviour
 
     void Start()
     {
-        currentHealth = maxHealth;
+        // Set initial health to 50
+        currentHealth = 50; 
         UpdateHealthUI();
     }
 
@@ -56,5 +57,7 @@ public class Health : MonoBehaviour
     public void ChangeHealth(int amount)
     {
         currentHealth += amount;
+        // Clamp the current health to be within the 0 to maxHealth range
+        currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth); 
     }
 }

@@ -3,7 +3,11 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 3
+
   tags: []
+
+  tags:
+  - MovingArrow
   layers:
   - Default
   - TransparentFX
@@ -11,9 +15,15 @@ TagManager:
   - 
   - Water
   - UI
+
   - navMesh
   - Player
   - 
+
+  - Background
+  - Arrow
+  - UI
+
   - 
   - 
   - 

@@ -2,45 +2,54 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-
-    private float speed = 5.0f;
+    public float speed = 4f;
+    public LayerMask obstacleMask;
     private Vector3 targetPosition;
     private bool isMoving = false;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
     void Update()
     {
-       // Input Handler
-       if (Input.GetMouseButtonDown(0))
-        {
-            // Buat RayCast mengikuti posisi mouse
-            Ray rayCast = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit rayHit;
+        HandleClick();
+        MoveToTarget();
+    }
 
-            // Kalau Raycast kena collider bakal nyimpan posisi target yang di hit
-            if (Physics.Raycast(rayCast, out rayHit))
+    void HandleClick()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+
+            if (Physics.Raycast(ray, out hit, 100f))
             {
-                targetPosition = rayHit.point;
-                targetPosition.y = transform.position.y;
-                isMoving = true;
+                // Check if the direct path is blocked
+                Vector3 direction = (hit.point - transform.position).normalized;
+                float distance = Vector3.Distance(transform.position, hit.point);
+
+                if (!Physics.Raycast(transform.position, direction, distance, obstacleMask))
+                {
+                    targetPosition = hit.point;
+                    isMoving = true;
+                }
+                else
+                {
+                    Debug.Log("Path blocked by obstacle.");
+                    isMoving = false;
+                }
             }
         }
+    }
 
-       // Movement Handler
-       if (isMoving)
+    void MoveToTarget()
+    {
+        if (!isMoving) return;
+
+        Vector3 direction = (targetPosition - transform.position).normalized;
+        transform.position += direction * speed * Time.deltaTime;
+
+        if (Vector3.Distance(transform.position, targetPosition) < 0.1f)
         {
-            transform.position = Vector3.MoveTowards(transform.position, targetPosition, speed * Time.deltaTime);
-
-            if (Vector3.Distance(transform.position, targetPosition) < 0.1f)
-            {
-                isMoving = false;
-            }
+            isMoving = false;
         }
     }
 }

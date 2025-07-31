@@ -6,7 +6,9 @@ using UnityEngine.AI;
 public class PathGen : MonoBehaviour
 {
     [Header("World Properties")]
-    public int size = 20;
+    public int WorldChunks = 10;
+    const int ChunkSize = 16;
+    public int size => WorldChunks * ChunkSize;
     [Range(1, 100)]
     public int density = 50;
 
@@ -38,9 +40,9 @@ public class PathGen : MonoBehaviour
     }
 
     [Header("Building Prefabs")]
-    public List<BuildingOption> housePrefabs; // Spawn hanya di dekat alley
-    public List<BuildingOption> shopPrefabs; // Spawn di dekat alley dan main path
-    public List<BuildingOption> minimarketPrefabs; // Spawn hanya di dekat main path
+    public List<BuildingOption> Type1; // Spawn hanya di dekat alley
+    public List<BuildingOption> Type2; // Spawn di dekat alley dan main path
+    public List<BuildingOption> Type3; // Spawn hanya di dekat main path
 
     [Header("Building Placement Settings")]
     [Range(1, 10)]
@@ -48,11 +50,28 @@ public class PathGen : MonoBehaviour
     [Range(1, 10)]
     public int maxDistanceToPath = 3;
 
-    
+    [System.Serializable]
+    public class BuildingData {
+        public Vector2Int coordinate;  // Koordinat Grid (x,y)
+        public Vector3 worldPosition;  // Posisi dunia (x,0,y)
+        public Quaternion rotation;    // Rotasi terakhir
+        public GameObject prefabUsed;  // Referensi prefab yang dipakai
+        public string prefabName;      // Nama prefab (backup jika GameObject null)
+
+        public BuildingData(Vector2Int coord, Vector3 pos, Quaternion rot, GameObject prefab) {
+            coordinate = coord;
+            worldPosition = pos;
+            rotation = rot;
+            prefabUsed = prefab;
+            prefabName = prefab.name;
+        }
+    }
+
+    [HideInInspector]public List<BuildingData> PlacedBuildings = new List<BuildingData>();
 
     private bool combineAfterGenerate = true;
 
-    private int[,] grid;
+    private int[,] Grid;
     private List<List<Vector2Int>> mainPaths = new List<List<Vector2Int>>();
     private Transform tileParent;
     private Transform buildingParent;
@@ -85,7 +104,7 @@ public class PathGen : MonoBehaviour
             }
         }
 
-        grid = new int[size, size];
+        Grid = new int[size, size];
         mainPaths.Clear();
 
         int mainAmount = Mathf.Max(1, Mathf.RoundToInt((float)size * density / 100f * 0.2f));
@@ -108,7 +127,6 @@ public class PathGen : MonoBehaviour
         DrawPrefabs();
         if (combineAfterGenerate) CombineAllTiles();
         SpawnBuildings();
-        AddGroundPlaneWithNavMesh();
     }
 
     List<Vector2Int> PathmakerMain(List<Vector2Int> entryList, List<Vector2Int> exitList)
@@ -166,7 +184,7 @@ public class PathGen : MonoBehaviour
                 int gy = y + dy;
                 if (gx >= 0 && gx < size && gy >= 0 && gy < size)
                 {
-                    grid[gx, gy] = 1;
+                    Grid[gx, gy] = 1;
                     pathPoints.Add(new Vector2Int(gx, gy));
                 }
             }
@@ -180,7 +198,7 @@ public class PathGen : MonoBehaviour
                     int gy = y + dy;
                     if (gx >= 0 && gx < size && gy >= 0 && gy < size)
                     {
-                        grid[gx, gy] = 1;
+                        Grid[gx, gy] = 1;
                         pathPoints.Add(new Vector2Int(gx, gy));
                     }
                 }
@@ -196,7 +214,7 @@ public class PathGen : MonoBehaviour
                     int gy = y + dy;
                     if (gx >= 0 && gx < size && gy >= 0 && gy < size)
                     {
-                        grid[gx, gy] = 1;
+                        Grid[gx, gy] = 1;
                         pathPoints.Add(new Vector2Int(gx, gy));
                     }
                 }
@@ -210,34 +228,13 @@ public class PathGen : MonoBehaviour
                 int gy = y + dy;
                 if (gx >= 0 && gx < size && gy >= 0 && gy < size)
                 {
-                    grid[gx, gy] = 1;
+                    Grid[gx, gy] = 1;
                     pathPoints.Add(new Vector2Int(gx, gy));
                 }
             }
         return pathPoints;
     }
 
-    void AddGroundPlaneWithNavMesh()
-    {
-        GameObject ground = GameObject.CreatePrimitive(PrimitiveType.Plane);
-        ground.name = "NavGround";
-        ground.transform.position = new Vector3(size / 2f, -0.21f, size / 2f);
-        ground.transform.localScale = new Vector3(size / 10f, 1f, size / 10f); // Plane is 10x10 units by default
-        ground.isStatic = true;
-
-        // Add MeshCollider if not present
-        MeshCollider collider = ground.GetComponent<MeshCollider>();
-        if (collider == null)
-            ground.AddComponent<MeshCollider>();
-
-        // Add NavMeshSurface
-        if (ground.GetComponent<NavMeshSurface>() == null)
-        {
-            var navSurface = ground.AddComponent<NavMeshSurface>();
-            navSurface.collectObjects = CollectObjects.Children; // or All
-            navSurface.BuildNavMesh();
-        }
-    }
 
     void PathmakerAlley()
     {
@@ -261,8 +258,8 @@ public class PathGen : MonoBehaviour
             {
                 int gx = x + dx;
                 int gy = y + dy;
-                if (gx >= 0 && gx < size && gy >= 0 && gy < size && grid[gx, gy] == 0)
-                    grid[gx, gy] = 2;
+                if (gx >= 0 && gx < size && gy >= 0 && gy < size && Grid[gx, gy] == 0)
+                    Grid[gx, gy] = 2;
             }
 
         while (x != exitPosition.x)
@@ -272,8 +269,8 @@ public class PathGen : MonoBehaviour
                 {
                     int gx = x + dx;
                     int gy = y + dy;
-                    if (gx >= 0 && gx < size && gy >= 0 && gy < size && grid[gx, gy] == 0)
-                        grid[gx, gy] = 2;
+                    if (gx >= 0 && gx < size && gy >= 0 && gy < size && Grid[gx, gy] == 0)
+                        Grid[gx, gy] = 2;
                 }
             x += (exitPosition.x > x) ? 1 : -1;
         }
@@ -285,8 +282,8 @@ public class PathGen : MonoBehaviour
                 {
                     int gx = x + dx;
                     int gy = y + dy;
-                    if (gx >= 0 && gx < size && gy >= 0 && gy < size && grid[gx, gy] == 0)
-                        grid[gx, gy] = 2;
+                    if (gx >= 0 && gx < size && gy >= 0 && gy < size && Grid[gx, gy] == 0)
+                        Grid[gx, gy] = 2;
                 }
             y += (exitPosition.y > y) ? 1 : -1;
         }
@@ -296,8 +293,8 @@ public class PathGen : MonoBehaviour
             {
                 int gx = x + dx;
                 int gy = y + dy;
-                if (gx >= 0 && gx < size && gy >= 0 && gy < size && grid[gx, gy] == 0)
-                    grid[gx, gy] = 2;
+                if (gx >= 0 && gx < size && gy >= 0 && gy < size && Grid[gx, gy] == 0)
+                    Grid[gx, gy] = 2;
             }
     }
 
@@ -308,7 +305,7 @@ public class PathGen : MonoBehaviour
             for (int y = 0; y < size; y++)
             {
                 // Handle path tiles
-                if (grid[x, y] == 1 || grid[x, y] == 2)
+                if (Grid[x, y] == 1 || Grid[x, y] == 2)
                 {
                     // Check adjacent tiles (4-way)
                     bool top = IsPathPrefab(x, y + 1);
@@ -431,7 +428,7 @@ public class PathGen : MonoBehaviour
     bool IsPathPrefab(int x, int y)
     {
         if (x < 0 || x >= size || y < 0 || y >= size) return false;
-        return grid[x, y] == 1 || grid[x, y] == 2;
+        return Grid[x, y] == 1 || Grid[x, y] == 2;
     }
 
     void SpawnBuildings()
@@ -439,54 +436,31 @@ public class PathGen : MonoBehaviour
         if (buildingParent != null) DestroyImmediate(buildingParent.gameObject);
         buildingParent = new GameObject("Buildings").transform;
         buildingParent.parent = this.transform;
-
-        List<Vector2Int> placedBuildings = new List<Vector2Int>();
+        PlacedBuildings.Clear();
 
         for (int x = 0; x < size; x++)
         {
             for (int y = 0; y < size; y++)
             {
-                if (grid[x, y] != 0) continue; // must be on grass
+                if (Grid[x, y] != 0) continue; // must be on grass
 
                 Vector2Int pos = new Vector2Int(x, y);
 
-                // Skip if too close to other building
-                bool tooClose = false;
-                foreach (var placed in placedBuildings)
-                {
-                    if (Vector2Int.Distance(pos, placed) < minDistanceBetweenBuildings)
-                    {
-                        tooClose = true;
-                        break;
-                    }
-                }
-                if (tooClose) continue;
-
-                // Check alley dan main path terdekat
+                // Check alley and main path distances
                 int distToAlley = FindNearestDistance(pos, 2);
                 int distToMain = FindNearestDistance(pos, 1);
 
                 bool nearAlley = distToAlley > 0 && distToAlley <= maxDistanceToPath;
                 bool nearMain = distToMain > 0 && distToMain <= maxDistanceToPath;
 
+                // Determine which building types to try based on proximity
+                List<BuildingOption> buildingsToTry = new List<BuildingOption>();
+                if (nearAlley) buildingsToTry.AddRange(Type1);
+                if (nearAlley || nearMain) buildingsToTry.AddRange(Type2);
+                if (nearMain && !nearAlley) buildingsToTry.AddRange(Type3);
 
-                if (nearAlley && TrySpawnBuilding(housePrefabs, pos, 2))
-                {
-                    placedBuildings.Add(pos);
-                    continue;
-                }
-
-                if ((nearAlley || nearMain) && TrySpawnBuilding(shopPrefabs, pos, nearAlley ? 2 : 1))
-                {
-                    placedBuildings.Add(pos);
-                    continue;
-                }
-
-                if (nearMain && !nearAlley && TrySpawnBuilding(minimarketPrefabs, pos, 1))
-                {
-                    placedBuildings.Add(pos);
-                    continue;
-                }
+                // Try to place a building
+                TryPlaceBuildingAtPosition(pos, buildingsToTry);
             }
         }
 
@@ -504,7 +478,7 @@ public class PathGen : MonoBehaviour
                         int ny = from.y + dy;
                         if (nx >= 0 && nx < size && ny >= 0 && ny < size)
                         {
-                            if (grid[nx, ny] == targetType)
+                            if (Grid[nx, ny] == targetType)
                                 return r;
                         }
                     }
@@ -512,116 +486,175 @@ public class PathGen : MonoBehaviour
             }
             return -1; // not found
         }
-        void MarkBuildingFootprint(Vector2Int center, Vector2 buildingSize)
+    }
+
+    bool TryPlaceBuildingAtPosition(Vector2Int pos, List<BuildingOption> buildingOptions)
+    {
+        Shuffle(buildingOptions);
+        foreach (var option in buildingOptions)
         {
-            // Calculate half building dimensions
-            int halfWidth = Mathf.FloorToInt(buildingSize.x / 2);
-            int halfHeight = Mathf.FloorToInt(buildingSize.y / 2);
-
-            // Calculate footprint bounds
-            int startX = Mathf.Clamp(center.x - halfWidth, 0, size - 1);
-            int endX = Mathf.Clamp(center.x + halfWidth, 0, size - 1);
-            int startY = Mathf.Clamp(center.y - halfHeight, 0, size - 1);
-            int endY = Mathf.Clamp(center.y + halfHeight, 0, size - 1);
-
-            // Mark all tiles in footprint
-            for (int x = startX; x <= endX; x++)
+            if (TryFindValidPlacement(pos, option, out Vector3 finalPosition, out Quaternion finalRotation))
             {
-                for (int y = startY; y <= endY; y++)
-                {
-                    placedBuildings.Add(new Vector2Int(x, y));
-                }
+                GameObject instance = Instantiate(option.prefab, finalPosition, finalRotation, buildingParent);
+
+                // Ganti pemanggilan MarkBuildingFootprint
+                MarkBuildingFootprint(
+                    new Vector2Int(Mathf.RoundToInt(finalPosition.x), Mathf.RoundToInt(finalPosition.z)),
+                    option.footprintSize,
+                    finalPosition,
+                    finalRotation,
+                    option.prefab
+                );
+
+                return true;
             }
         }
+        return false;
+    }
 
-        bool IsValidBuildingPosition(Vector2Int pos, Vector2 footprintSize, List<Vector2Int> placedBuildings)
+    bool TryFindValidPlacement(Vector2Int initialPos, BuildingOption buildingOption, out Vector3 finalPosition, out Quaternion finalRotation)
+    {
+        finalPosition = Vector3.zero;
+        finalRotation = Quaternion.identity;
+
+        if (!FindNearestPathDirection(initialPos, out Vector2Int pathPos, out Vector2 direction))
+            return false;
+
+        Vector2 footprint = buildingOption.footprintSize;
+        int halfWidth = Mathf.CeilToInt(footprint.x / 2f);
+        int halfDepth = Mathf.CeilToInt(footprint.y / 2f);
+
+        Vector2Int adjustedPos = initialPos;
+        int attempts = 0;
+        int maxAttempts = 5;
+
+        while (attempts < maxAttempts)
         {
-            // Hitung bounding box dari building yang mau di-spawn
-            int halfWidth = Mathf.FloorToInt(footprintSize.x / 2f);
-            int halfHeight = Mathf.FloorToInt(footprintSize.y / 2f);
+            adjustedPos = CalculateAdjustedPosition(initialPos, pathPos, direction, halfDepth);
 
-            int newStartX = pos.x - halfWidth - minDistanceBetweenBuildings;
-            int newEndX = pos.x + halfWidth + minDistanceBetweenBuildings;
-            int newStartY = pos.y - halfHeight - minDistanceBetweenBuildings;
-            int newEndY = pos.y + halfHeight + minDistanceBetweenBuildings;
-
-            // Bandingkan dengan semua posisi tile bangunan yang sudah ada
-            foreach (var placed in placedBuildings)
+            // This now checks the ENTIRE footprint, not just center
+            if (IsValidBuildingPosition(adjustedPos, footprint))
             {
-                if (placed.x >= newStartX && placed.x <= newEndX &&
-                    placed.y >= newStartY && placed.y <= newEndY)
-                {
-                    return false; // Overlap atau terlalu dekat
-                }
+                finalPosition = new Vector3(adjustedPos.x, 0, adjustedPos.y);
+                finalRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.y));
+                return true;
             }
 
-            // Check if area akan menabrak tile non-0 (path atau obstacle)
-            int startX = Mathf.Max(0, pos.x - halfWidth);
-            int endX = Mathf.Min(size - 1, pos.x + halfWidth);
-            int startY = Mathf.Max(0, pos.y - halfHeight);
-            int endY = Mathf.Min(size - 1, pos.y + halfHeight);
-
-            for (int x = startX; x <= endX; x++)
-            {
-                for (int y = startY; y <= endY; y++)
-                {
-                    if (grid[x, y] != 0)
-                        return false;
-                }
-            }
-
-            return true;
+            initialPos = Vector2Int.RoundToInt(initialPos - direction);
+            attempts++;
         }
 
-        bool TrySpawnBuilding(List<BuildingOption> prefabList, Vector2Int pos, int targetType)
+        return false;
+    }
+
+    Vector2Int CalculateAdjustedPosition(Vector2Int initialPos, Vector2Int pathPos, Vector2 direction, int depthOffset)
+    {
+        // Move building away from path by depthOffset + minDistance
+        int moveDistance = depthOffset + minDistanceBetweenBuildings;
+        Vector2Int adjustedPos = initialPos;
+
+        // Move away from path while staying within bounds
+        for (int i = 0; i < moveDistance; i++)
         {
-            foreach (var option in prefabList)
+            Vector2Int newPos = adjustedPos - Vector2Int.RoundToInt(direction);
+            if (newPos.x < 0 || newPos.x >= size || newPos.y < 0 || newPos.y >= size)
+                break;
+            adjustedPos = newPos;
+        }
+
+        return adjustedPos;
+    }
+
+    bool FindNearestPathDirection(Vector2Int pos, out Vector2Int nearestPathPos, out Vector2 direction)
+    {
+        nearestPathPos = Vector2Int.zero;
+        direction = Vector2.zero;
+        float minDistance = float.MaxValue;
+
+        // Search in expanding radius
+        for (int r = 1; r <= maxDistanceToPath; r++)
+        {
+            for (int dx = -r; dx <= r; dx++)
             {
-                if (Random.value <= option.spawnChance)
+                for (int dy = -r; dy <= r; dy++)
                 {
-                    // Check if building would fit without overlapping paths
-                    if (!IsValidBuildingPosition(pos, option.footprintSize, placedBuildings))
-                        return false;
-
-                    Vector3 worldPos = new Vector3(pos.x, 0f, pos.y);
-
-                    // Find direction to path
-                    Vector3Int dir = Vector3Int.forward;
-                    Vector3Int[] directions = new Vector3Int[]
+                    if (Mathf.Abs(dx) != r && Mathf.Abs(dy) != r) continue; // edge of square only
+                    
+                    int nx = pos.x + dx;
+                    int ny = pos.y + dy;
+                    
+                    if (nx >= 0 && nx < size && ny >= 0 && ny < size && (Grid[nx, ny] == 1 || Grid[nx, ny] == 2))
                     {
-                        new Vector3Int(1, 0, 0),
-                        new Vector3Int(-1, 0, 0),
-                        new Vector3Int(0, 0, 1),
-                        new Vector3Int(0, 0, -1)
-                    };
-
-                    foreach (var d in directions)
-                    {
-                        int nx = pos.x + d.x;
-                        int ny = pos.y + d.z;
-                        if (nx >= 0 && nx < size && ny >= 0 && ny < size)
+                        float distance = Vector2Int.Distance(pos, new Vector2Int(nx, ny));
+                        if (distance < minDistance)
                         {
-                            if (grid[nx, ny] == targetType)
-                            {
-                                dir = d;
-                                break;
-                            }
+                            minDistance = distance;
+                            nearestPathPos = new Vector2Int(nx, ny);
+                            direction = (new Vector2(nx, ny) - new Vector2(pos.x, pos.y)).normalized;
                         }
                     }
-
-                    Quaternion rot = Quaternion.LookRotation(new Vector3(dir.x, 0, dir.z));
-                    GameObject instance = Instantiate(option.prefab, worldPos, rot, buildingParent);
-                    instance.isStatic = true;
-                    instance.name = $"Building_{option.prefab.name}_{pos.x}_{pos.y}";
-                    
-                    // Mark the building's footprint as occupied
-                    MarkBuildingFootprint(pos, option.footprintSize);
-                    return true;
                 }
             }
-            return false;
+            
+            if (minDistance < float.MaxValue) // Found a path
+                return true;
         }
-        
+
+        return false;
+    }
+
+    bool IsValidBuildingPosition(Vector2Int center, Vector2 footprint)
+    {
+        int halfWidth = Mathf.CeilToInt(footprint.x / 2f);
+        int halfDepth = Mathf.CeilToInt(footprint.y / 2f);
+
+        // Check all tiles in the building's footprint
+        for (int x = center.x - halfWidth; x <= center.x + halfWidth; x++) {
+            for (int y = center.y - halfDepth; y <= center.y + halfDepth; y++) {
+                // Check if position is within grid bounds
+                if (x < 0 || x >= size || y < 0 || y >= size)
+                    return false;
+                
+                // Check if tile is a path (1 = main path, 2 = alley)
+                if (Grid[x, y] != 0) // 0 is grass
+                    return false;
+                
+                // Check against other buildings
+                if (PlacedBuildings.Exists(b => b.coordinate == new Vector2Int(x, y)))
+                    return false;
+            }
+        }
+        return true;
+    }
+
+    void MarkBuildingFootprint(Vector2Int center, Vector2 footprint, Vector3 worldPos, Quaternion rotation, GameObject prefab)
+    {
+        int halfWidth = Mathf.CeilToInt(footprint.x / 2f);
+        int halfDepth = Mathf.CeilToInt(footprint.y / 2f);
+
+        for (int x = center.x - halfWidth; x <= center.x + halfWidth; x++) {
+            for (int y = center.y - halfDepth; y <= center.y + halfDepth; y++) {
+                if (x >= 0 && x < size && y >= 0 && y < size) {
+                    PlacedBuildings.Add(new BuildingData(
+                        new Vector2Int(x, y),
+                        worldPos,
+                        rotation,
+                        prefab
+                    ));
+                }
+            }
+        }
+    }
+
+    void Shuffle<T>(List<T> list)
+    {
+        for (int i = 0; i < list.Count; i++)
+        {
+            T temp = list[i];
+            int randomIndex = Random.Range(i, list.Count);
+            list[i] = list[randomIndex];
+            list[randomIndex] = temp;
+        }
     }
 
 }

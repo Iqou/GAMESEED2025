@@ -1,9 +1,34 @@
 fileFormatVersion: 2
-guid: fc78a037781c43249a3c85148af5760e
+guid: 542a011b9bf72234497a49875fd9aa89
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Atap v2
+    second: {fileID: 2800000, guid: 09ee235e029a30842874d9c2a220adb2, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Jendela v2
+    second: {fileID: 2800000, guid: 4638c346fe3990a4992b92fa0413d45d, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Lantai v2 2
+    second: {fileID: 2800000, guid: d4e5ef2bc2e11f8469b49129622a6426, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Pintu v2
+    second: {fileID: 2800000, guid: 4bcb3ef9c9b0f23439cb60ed1fbd4f98, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Tembok v2
+    second: {fileID: 2800000, guid: 13baf053949de5f438da21ee9648af13, type: 3}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -41,8 +66,8 @@ ModelImporter:
     importPhysicalCameras: 1
     importVisibility: 1
     importBlendShapes: 1
-    importCameras: 1
-    importLights: 1
+    importCameras: 0
+    importLights: 0
     nodeNameCollisionStrategy: 1
     fileIdsGeneration: 2
     swapUVChannels: 0
@@ -88,7 +113,7 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
-    globalScale: 0.2
+    globalScale: 0.002
     rootMotionBoneName: 
     hasTranslationDoF: 0
     hasExtraRoot: 0

@@ -11,7 +11,7 @@ public class ToaRW : MonoBehaviour
     private float desibelOutput;
     private float areaJangkauan = 5f;
     private float duration = 0.5f;
-    private float cooldownTime = 4f;
+    private float cooldownTime = 1f;
     private float weight = 2f;
     private float saweranMultiplier = 1.2f;
 
@@ -34,23 +34,6 @@ public class ToaRW : MonoBehaviour
         UpdateStatus();   
     }
 
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.W) && Time.time >= lastActiveTime + cooldownTime && !isAttacking)
-        {
-            TriggerAOE();
-        } 
-        else if(Input.GetKeyDown(KeyCode.W) && Time.time >= lastActiveTime + cooldownTime && isAttacking)
-        {
-            StopAOE();
-        }
-
-        if (isAttacking)
-        {
-            MouseRotator();
-        }
-    }
-
     void UpdateStatus()
     {
         desibelOutput = baseDesibelOutput + (desibelLevel - 1) * 2f;
@@ -60,55 +43,32 @@ public class ToaRW : MonoBehaviour
 
     public void Use(Transform owner)
     {
-        Vector3 spawnPos = owner.position + owner.forward * 1.5f;
-        Quaternion spawnRot = Quaternion.LookRotation(owner.forward);
-        aoeInstance = GameObject.Instantiate(aoePrefab, spawnPos, spawnRot);
-        aoeInstance.transform.localScale = new Vector3(areaJangkauan, 0.1f, areaJangkauan);
-
-        attackPos = spawnPos;
-    }
-
-
-    public void TriggerAOE()
-    {
-        aoeInstance.SetActive(true);
-
-        Collider[] hit = Physics.OverlapSphere(attackPos, areaJangkauan);
-
-        foreach (Collider hits in hit)
+        if (lastActiveTime > Time.time)
         {
-            if (hits.CompareTag("NPC"))
-            {
-                desibelOutput = Random.Range(minDesibelOutput, maxDesibelOutput);
-                Debug.Log($"{hits.name} Duarr kena damage dari TOA kena damage {desibelOutput} db");
-            }
+            lastActiveTime = Time.time - cooldownTime;
         }
 
-        isAttacking = true;
-        lastActiveTime = Time.time;
-        Destroy(aoeInstance, duration);
-    }
-
-    void StopAOE()
-    {
-        if (aoeInstance != null)
+        if (Time.time >= lastActiveTime + cooldownTime)
         {
-            Destroy(aoeInstance);
+            Vector3 spawnPos = owner.position + owner.forward * 1.5f;
+            Quaternion spawnRot = Quaternion.LookRotation(owner.forward);
+            aoeInstance = GameObject.Instantiate(aoePrefab, spawnPos, spawnRot);
+            aoeInstance.transform.localScale = new Vector3(areaJangkauan, 0.1f, areaJangkauan);
+
+            StaticAoe attribute = aoeInstance.GetComponent<StaticAoe>();
+
+            attribute.areaJangkauan = areaJangkauan;
+            attribute.duration = duration;
+            attribute.minDesibelOutput = minDesibelOutput;
+            attribute.maxDesibelOutput = maxDesibelOutput;
+
+            attackPos = spawnPos;
+            lastActiveTime = Time.time;
+            Destroy(aoeInstance, duration);
         }
-
-        isAttacking = false;
+        else
+        {
+            Debug.Log($"Masih cooldown sisa {(lastActiveTime + cooldownTime) - Time.time} lagi, waktu saat ini {Time.time}");
+        }
     }
-
-    void MouseRotator()
-    {
-        Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        mousePos.z = 0f;
-
-        Vector3 direction = (mousePos - transform.position).normalized;
-        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-
-        transform.rotation = Quaternion.Euler(0f, 0f, angle);
-    }
-
-
 }

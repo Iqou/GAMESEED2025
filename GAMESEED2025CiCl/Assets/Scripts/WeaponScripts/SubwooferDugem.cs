@@ -56,9 +56,16 @@ public class SubwooferDugem : MonoBehaviour
             aoeInstance = GameObject.Instantiate(aoePrefab, spawnPos, spawnRot);
             aoeInstance.transform.localScale = new Vector3(areaJangkauan, 0.1f, areaJangkauan);
 
+            StaticAoe attribute = aoeInstance.GetComponent<StaticAoe>();
+
+            attribute.areaJangkauan = areaJangkauan;
+            attribute.duration = duration;
+            attribute.minDesibelOutput = minDesibelOutput;
+            attribute.maxDesibelOutput = maxDesibelOutput;
+
             attackPos = spawnPos;
             lastActiveTime = Time.time;
-            ActivateDugem();
+            Destroy(aoeInstance, duration);
         }
         else
         {
@@ -66,29 +73,4 @@ public class SubwooferDugem : MonoBehaviour
         }
 
     }
-
-
-    public void ActivateDugem()
-    {
-        Collider[] hit = Physics.OverlapSphere(attackPos, areaJangkauan);
-
-        foreach (Collider hits in hit)
-        {
-            if (hits.CompareTag("NPC"))
-            {
-                desibelOutput = Random.Range(minDesibelOutput, maxDesibelOutput);
-                Debug.Log($"{hits.name} Duarr kena damage dari subwoofer dugem damage {desibelOutput} dB");
-            }
-        }
-        
-        isAttacking = false;
-        Destroy(aoeInstance, duration);
-    }
-
-    private void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.pink;
-        Gizmos.DrawWireSphere(transform.position + transform.forward * 1.5f, areaJangkauan);
-    }
-
 }

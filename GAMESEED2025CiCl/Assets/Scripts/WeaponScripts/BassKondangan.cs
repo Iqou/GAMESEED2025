@@ -10,8 +10,8 @@ public class BassKondangan : MonoBehaviour
     private float baseDesibelOutput = 90f;
     private float desibelOutput;
     private float areaJangkauan = 9f;
-    private float duration = 0.5f;
-    private float cooldownTime = 10f;
+    private float duration = 1f;
+    private float cooldownTime = 1.5f;
     private float weight = 6f;
     private float saweranMultiplier = 2.2f;
     private float knockbackForce = 5f;
@@ -36,15 +36,6 @@ public class BassKondangan : MonoBehaviour
         UpdateStats();
     }
 
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.A) && Time.time >= lastActiveTime + cooldownTime && !isAttacking)
-        {
-            isAttacking = true;
-            Explosion();
-        }
-    }
-
     void UpdateStats()
     {
         desibelOutput = baseDesibelOutput + (desibelLevel - 1) * 2f;
@@ -54,44 +45,32 @@ public class BassKondangan : MonoBehaviour
 
     public void Use(Transform owner)
     {
-        Vector3 spawnPos = owner.position + owner.forward * 1.5f;
-        Quaternion spawnRot = Quaternion.LookRotation(owner.forward);
-        aoeInstance = GameObject.Instantiate(aoePrefab, spawnPos, spawnRot);
-        aoeInstance.transform.localScale = new Vector3(areaJangkauan, 0.1f, areaJangkauan);
-
-        attackPos = spawnPos;
-    }
-
-
-    public void Explosion()
-    {
-        Rigidbody rigidbody = GetComponent<Rigidbody>();
-
-        if (rigidbody != null)
+        if (lastActiveTime > Time.time)
         {
-            Vector3 knockbackDirection = -transform.forward;
-            rigidbody.AddForce(knockbackDirection * knockbackForce, ForceMode.Impulse);
+            lastActiveTime = Time.time - cooldownTime;
         }
 
-        Collider[] hit = Physics.OverlapSphere(attackPos, areaJangkauan);
-
-        foreach (Collider hits in hit)
+        if (Time.time >= lastActiveTime + cooldownTime)
         {
-            if (hits.CompareTag("NPC"))
-            {
-                desibelOutput = Random.Range(minDesibelOutput, maxDesibelOutput);
-                Debug.Log($"{hits.name} Duarr kena damage dari bass kondangan kena damage {desibelOutput} dB");
-            }
+            Vector3 spawnPos = owner.position + owner.forward * 1.5f;
+            Quaternion spawnRot = Quaternion.LookRotation(owner.forward);
+            aoeInstance = GameObject.Instantiate(aoePrefab, spawnPos, spawnRot);
+            aoeInstance.transform.localScale = new Vector3(areaJangkauan, 0.1f, areaJangkauan);
+
+            StaticAoe attribute = aoeInstance.GetComponent<StaticAoe>();
+
+            attribute.areaJangkauan = areaJangkauan;
+            attribute.duration = duration;
+            attribute.minDesibelOutput = minDesibelOutput;
+            attribute.maxDesibelOutput = maxDesibelOutput;
+
+            attackPos = spawnPos;
+            lastActiveTime = Time.time;
+            Destroy(aoeInstance, duration);
         }
-
-        lastActiveTime = Time.time;
-        isAttacking = false;
-        Destroy(aoeInstance, duration);
-    }
-
-    private void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.pink;
-        Gizmos.DrawWireSphere(transform.position + transform.forward * 1.5f, areaJangkauan);
+        else
+        {
+            Debug.Log($"Masih cooldown sisa {(lastActiveTime + cooldownTime) - Time.time} lagi, waktu saat ini {Time.time}");
+        }
     }
 }

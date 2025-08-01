@@ -29,7 +29,6 @@ public class PlayerAttack : MonoBehaviour
             if (toa != null && Input.GetKey(KeyCode.W))
             {
                 toa.Use(transform);
-                toa.TriggerAOE();
                 continue;
             }
 
@@ -37,7 +36,6 @@ public class PlayerAttack : MonoBehaviour
             if (kondangan != null && Input.GetKeyDown(KeyCode.A))
             {
                 kondangan.Use(transform);
-                kondangan.Explosion();
                 continue;
             }
 

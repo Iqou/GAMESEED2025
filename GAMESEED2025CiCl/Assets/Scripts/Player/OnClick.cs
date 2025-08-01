@@ -1,14 +1,16 @@
-using Unity.VisualScripting;
 using UnityEngine;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+using UnityEngine.UI;
+using TMPro;
 
 public class OnClick : MonoBehaviour
 {
+    public TextMeshProUGUI feedbackText;
+    public float feedbackDuration = 0.5f;
+
     public KeyCode Arrow;
     public GameObject Health;
-    public float maxDistanceToDestroyOnTooEarlyClick = 5f;
+    public float maxDistanceToDestroyOnTooEarlyClick = 6f;
     public Sprite defaultSprite;
     public Sprite clickedSprite;
     public float clickAnimationDuration = 0.1f;
@@ -20,6 +22,8 @@ public class OnClick : MonoBehaviour
     private GameObject _currentTouchingArrow;
     private AudioSource _audioSource;
     private SpriteRenderer _spriteRenderer;
+
+    private Coroutine _hideTextCoroutine;
 
     public bool Touching
     {
@@ -42,6 +46,11 @@ public class OnClick : MonoBehaviour
         {
             _spriteRenderer.sprite = defaultSprite;
         }
+
+        if (feedbackText != null)
+        {
+            feedbackText.text = "";
+        }
     }
 
     void Update()
@@ -52,42 +61,44 @@ public class OnClick : MonoBehaviour
             if (Touching && _currentTouchingArrow != null)
             {
                 float distance = Mathf.Abs(transform.position.y - _currentTouchingArrow.transform.position.y);
+
+                Health healthComponent = Health.GetComponent<Health>();
+
                 if (distance <= perfectWindowDistance)
                 {
-                    Debug.Log("<color=green>PERFECT!</color> Panah " + _currentTouchingArrow.name + " dihancurkan.", _currentTouchingArrow);
-                    if (Health != null)
+                    DisplayFeedbackText("PERFECT!", Color.green);
+                    if (healthComponent != null)
                     {
-                        // Add 5 health for a perfect hit
-                        Health.GetComponent<Health>().ChangeHealth(5);
+                        healthComponent.ChangeHealth(5);
                     }
                 }
                 else if (distance <= goodWindowDistance)
                 {
-                    Debug.Log("<color=yellow>GOOD!</color> Panah " + _currentTouchingArrow.name + " dihancurkan.", _currentTouchingArrow);
-                    if (Health != null)
+                    DisplayFeedbackText("GOOD!", Color.yellow);
+                    if (healthComponent != null)
                     {
-                        // Add 2 health for a good hit
-                        Health.GetComponent<Health>().ChangeHealth(2);
+                        healthComponent.ChangeHealth(2);
                     }
                 }
                 else
                 {
-                    Debug.Log("<color=orange>HIT (Akurasi Rendah)!</color> Panah " + _currentTouchingArrow.name + " dihancurkan, tapi kurang akurat.", _currentTouchingArrow);
-                    if (Health != null)
+                    DisplayFeedbackText("HIT!", Color.red);
+                    if (healthComponent != null)
                     {
-                        Health.GetComponent<Health>().ChangeHealth(-5);
+                        healthComponent.ChangeHealth(-1);
                     }
                 }
+                
                 Destroy(_currentTouchingArrow);
                 _currentTouchingArrow = null;
                 Touching = false;
             }
             else
             {
-                Debug.Log("<color=red>Miss! Klik terlalu cepat atau tidak ada panah di area target.</color>");
+                DisplayFeedbackText("MISS!", Color.red);
                 if (Health != null)
                 {
-                    Health.GetComponent<Health>().ChangeHealth(-10);
+                    Health.GetComponent<Health>().ChangeHealth(-5);
                 }
                 else
                 {
@@ -97,6 +108,32 @@ public class OnClick : MonoBehaviour
             }
         }
     }
+    
+    void DisplayFeedbackText(string message, Color color)
+    {
+        if (feedbackText != null)
+        {
+            if (_hideTextCoroutine != null)
+            {
+                StopCoroutine(_hideTextCoroutine);
+            }
+            
+            feedbackText.text = message;
+            feedbackText.color = color;
+            
+            _hideTextCoroutine = StartCoroutine(HideFeedbackText());
+        }
+    }
+
+    IEnumerator HideFeedbackText()
+    {
+        yield return new WaitForSeconds(feedbackDuration);
+        if (feedbackText != null)
+        {
+            feedbackText.text = "";
+        }
+        _hideTextCoroutine = null;
+    }
 
     IEnumerator PlayClickAnimation()
     {
@@ -104,18 +141,11 @@ public class OnClick : MonoBehaviour
         {
             _spriteRenderer.sprite = clickedSprite;
             yield return new WaitForSeconds(clickAnimationDuration);
+            
             if (_spriteRenderer != null && defaultSprite != null)
             {
                 _spriteRenderer.sprite = defaultSprite;
             }
-        }
-        else if (_spriteRenderer == null)
-        {
-            Debug.LogWarning("SpriteRenderer tidak ditetapkan untuk animasi klik pada " + gameObject.name);
-        }
-        else if (clickedSprite == null)
-        {
-            Debug.LogWarning("Sprite 'Clicked' tidak ditetapkan untuk animasi klik pada " + gameObject.name);
         }
     }
 

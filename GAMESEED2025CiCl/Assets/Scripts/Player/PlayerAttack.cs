@@ -5,7 +5,11 @@ public class PlayerAttack : MonoBehaviour
 {
     public GameObject aoePrefab;
 
-    public List<GameObject> horegList;
+    [Header("Assign Weapon Prefabs Here")]
+    public List<GameObject> horegPrefabs; // Untuk konsistensi, gunakan List<GameObject> untuk menyimpan prefab senjata.
+
+    private List<GameObject> activeHoregs; // Menampilkan speaker yang sedang aktif
+
     public float beatInterval = 1.0f;
     public float beatWindow = 0.15f;
 
@@ -15,6 +19,16 @@ public class PlayerAttack : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        activeHoregs = new List<GameObject>();
+        foreach (GameObject prefab in horegPrefabs)
+        {
+            if (prefab != null)
+            {
+                GameObject weaponInstance = Instantiate(prefab, transform.position, transform.rotation, transform);
+                activeHoregs.Add(weaponInstance);
+            }
+        }
+
         nextBeatTime = Time.time * beatInterval;
     }
 
@@ -25,13 +39,12 @@ public class PlayerAttack : MonoBehaviour
 
         bool isOnBeat = Mathf.Abs(Time.time - nextBeatTime) <= beatWindow;
 
-        foreach (GameObject horeg in horegList)
+        foreach (GameObject horeg in activeHoregs)
         {
             ToaRW toa = horeg.GetComponent<ToaRW>();
-            if (toa != null && Input.GetKey(KeyCode.W))
+            if (toa != null && Input.GetKeyDown(KeyCode.W))
             {
                 toa.Use(transform);
-                toa.TriggerAOE();
                 continue;
             }
 
@@ -39,7 +52,6 @@ public class PlayerAttack : MonoBehaviour
             if (kondangan != null && Input.GetKeyDown(KeyCode.A))
             {
                 kondangan.Use(transform);
-                kondangan.Explosion();
                 continue;
             }
 
@@ -47,7 +59,6 @@ public class PlayerAttack : MonoBehaviour
             if (dugem != null && Input.GetKeyDown(KeyCode.S))
             {
                 dugem.Use(transform);
-                dugem.ActivateDugem();
                 continue;
             }
 
@@ -55,7 +66,6 @@ public class PlayerAttack : MonoBehaviour
             if (superHoreg != null && Input.GetKeyDown(KeyCode.D))
             {
                 superHoreg.Use(transform);
-                superHoreg.ShootDaHoreg();
                 continue;
             }
         }

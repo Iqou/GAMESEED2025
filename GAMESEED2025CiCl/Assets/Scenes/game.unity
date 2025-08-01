@@ -137,7 +137,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   aoePrefab: {fileID: 633049889764611862, guid: 0c870656eaa143a418930ce098b0f31f, type: 3}
-  aoeRadius: 7
+  horegList: []
   beatInterval: 1
   beatWindow: 0.15
 --- !u!114 &255749583
@@ -205,6 +205,24 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &255749590
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 255749581}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 238bfe46032ec504597919121af9e88b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damageMultiplier: 1
+  cooldownReduction: 0
+  areaOfEffectBonus: 1
+  beatAccuracyBonus: 0
+  maxHealthBonus: 0
+  moveSpeedMultiplier: 1
 --- !u!1 &349474944
 GameObject:
   m_ObjectHideFlags: 0
@@ -355,11 +373,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4fc487c1b3605bd4ca0790356c64116d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objectToSpawn: {fileID: 919132149155446097, guid: de13a7420582ded45a8d7d3f96889aca, type: 3}
-  minSpawnDelay: 1
-  maxSpawnDelay: 3
-  spawnYPosition: -6.1
-  spawnZPosition: 0
 --- !u!4 &1289809416
 Transform:
   m_ObjectHideFlags: 0
@@ -520,6 +533,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: de13a7420582ded45a8d7d3f96889aca, type: 3}
       insertIndex: -1
       addedObject: {fileID: 255749587}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: de13a7420582ded45a8d7d3f96889aca, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 255749590}
   m_SourcePrefab: {fileID: 100100000, guid: de13a7420582ded45a8d7d3f96889aca, type: 3}
 --- !u!1 &2076822471
 GameObject:
@@ -554,7 +570,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 255749581}
-  offset: {x: 0, y: 9, z: -5}
+  offset: {x: 0, y: 9, z: 0}
   smoothSpeed: 0.125
 --- !u!114 &2076822473
 MonoBehaviour:

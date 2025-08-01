@@ -45,7 +45,6 @@ public class PlayerAttack : MonoBehaviour
             if (dugem != null && Input.GetKeyDown(KeyCode.S))
             {
                 dugem.Use(transform);
-                dugem.ActivateDugem();
                 continue;
             }
 

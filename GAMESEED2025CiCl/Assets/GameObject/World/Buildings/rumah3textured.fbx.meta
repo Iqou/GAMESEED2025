@@ -8,22 +8,22 @@ ModelImporter:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: Atap v1
-    second: {fileID: 2800000, guid: 97d19fe6ebab55541a5b4af6aa7ab33f, type: 3}
+    second: {fileID: 2800000, guid: e1db65ef6219d5d49abd8bca997731c4, type: 3}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: Jendela v1
-    second: {fileID: 2800000, guid: 4a658465008f9564d8352361f23b4376, type: 3}
+    second: {fileID: 2800000, guid: eb076eadc2d97ff46b8a6dd1d81bce26, type: 3}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: Pintu v1
-    second: {fileID: 2800000, guid: bece65777f6c81d41a1c643cf3fcae77, type: 3}
+    second: {fileID: 2800000, guid: 6e7a404b7a210414893a56847c938d5e, type: 3}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: Tembok v1 2
-    second: {fileID: 2800000, guid: e20a721a6002e054ca970b3e992db5d8, type: 3}
+    second: {fileID: 2800000, guid: a69456661472ace48a2ead43cf288200, type: 3}
   materials:
     materialImportMode: 2
     materialName: 0

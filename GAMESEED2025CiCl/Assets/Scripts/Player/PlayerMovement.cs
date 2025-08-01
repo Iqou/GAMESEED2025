@@ -34,7 +34,7 @@ public class PlayerMovement : MonoBehaviour
                 else
                 {
                     Debug.Log("Path blocked by obstacle.");
-                    isMoving = false;
+                    //isMoving = false;
                 }
             }
         }

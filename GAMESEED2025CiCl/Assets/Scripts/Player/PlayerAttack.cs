@@ -53,7 +53,6 @@ public class PlayerAttack : MonoBehaviour
             if (superHoreg != null && Input.GetKeyDown(KeyCode.D))
             {
                 superHoreg.Use(transform);
-                superHoreg.ShootDaHoreg();
                 continue;
             }
         }

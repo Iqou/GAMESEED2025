@@ -1,0 +1,220 @@
+using UnityEngine;
+using UnityEngine.AI;
+
+public class npcIbuIbuResah : MonoBehaviour, INPCDamageable
+{
+    GameObject player;
+    NavMeshAgent Agent;
+
+    [Header("Layer Settings")]
+    [SerializeField] LayerMask groundLayer, playerLayer, obstacleLayer;
+
+    //patrol
+    Vector3 destPoint;
+    bool walkPointSet;
+    [SerializeField] float range = 10f;
+
+    //chase
+    [SerializeField] float sightRange = 20f;
+    [SerializeField] float stopDistance = 3f;
+    bool playerInSight;
+
+    //Atribut NPC
+    [Range(70, 140)]
+    public int sensitivitasDesibel = 100;
+
+    [Range(0f, 100f)]
+    public float currEmotion = 0f;
+
+    [Range(0f, 100f)]
+    public float aggroLevel = 0f;
+
+    [Range(0f, 100f)]
+    public float fearLevel = 0f;
+
+    public int phoneCooldown = 120;
+
+    public float nextPhoneTime = 0f;
+
+    public int giveCoin = 5000;
+
+    [Range(50, 500)]
+    public int giveExperience = 100;
+
+    bool isAggro = false;
+    bool isFleeing = false;
+
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    void Start()
+    {
+        Agent = GetComponent<NavMeshAgent>();
+        player = GameObject.Find("Player");
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        if (nextPhoneTime > 0)
+        {
+            nextPhoneTime -= Time.deltaTime;
+            if (nextPhoneTime < 0)
+                nextPhoneTime = 0;
+
+        }
+
+        CheckLineOfSight();
+
+        UpdateNPCState();
+
+        if (isAggro && nextPhoneTime <= 0)
+        {
+            CallPolice();
+            nextPhoneTime = phoneCooldown; // reset cooldown
+        }
+
+        if (isFleeing && playerInSight)
+        {
+            FleeFromPlayer();
+        }
+        else if (isAggro && playerInSight)
+        {
+            ChasePlayer();
+        }
+        else
+        {
+            Patrol();
+        }
+    }
+
+    //emotionBar dan sesitivitasDesibel
+     public void TakeDamage(float desibelDamage)
+    {
+        if (desibelDamage >= sensitivitasDesibel)
+        {
+            float reducePercent = Random.Range(2f, 10f);
+            currEmotion -= reducePercent;
+            currEmotion = Mathf.Clamp(currEmotion, 0f, 100f);
+
+            Debug.Log($"{gameObject.name} TERGANGGU (besar)! Emotion turun {reducePercent:F1}% -> {currEmotion:F1}%");
+        }
+        else
+        {
+            float addPercent = Random.Range(2f, 5f);
+            currEmotion += addPercent;
+            currEmotion = Mathf.Clamp(currEmotion, 0f, 100f);
+
+            Debug.Log($"{gameObject.name} TERGANGGU (kecil)! Emotion naik {addPercent:F1}% -> {currEmotion:F1}%");
+        }
+
+        UpdateNPCState();
+    }
+
+    void UpdateNPCState()
+    {
+        string oldState = isFleeing ? "Fleeing" : isAggro ? "Aggro" : "Normal";
+
+        // 1️⃣ Fear lebih prioritas
+        if (currEmotion <= fearLevel)
+        {
+            if (!isFleeing) Debug.Log($"{gameObject.name} TRANSISI: {oldState} -> FEAR (currEmotion={currEmotion:F1})");
+            isFleeing = true;
+            isAggro = false;
+            return; // ⬅ Hentikan di sini
+        }
+
+        // 2️⃣ Aggro
+        if (currEmotion >= aggroLevel)
+        {
+            if (!isAggro) Debug.Log($"{gameObject.name} TRANSISI: {oldState} -> AGGRO (currEmotion={currEmotion:F1})");
+            isAggro = true;
+            isFleeing = false;
+
+            if (nextPhoneTime <= 0)
+            {
+                CallPolice();
+                nextPhoneTime = phoneCooldown;
+            }
+            return; // ⬅ Hentikan di sini
+        }
+
+        // 3️⃣ Normal
+        if (isAggro || isFleeing)
+            Debug.Log($"{gameObject.name} TRANSISI: {oldState} -> NORMAL (currEmotion={currEmotion:F1})");
+
+        isAggro = false;
+        isFleeing = false;
+    }
+
+    void CallPolice()
+    {
+        Debug.Log($"{gameObject.name} menelpon aparat!");
+    }
+
+    //behavior
+    void Patrol()
+    {
+        if (!walkPointSet) searchForDest();
+        if (walkPointSet) Agent.SetDestination(destPoint);
+        if (Vector3.Distance(transform.position, destPoint) < 1f) walkPointSet = false;
+    }
+
+    void searchForDest()
+    {
+        float z = Random.Range(-range, range);
+        float x = Random.Range(-range, range);
+
+        destPoint = new Vector3(transform.position.x + x, transform.position.y, transform.position.z + z);
+
+        if (Physics.Raycast(destPoint + Vector3.up * 2, Vector3.down, out RaycastHit hit, 5f, groundLayer))
+        {
+            walkPointSet = true;
+            destPoint = hit.point; // Agar tepat di atas tanah
+        }
+    }
+
+    void ChasePlayer()
+    {
+        float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
+
+        if (distanceToPlayer > stopDistance)
+        {
+            Agent.SetDestination(player.transform.position);
+        }
+        else
+        {
+            Agent.ResetPath(); // berhenti bergerak jika sudah cukup dekat
+        }
+    }
+
+    void CheckLineOfSight()
+    {
+        Vector3 directionToPlayer = player.transform.position - transform.position;
+        float distanceToPlayer = directionToPlayer.magnitude;
+
+        if (distanceToPlayer <= sightRange)
+        {
+            Ray ray = new Ray(transform.position + Vector3.up, directionToPlayer.normalized); // +Vector3.up supaya ray keluar dari kepala NPC
+            if (Physics.Raycast(ray, out RaycastHit hit, sightRange, ~obstacleLayer)) // obstacleLayer diatur agar mengandung layer yang memblokir pandangan
+            {
+                if (hit.collider.gameObject == player)
+                {
+                    playerInSight = true;
+                    return;
+                }
+            }
+        }
+
+        playerInSight = false;
+    }
+
+    void FleeFromPlayer()
+    {
+        Vector3 direction = (transform.position - player.transform.position).normalized;
+        Vector3 fleePoint = transform.position + direction * range;
+
+        if (NavMesh.SamplePosition(fleePoint, out NavMeshHit hit, range, NavMesh.AllAreas))
+        {
+            Agent.SetDestination(hit.position);
+        }
+    }
+}

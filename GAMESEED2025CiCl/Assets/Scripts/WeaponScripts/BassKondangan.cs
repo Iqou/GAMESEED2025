@@ -81,6 +81,12 @@ public class BassKondangan : MonoBehaviour
             {
                 desibelOutput = Random.Range(minDesibelOutput, maxDesibelOutput);
                 Debug.Log($"{hits.name} Duarr kena damage dari bass kondangan kena damage {desibelOutput} dB");
+
+                INPCDamageable npc = hits.GetComponent<INPCDamageable>();
+                if (npc != null)
+                {
+                    npc.TakeDamage(desibelOutput);
+                }
             }
         }
 

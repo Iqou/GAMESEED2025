@@ -73,6 +73,12 @@ public class SubwooferDugem : MonoBehaviour
             {
                 desibelOutput = Random.Range(minDesibelOutput, maxDesibelOutput);
                 Debug.Log($"{hits.name} Duarr kena damage dari subwoofer dugem damage {desibelOutput} dB");
+
+                INPCDamageable npc = hits.GetComponent<INPCDamageable>();
+                if (npc != null)
+                {
+                    npc.TakeDamage(desibelOutput);
+                }
             }
         }
 

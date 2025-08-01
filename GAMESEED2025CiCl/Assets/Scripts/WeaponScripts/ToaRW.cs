@@ -5,8 +5,8 @@ public class ToaRW : MonoBehaviour
     private string namaSpeaker = "Toa RW";
     private string tier = "Common";
 
-    private float maxDesibelOutput = 70f;
-    private float minDesibelOutput = 80f;
+    private float minDesibelOutput = 70f;
+    private float maxDesibelOutput = 80f;
     private float baseDesibelOutput = 70f;
     private float desibelOutput;
     private float areaJangkauan = 5f;
@@ -81,6 +81,12 @@ public class ToaRW : MonoBehaviour
             {
                 desibelOutput = Random.Range(minDesibelOutput, maxDesibelOutput);
                 Debug.Log($"{hits.name} Duarr kena damage dari TOA kena damage {desibelOutput} db");
+
+                INPCDamageable npc = hits.GetComponent<INPCDamageable>();
+                if (npc != null)
+                {
+                    npc.TakeDamage(desibelOutput);
+                }
             }
         }
 

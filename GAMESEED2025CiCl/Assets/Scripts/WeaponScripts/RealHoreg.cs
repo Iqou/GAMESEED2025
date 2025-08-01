@@ -73,6 +73,12 @@ public class RealHoreg : MonoBehaviour
                 desibelOutput = Random.Range(minDesibelOutput, maxDesibelOutput);
                 Debug.Log($"{hits.name} Duarr kena damage dari Real Horeg, damage {desibelOutput} dB");
                 aoeInstance.transform.localScale = new Vector3(areaJangkauan, 0.1f, areaJangkauan);
+
+                INPCDamageable npc = hits.GetComponent<INPCDamageable>();
+                if (npc != null)
+                {
+                    npc.TakeDamage(desibelOutput);
+                }
             }
         }
 

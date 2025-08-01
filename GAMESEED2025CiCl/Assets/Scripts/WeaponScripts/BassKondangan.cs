@@ -5,8 +5,8 @@ public class BassKondangan : MonoBehaviour
     private string namaSpeaker = "Bass Kondangan";
     private string tier = "Epic";
 
-    private float maxDesibelOutput = 90f;
-    private float minDesibelOutput = 100f;
+    private float maxDesibelOutput = 100f;
+    private float minDesibelOutput = 90f;
     private float baseDesibelOutput = 90f;
     private float desibelOutput;
     private float areaJangkauan = 9f;

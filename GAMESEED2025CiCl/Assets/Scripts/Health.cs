@@ -1,24 +1,41 @@
 using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
-using System;
+using UnityEngine.UI;
 
 public class Health : MonoBehaviour
 {
     public int currentHealth;
-    public int maxHealth;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    public int maxHealth = 100;
+
+    [Header("UI References")]
+    public Image playerHealthBar;
+    public Image enemyHealthBar;
+
     void Start()
     {
-        currentHealth = maxHealth;
+        currentHealth = maxHealth / 2;
+        UpdateHealthUI();
     }
 
-    // Update is called once per frame
-    void Update()
+    public void ChangeHealth(int amount)
     {
-        if (currentHealth > maxHealth)
+        currentHealth += amount;
+        currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
+
+        UpdateHealthUI();
+    }
+
+    private void UpdateHealthUI()
+    {
+        float healthRatio = (float)currentHealth / maxHealth;
+
+        if (playerHealthBar != null)
         {
-            currentHealth = maxHealth;
+            playerHealthBar.fillAmount = healthRatio;
+        }
+
+        if (enemyHealthBar != null)
+        {
+            enemyHealthBar.fillAmount = 1 - healthRatio;
         }
     }
 }

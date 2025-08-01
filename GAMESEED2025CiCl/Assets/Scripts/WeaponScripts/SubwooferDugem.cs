@@ -6,13 +6,13 @@ public class SubwooferDugem : MonoBehaviour
     private string namaSpeaker = "Subwoofer Dugem";
     private string tier = "Mythic";
 
-    private float maxDesibelOutput = 90f;
-    private float minDesibelOutput = 100f;
+    private float maxDesibelOutput = 100f;
+    private float minDesibelOutput = 90f;
     private float baseDesibelOutput = 100f;
     private float desibelOutput;
     private float areaJangkauan = 15f;
-    private float duration = 1f;
-    private float cooldownTime = 12f;
+    private float duration = 2f;
+    private float cooldownTime = 2f;
     private float weight = 4f;
     private float saweranMultiplier = 2.2f;
 
@@ -35,16 +35,6 @@ public class SubwooferDugem : MonoBehaviour
         UpdateStats();
     }
 
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.S) && Time.time >= lastActiveTime + cooldownTime && !isAttacking)
-        {
-            isAttacking = true;
-            ActivateDugem();
-        }
-
-    }
-
     void UpdateStats()
     {
         desibelOutput = baseDesibelOutput + (desibelLevel - 1) * 2f;
@@ -54,12 +44,27 @@ public class SubwooferDugem : MonoBehaviour
 
     public void Use(Transform owner)
     {
-        Vector3 spawnPos = owner.position + owner.forward * 1.5f;
-        Quaternion spawnRot = Quaternion.LookRotation(owner.forward);
-        aoeInstance = GameObject.Instantiate(aoePrefab, spawnPos, spawnRot);
-        aoeInstance.transform.localScale = new Vector3(areaJangkauan, 0.1f, areaJangkauan);
+        if (lastActiveTime > Time.time)
+        {
+            lastActiveTime = Time.time - cooldownTime;
+        }
 
-        attackPos = spawnPos;
+        if (Time.time >= lastActiveTime + cooldownTime)
+        {
+            Vector3 spawnPos = owner.position + owner.forward * 1.5f;
+            Quaternion spawnRot = Quaternion.LookRotation(owner.forward);
+            aoeInstance = GameObject.Instantiate(aoePrefab, spawnPos, spawnRot);
+            aoeInstance.transform.localScale = new Vector3(areaJangkauan, 0.1f, areaJangkauan);
+
+            attackPos = spawnPos;
+            lastActiveTime = Time.time;
+            ActivateDugem();
+        }
+        else
+        {
+            Debug.Log($"Masih cooldown sisa {(lastActiveTime + cooldownTime) - Time.time} lagi, waktu saat ini {Time.time}");
+        }
+
     }
 
 
@@ -81,8 +86,7 @@ public class SubwooferDugem : MonoBehaviour
                 }
             }
         }
-
-        lastActiveTime = Time.time;
+        
         isAttacking = false;
         Destroy(aoeInstance, duration);
     }

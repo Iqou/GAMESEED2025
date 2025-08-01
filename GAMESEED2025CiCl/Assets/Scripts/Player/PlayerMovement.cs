@@ -7,6 +7,9 @@ public class PlayerMovement : MonoBehaviour
     private Vector3 targetPosition;
     private bool isMoving = false;
 
+    public Animator animator;
+    public SpriteRenderer playerRenderer;
+
     void Update()
     {
         HandleClick();
@@ -47,9 +50,44 @@ public class PlayerMovement : MonoBehaviour
         Vector3 direction = (targetPosition - transform.position).normalized;
         transform.position += direction * speed * Time.deltaTime;
 
+        AnimationHandler(direction);
+
         if (Vector3.Distance(transform.position, targetPosition) < 0.1f)
         {
             isMoving = false;
+            animator.SetBool("Moving", false);
+        }
+    }
+
+    void AnimationHandler(Vector3 direction)
+    {
+        animator.SetBool("Moving", true);
+
+        animator.ResetTrigger("Right");
+        animator.ResetTrigger("Left");
+        animator.ResetTrigger("Up");
+        animator.ResetTrigger("Back");
+
+        if (Mathf.Abs(direction.x) > Mathf.Abs(direction.z))
+        {
+            if (direction.x > 0)
+            {
+                animator.SetTrigger("Right");
+            }else
+            {
+                animator.SetTrigger("Left");
+            }
+        }
+        else
+        {
+            if (direction.z > 0)
+            {
+                animator.SetTrigger("Back");
+            }
+            else
+            {
+                animator.SetTrigger("Up");
+            }
         }
     }
 }

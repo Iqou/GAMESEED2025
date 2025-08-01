@@ -3,8 +3,6 @@ using System.Collections.Generic;
 
 public class PlayerAttack : MonoBehaviour
 {
-    public GameObject aoePrefab;
-
     public List<GameObject> horegList;
     public float beatInterval = 1.0f;
     public float beatWindow = 0.15f;
@@ -47,7 +45,6 @@ public class PlayerAttack : MonoBehaviour
             if (dugem != null && Input.GetKeyDown(KeyCode.S))
             {
                 dugem.Use(transform);
-                dugem.ActivateDugem();
                 continue;
             }
 
@@ -55,7 +52,6 @@ public class PlayerAttack : MonoBehaviour
             if (superHoreg != null && Input.GetKeyDown(KeyCode.D))
             {
                 superHoreg.Use(transform);
-                superHoreg.ShootDaHoreg();
                 continue;
             }
         }

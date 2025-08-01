@@ -28,19 +28,23 @@ public class ToaRW : MonoBehaviour
     private GameObject aoeInstance;
     public GameObject aoePrefab;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    private PlayerStats playerStats;
+
     void Start()
     {
+        playerStats = GetComponentInParent<PlayerStats>();
+        if (playerStats == null) Debug.LogError("PlayerStats component not found on parent!");
         UpdateStatus();   
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.W) && Time.time >= lastActiveTime + cooldownTime && !isAttacking)
+        float finalCooldown = cooldownTime * (1 - playerStats.cooldownReduction);
+        if (Input.GetKeyDown(KeyCode.W) && Time.time >= lastActiveTime + finalCooldown && !isAttacking)
         {
             TriggerAOE();
         } 
-        else if(Input.GetKeyDown(KeyCode.W) && Time.time >= lastActiveTime + cooldownTime && isAttacking)
+        else if(Input.GetKeyDown(KeyCode.W) && Time.time >= lastActiveTime + finalCooldown && isAttacking)
         {
             StopAOE();
         }
@@ -60,10 +64,12 @@ public class ToaRW : MonoBehaviour
 
     public void Use(Transform owner)
     {
+        float finalCooldown = cooldownTime * (1 - playerStats.cooldownReduction);
+        if (Time.time < lastActiveTime + finalCooldown) return;
+
         Vector3 spawnPos = owner.position + owner.forward * 1.5f;
         Quaternion spawnRot = Quaternion.LookRotation(owner.forward);
         aoeInstance = GameObject.Instantiate(aoePrefab, spawnPos, spawnRot);
-        aoeInstance.transform.localScale = new Vector3(areaJangkauan, 0.1f, areaJangkauan);
 
         attackPos = spawnPos;
     }
@@ -73,13 +79,15 @@ public class ToaRW : MonoBehaviour
     {
         aoeInstance.SetActive(true);
 
-        Collider[] hit = Physics.OverlapSphere(attackPos, areaJangkauan);
+        float finalArea = areaJangkauan * playerStats.areaOfEffectBonus;
+        Collider[] hit = Physics.OverlapSphere(attackPos, finalArea);
 
         foreach (Collider hits in hit)
         {
             if (hits.CompareTag("NPC"))
             {
-                desibelOutput = Random.Range(minDesibelOutput, maxDesibelOutput);
+                float randomBase = Random.Range(minDesibelOutput, maxDesibelOutput);
+                desibelOutput = randomBase * playerStats.damageMultiplier;
                 Debug.Log($"{hits.name} Duarr kena damage dari TOA kena damage {desibelOutput} db");
             }
         }
@@ -93,9 +101,8 @@ public class ToaRW : MonoBehaviour
     {
         if (aoeInstance != null)
         {
-            Destroy(aoeInstance);
+            aoeInstance.SetActive(false);
         }
-
         isAttacking = false;
     }
 
@@ -111,4 +118,4 @@ public class ToaRW : MonoBehaviour
     }
 
 
-}
+}   

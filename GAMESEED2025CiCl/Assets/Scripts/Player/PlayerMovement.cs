@@ -7,6 +7,17 @@ public class PlayerMovement : MonoBehaviour
     private Vector3 targetPosition;
     private bool isMoving = false;
 
+    private PlayerStats playerStats;
+
+    void Start()
+    {
+        playerStats = GetComponent<PlayerStats>();
+        if (playerStats == null)
+        {
+            Debug.LogError("PlayerStats component not found on the player!");
+        }
+    }
+
     void Update()
     {
         HandleClick();
@@ -44,8 +55,11 @@ public class PlayerMovement : MonoBehaviour
     {
         if (!isMoving) return;
 
+        // Implementasi upgrade player speed
+        float finalSpeed = speed * playerStats.moveSpeedMultiplier;
+
         Vector3 direction = (targetPosition - transform.position).normalized;
-        transform.position += direction * speed * Time.deltaTime;
+        transform.position += direction * finalSpeed * Time.deltaTime;
 
         if (Vector3.Distance(transform.position, targetPosition) < 0.1f)
         {

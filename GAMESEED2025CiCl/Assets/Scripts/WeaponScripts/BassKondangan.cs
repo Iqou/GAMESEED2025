@@ -30,19 +30,21 @@ public class BassKondangan : MonoBehaviour
     private GameObject aoeInstance;
     public GameObject aoePrefab;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    private PlayerStats playerStats; 
+
     void Start()
     {
+        playerStats = GetComponentInParent<PlayerStats>();
+        if (playerStats == null)
+        {
+            Debug.LogError("PlayerStats component not found");
+        }
         UpdateStats();
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.A) && Time.time >= lastActiveTime + cooldownTime && !isAttacking)
-        {
-            isAttacking = true;
-            Explosion();
-        }
+        // Untuk memudahkan implementasi upgrade, semua logika attack ada di PlayerAttack.cs
     }
 
     void UpdateStats()
@@ -63,31 +65,7 @@ public class BassKondangan : MonoBehaviour
     }
 
 
-    public void Explosion()
-    {
-        Rigidbody rigidbody = GetComponent<Rigidbody>();
-
-        if (rigidbody != null)
-        {
-            Vector3 knockbackDirection = -transform.forward;
-            rigidbody.AddForce(knockbackDirection * knockbackForce, ForceMode.Impulse);
-        }
-
-        Collider[] hit = Physics.OverlapSphere(attackPos, areaJangkauan);
-
-        foreach (Collider hits in hit)
-        {
-            if (hits.CompareTag("NPC"))
-            {
-                desibelOutput = Random.Range(minDesibelOutput, maxDesibelOutput);
-                Debug.Log($"{hits.name} Duarr kena damage dari bass kondangan kena damage {desibelOutput} dB");
-            }
-        }
-
-        lastActiveTime = Time.time;
-        isAttacking = false;
-        Destroy(aoeInstance, duration);
-    }
+    
 
     private void OnDrawGizmosSelected()
     {

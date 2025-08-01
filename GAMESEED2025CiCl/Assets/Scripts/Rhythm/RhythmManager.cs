@@ -4,11 +4,10 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 
-
 public class RhythmManager : MonoBehaviour
 {
     public TextAsset beatmapJsonFile;
-
+    
     public GameObject leftArrowPrefab;
     public GameObject downArrowPrefab;
     public GameObject upArrowPrefab;
@@ -20,56 +19,53 @@ public class RhythmManager : MonoBehaviour
     public Transform rightLaneSpawnPoint;
 
     public AudioSource audioSource;
-
     public TextMeshProUGUI playbackTimerText;
     public TextMeshProUGUI remainingTimeText;
+    public float noteApproachTime = 1.5f;
 
-
-
-    public float noteApproachTime = 1.5f; 
+    [Header("Mekanik Boss")]
+    [Tooltip("Kekuatan dasar pergerakan bar, 0-100 float")]
+    public float beatForce = 35f;
+    [Tooltip("Multiplier untuk menambah BeatForce, 1-5 kali float")]
+    public float beatMultiplier = 2f;
+    [Tooltip("Frekuensi boss menggunakan beat multiplier, 0-5 kali/lagu integer")]
+    public int pressure = 3;
+    [Tooltip("Batasan waktu beat multiplier aktif, 1-20 detik float")]
+    public float beatMultiplierThreshold = 5f;
+    [Tooltip("Jumlah kali boss merubah BPM, 1-5 kali integer")]
+    public int tempoShiftCount = 4;
+    [Tooltip("Text UI untuk menampilkan peringatan BPM")]
+    public TextMeshProUGUI bpmWarningText;
+    public float bpmWarningDuration = 1.5f;
 
     private BeatmapData beatmapData;
     private List<HitObject> sortedHitObjects;
     private int nextHitObjectIndex = 0;
+    private bool beatMultiplierActive = false;
+    private int tempoShiftedCount = 0;
+    private float defaultAudioPitch;
 
     void Start()
     {
-        if (beatmapJsonFile == null)
-        {
-            Debug.LogError("Beatmap JSON file not assigned to RhythmManager! Disabling script.");
-            enabled = false;
-            return;
-        }
-        if (audioSource == null)
-        {
-            audioSource = GetComponent<AudioSource>();
-            if (audioSource == null)
-            {
-                Debug.LogError("AudioSource component not found on RhythmManager or assigned! Disabling script.");
-                enabled = false;
-                return;
-            }
-        }
-        if (leftArrowPrefab == null || downArrowPrefab == null ||
-            upArrowPrefab == null || rightArrowPrefab == null)
-        {
-            Debug.LogError("One or more Arrow Prefabs are not assigned! Disabling script.");
-            enabled = false;
-            return;
-        }
-        if (leftLaneSpawnPoint == null || downLaneSpawnPoint == null ||
+        if (beatmapJsonFile == null || audioSource == null ||
+            leftArrowPrefab == null || downArrowPrefab == null ||
+            upArrowPrefab == null || rightArrowPrefab == null ||
+            leftLaneSpawnPoint == null || downLaneSpawnPoint == null ||
             upLaneSpawnPoint == null || rightLaneSpawnPoint == null)
         {
-            Debug.LogError("One or more Lane Spawn Points are not assigned! Disabling script.");
+            Debug.LogError("RhythmManager is not fully configured. Disabling script.");
             enabled = false;
             return;
         }
 
+        defaultAudioPitch = audioSource.pitch;
         LoadBeatmap();
         
         if (beatmapData != null && audioSource.clip != null)
         {
             StartCoroutine(SpawnNotesRoutine());
+            StartCoroutine(BeatMultiplierRoutine());
+            StartCoroutine(TempoShiftRoutine());
         }
         else
         {
@@ -84,7 +80,7 @@ public class RhythmManager : MonoBehaviour
         try
         {
             beatmapData = JsonUtility.FromJson<BeatmapData>(jsonString);
-
+            
             beatmapData.general.AudioFilename = beatmapData.general.AudioFilename.Trim();
             beatmapData.metadata.Title = beatmapData.metadata.Title.Trim();
             beatmapData.metadata.Artist = beatmapData.metadata.Artist.Trim();
@@ -115,12 +111,12 @@ public class RhythmManager : MonoBehaviour
             }
             else
             {
-                Debug.LogError("Audio clip not found in Resources folder: '" + audioResourcePath + "'. Please check filename and placement (e.g., Assets/Resources/" + audioResourcePath + ".mp3).");
+                Debug.LogError("Audio clip not found in Resources folder: '" + audioResourcePath + "'. Please check filename and placement.");
             }
         }
         catch (System.Exception e)
         {
-            Debug.LogError("Failed to parse beatmap JSON: " + e.Message + "\nJSON Content:\n" + jsonString);
+            Debug.LogError("Failed to parse beatmap JSON: " + e.Message);
             beatmapData = null;
         }
     }
@@ -131,21 +127,17 @@ public class RhythmManager : MonoBehaviour
         {
             float currentTime = audioSource.time;
             float duration = audioSource.clip.length;
-
             if (remainingTimeText != null)
                 remainingTimeText.text = "Remaining: " + FormatTime(duration - currentTime);
         }
     }
 
-string FormatTime(float timeInSeconds)
-{
-    int minutes = Mathf.FloorToInt(timeInSeconds / 60f);
-    int seconds = Mathf.FloorToInt(timeInSeconds % 60f);
-    return string.Format("{0:00}:{1:00}", minutes, seconds);
-}
-
-
-
+    string FormatTime(float timeInSeconds)
+    {
+        int minutes = Mathf.FloorToInt(timeInSeconds / 60f);
+        int seconds = Mathf.FloorToInt(timeInSeconds % 60f);
+        return string.Format("{0:00}:{1:00}", minutes, seconds);
+    }
 
     IEnumerator SpawnNotesRoutine()
     {
@@ -154,25 +146,22 @@ string FormatTime(float timeInSeconds)
         {
             yield return new WaitForSeconds(audioLeadIn / 1000f);
         }
-
         audioSource.Play();
-
+        
         const float timeTolerance = 0.01f; 
-
+        
         while (nextHitObjectIndex < sortedHitObjects.Count)
         {
             HitObject currentNote = sortedHitObjects[nextHitObjectIndex];
             float spawnTimeMs;
-
             if (!float.TryParse(currentNote.time, out spawnTimeMs))
             {
-                Debug.LogWarning("Invalid time value in hitobject: " + currentNote.time + ". Skipping note.");
+                Debug.LogWarning("Invalid time value in hitobject. Skipping note.");
                 nextHitObjectIndex++;
                 continue;
             }
 
             float targetTime = spawnTimeMs / 1000f;
-
             while (audioSource.time < targetTime - timeTolerance)
             {
                 yield return null;
@@ -181,7 +170,6 @@ string FormatTime(float timeInSeconds)
             SpawnNote(currentNote);
             nextHitObjectIndex++;
         }
-
         Debug.Log("All notes spawned! Beatmap finished.");
     }
 
@@ -190,10 +178,9 @@ string FormatTime(float timeInSeconds)
         GameObject prefabToSpawn = null;
         Transform spawnPoint = null;
         float osuX;
-
         if (!float.TryParse(note.x, out osuX))
         {
-            Debug.LogWarning("Invalid X value in hitobject: " + note.x + ". Cannot spawn note.");
+            Debug.LogWarning("Invalid X value in hitobject. Cannot spawn note.");
             return;
         }
 
@@ -221,65 +208,55 @@ string FormatTime(float timeInSeconds)
         if (prefabToSpawn != null && spawnPoint != null)
         {
             GameObject newArrow = Instantiate(prefabToSpawn, spawnPoint.position, Quaternion.identity);
-            
             MoveSpawn moveSpawnScript = newArrow.GetComponent<MoveSpawn>();
             if (moveSpawnScript != null)
             {
-                float noteTimeMs;
-                if (!float.TryParse(note.time, out noteTimeMs))
+                float currentSpeed = beatForce;
+                if(beatMultiplierActive)
                 {
-                    Debug.LogWarning("Could not parse note time for speed calculation.");
-                    return;
+                    currentSpeed *= beatMultiplier;
                 }
-                
-                TimingPoint activeTp = GetActiveTimingPoint(noteTimeMs);
-
-                float millPerBeat;
-                if (!float.TryParse(activeTp.millperbeat, out millPerBeat) || millPerBeat == 0)
-                {
-                    Debug.LogWarning("Invalid millperbeat value for active timing point. Using default speed.");
-                    return;
-                }
-
-                float distanceToTravel = Mathf.Abs(transform.position.y - spawnPoint.position.y); 
-
-                float calculatedSpeed = distanceToTravel / noteApproachTime;
-
-                moveSpawnScript.SetSpeed(calculatedSpeed);
+                moveSpawnScript.SetSpeed(currentSpeed);
             }
-            else
-            {
-                Debug.LogWarning("Prefab '" + prefabToSpawn.name + "' does not have a MoveSpawn script. Arrow will not move.");
-            }
-        }
-        else
-        {
-            Debug.LogWarning("Could not spawn note for X: " + osuX + ". Prefab or Spawn Point not assigned/recognized. Prefab assigned: " + (prefabToSpawn != null) + ", SpawnPoint assigned: " + (spawnPoint != null));
         }
     }
-
-    TimingPoint GetActiveTimingPoint(float currentTimeMs)
+    
+    IEnumerator BeatMultiplierRoutine()
     {
-        TimingPoint activeTp = beatmapData.timingpoints[0];
-        foreach (var tp in beatmapData.timingpoints)
+        while (pressure > 0)
         {
-            float offsetMs;
-            if (float.TryParse(tp.offset, out offsetMs))
-            {
-                if (offsetMs <= currentTimeMs)
-                {
-                    activeTp = tp;
-                }
-                else
-                {
-                    break; 
-                }
-            }
-            else
-            {
-                Debug.LogWarning("Invalid offset value in timingpoint: " + tp.offset);
-            }
+            yield return new WaitForSeconds(audioSource.clip.length / pressure);
+            Debug.Log("Beat Multiplier Activated!");
+            beatMultiplierActive = true;
+            yield return new WaitForSeconds(beatMultiplierThreshold);
+            beatMultiplierActive = false;
+            Debug.Log("Beat Multiplier Deactivated.");
+            pressure--;
         }
-        return activeTp;
     }
+    
+    IEnumerator TempoShiftRoutine()
+    {
+        float totalDuration = audioSource.clip.length;
+        float segmentTime = totalDuration / (tempoShiftCount + 1);
+        for(int i = 0; i < tempoShiftCount; i++)
+        {
+            yield return new WaitForSeconds(segmentTime);
+            
+            audioSource.pitch = defaultAudioPitch * beatMultiplier;
+            Debug.Log("Tempo Shift Activated!");
+            
+            if(bpmWarningText != null)
+            {
+                bpmWarningText.text = "TEMPO SHIFT!";
+                bpmWarningText.color = Color.red;
+                yield return new WaitForSeconds(bpmWarningDuration);
+                bpmWarningText.text = "";
+            }
+            
+            audioSource.pitch = defaultAudioPitch;
+        }
+    }
+    
+    TimingPoint GetActiveTimingPoint(float currentTimeMs) { return null; }
 }

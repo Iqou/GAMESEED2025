@@ -8,6 +8,6 @@ public class MissedClick : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         Destroy(collision.gameObject);
-        Health.GetComponent<Health>().currentHealth -= 10;
+        Health.GetComponent<Health>().currentHealth -= 8;
     }
 }

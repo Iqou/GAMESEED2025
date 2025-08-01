@@ -5,8 +5,8 @@ public class ToaRW : MonoBehaviour
     private string namaSpeaker = "Toa RW";
     private string tier = "Common";
 
-    private float maxDesibelOutput = 70f;
-    private float minDesibelOutput = 80f;
+    private float maxDesibelOutput = 80f;
+    private float minDesibelOutput = 70f;
     private float baseDesibelOutput = 70f;
     private float desibelOutput;
     private float areaJangkauan = 5f;

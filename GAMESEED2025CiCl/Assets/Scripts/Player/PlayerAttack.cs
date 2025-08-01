@@ -3,8 +3,6 @@ using System.Collections.Generic;
 
 public class PlayerAttack : MonoBehaviour
 {
-    public GameObject aoePrefab;
-
     public List<GameObject> horegList;
     public float beatInterval = 1.0f;
     public float beatWindow = 0.15f;

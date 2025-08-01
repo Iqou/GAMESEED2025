@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-public class npcIbuIbuResah : MonoBehaviour, INPCDamageable
+public class npcAnakKecil : MonoBehaviour, INPCDamageable
 {
     GameObject player;
     NavMeshAgent Agent;
@@ -38,11 +38,16 @@ public class npcIbuIbuResah : MonoBehaviour, INPCDamageable
 
     public int giveCoin = 5000;
 
-    [Range(50, 500)]
+    [Range(0, 500)]
     public int giveExperience = 100;
+
+    [Header("Reward Prefabs")]
+    public GameObject coinPrefab;
+    public GameObject expPrefab;
 
     bool isAggro = false;
     bool isFleeing = false;
+    bool isFan = false;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -54,29 +59,20 @@ public class npcIbuIbuResah : MonoBehaviour, INPCDamageable
     // Update is called once per frame
     void Update()
     {
-        if (nextPhoneTime > 0)
-        {
-            nextPhoneTime -= Time.deltaTime;
-            if (nextPhoneTime < 0)
-                nextPhoneTime = 0;
-
-        }
-
         CheckLineOfSight();
 
         UpdateNPCState();
-
-        if (isAggro && nextPhoneTime <= 0)
-        {
-            CallPolice();
-            nextPhoneTime = phoneCooldown; // reset cooldown
-        }
 
         if (isFleeing && playerInSight)
         {
             FleeFromPlayer();
         }
         else if (isAggro && playerInSight)
+        {
+            ChasePlayer();
+            tryCallPolice();
+        }
+        else if (playerInSight)
         {
             ChasePlayer();
         }
@@ -87,7 +83,7 @@ public class npcIbuIbuResah : MonoBehaviour, INPCDamageable
     }
 
     //emotionBar dan sesitivitasDesibel
-     public void TakeDamage(float desibelDamage)
+    public void TakeDamage(float desibelDamage)
     {
         if (desibelDamage >= sensitivitasDesibel)
         {
@@ -107,48 +103,87 @@ public class npcIbuIbuResah : MonoBehaviour, INPCDamageable
         }
 
         UpdateNPCState();
+
+        if (isFan)
+        {
+            spawnReward();
+        }
     }
 
     void UpdateNPCState()
     {
         string oldState = isFleeing ? "Fleeing" : isAggro ? "Aggro" : "Normal";
+        isFan = false;
 
-        // 1️⃣ Fear lebih prioritas
-        if (currEmotion <= fearLevel)
+        // Fear prioritas
+        if (currEmotion < fearLevel)
         {
-            if (!isFleeing) Debug.Log($"{gameObject.name} TRANSISI: {oldState} -> FEAR (currEmotion={currEmotion:F1})");
+            if (!isFleeing) Debug.Log($"{gameObject.name} isFleeing=true");
             isFleeing = true;
             isAggro = false;
             return; // ⬅ Hentikan di sini
         }
 
-        // 2️⃣ Aggro
-        if (currEmotion >= aggroLevel)
+        // Aggro
+        if (currEmotion < aggroLevel && currEmotion > fearLevel)
         {
-            if (!isAggro) Debug.Log($"{gameObject.name} TRANSISI: {oldState} -> AGGRO (currEmotion={currEmotion:F1})");
+            if (!isAggro) Debug.Log($"{gameObject.name} isAggro=true)");
             isAggro = true;
             isFleeing = false;
+            return; // ⬅ Hentikan di sini
+        }
 
-            if (nextPhoneTime <= 0)
+        // fan
+        if (isAggro || isFleeing)
+            Debug.Log($"{gameObject.name} bukan keduanya");
+        isFan = true;
+        isAggro = false;
+        isFleeing = false;
+    }
+
+    void tryCallPolice()
+    {
+        if (nextPhoneTime <= 0)
             {
                 CallPolice();
                 nextPhoneTime = phoneCooldown;
             }
-            return; // ⬅ Hentikan di sini
-        }
-
-        // 3️⃣ Normal
-        if (isAggro || isFleeing)
-            Debug.Log($"{gameObject.name} TRANSISI: {oldState} -> NORMAL (currEmotion={currEmotion:F1})");
-
-        isAggro = false;
-        isFleeing = false;
     }
 
     void CallPolice()
     {
         Debug.Log($"{gameObject.name} menelpon aparat!");
     }
+
+    void spawnReward()
+    {
+        if (coinPrefab != null)
+        {
+            GameObject coin = Instantiate(coinPrefab, transform.position + Vector3.up * 1f, Quaternion.identity);
+            Rigidbody rb = coin.GetComponent<Rigidbody>();
+            if (rb != null)
+            {
+                rb.AddForce(new Vector3(Random.Range(-1f, 1f), 1f, Random.Range(-1f, 1f)) * 3f, ForceMode.Impulse);
+            }
+            // 🔹 Hapus otomatis setelah 10 detik
+            Destroy(coin, 10f);
+        }
+
+        if (expPrefab != null)
+        {
+            GameObject exp = Instantiate(expPrefab, transform.position + Vector3.up * 1f, Quaternion.identity);
+            Rigidbody rb = exp.GetComponent<Rigidbody>();
+            if (rb != null)
+            {
+                rb.AddForce(new Vector3(Random.Range(-1f, 1f), 1f, Random.Range(-1f, 1f)) * 3f, ForceMode.Impulse);
+            }
+            // 🔹 Hapus otomatis setelah 10 detik
+            Destroy(exp, 10f);
+        }
+
+        Debug.Log($"{gameObject.name} melempar koin {giveCoin} dan exp {giveExperience}!");
+    }
+
 
     //behavior
     void Patrol()

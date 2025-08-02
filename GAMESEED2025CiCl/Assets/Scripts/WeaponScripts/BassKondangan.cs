@@ -42,6 +42,12 @@ public class BassKondangan : MonoBehaviour
         float currentMaxDamage = (100f + (desibelLevel - 1) * 2f) * damageMultiplier;
         float currentMinDamage = (90f + (desibelLevel - 1) * 2f) * damageMultiplier;
 
+        if (lastActiveTime > Time.time)
+        {
+            lastActiveTime = Time.time;
+        }
+
+
         if (Time.time >= lastActiveTime + currentCooldown)
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);

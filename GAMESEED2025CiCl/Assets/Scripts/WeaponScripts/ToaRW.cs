@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class ToaRW : MonoBehaviour
 {
@@ -28,6 +29,11 @@ public class ToaRW : MonoBehaviour
     private GameObject aoeInstance;
     public GameObject aoePrefab;
 
+    private void Start()
+    {
+
+    }
+
     public void Use(Transform owner, PlayerStats playerStats)
     {
         // Dynamic Stat Calculation
@@ -39,6 +45,11 @@ public class ToaRW : MonoBehaviour
         float currentArea = (5f + (areaLevel - 1) * 1.5f) * areaMultiplier;
         float currentMaxDamage = (80f + (desibelLevel - 1) * 2f) * damageMultiplier;
         float currentMinDamage = (70f + (desibelLevel - 1) * 2f) * damageMultiplier;
+
+        if (lastActiveTime > Time.time)
+        {
+            lastActiveTime = Time.time;
+        }
 
 
         if (Time.time >= lastActiveTime + currentCooldown)

@@ -28,12 +28,15 @@ public class ToaRW : MonoBehaviour
     private GameObject aoeInstance;
     public GameObject aoePrefab;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    private PlayerStats playerStats;
+
     void Start()
     {
+        playerStats = GetComponentInParent<PlayerStats>();
+        if (playerStats == null) Debug.LogError("PlayerStats component not found on parent!");
         UpdateStatus();   
     }
-
+    
     void UpdateStatus()
     {
         desibelOutput = baseDesibelOutput + (desibelLevel - 1) * 2f;
@@ -86,3 +89,4 @@ public class ToaRW : MonoBehaviour
         }
     }
 }
+

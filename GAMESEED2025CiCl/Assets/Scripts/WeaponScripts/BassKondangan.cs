@@ -30,9 +30,15 @@ public class BassKondangan : MonoBehaviour
     private GameObject aoeInstance;
     public GameObject aoePrefab;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    private PlayerStats playerStats; 
+
     void Start()
     {
+        playerStats = GetComponentInParent<PlayerStats>();
+        if (playerStats == null)
+        {
+            Debug.LogError("PlayerStats component not found");
+        }
         UpdateStats();
     }
 
@@ -43,8 +49,7 @@ public class BassKondangan : MonoBehaviour
         cooldownTime = Mathf.Max(1f, cooldownTime - (cooldownLevel - 1) * 0.5f);
     }
 
-    public void Use(Transform owner)
-    {
+    public void Use(Transform owner
         if (lastActiveTime > Time.time)
         {
             lastActiveTime = Time.time - cooldownTime;
@@ -72,5 +77,4 @@ public class BassKondangan : MonoBehaviour
         {
             Debug.Log($"Masih cooldown sisa {(lastActiveTime + cooldownTime) - Time.time} lagi, waktu saat ini {Time.time}");
         }
-    }
 }

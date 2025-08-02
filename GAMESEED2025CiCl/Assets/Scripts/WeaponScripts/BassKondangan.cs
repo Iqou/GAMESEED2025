@@ -10,8 +10,8 @@ public class BassKondangan : MonoBehaviour
     private float baseDesibelOutput = 90f;
     private float desibelOutput;
     private float areaJangkauan = 9f;
-    private float duration = 0.5f;
-    private float cooldownTime = 10f;
+    private float duration = 1f;
+    private float cooldownTime = 1.5f;
     private float weight = 6f;
     private float saweranMultiplier = 2.2f;
     private float knockbackForce = 5f;
@@ -42,11 +42,6 @@ public class BassKondangan : MonoBehaviour
         UpdateStats();
     }
 
-    void Update()
-    {
-        // Untuk memudahkan implementasi upgrade, semua logika attack ada di PlayerAttack.cs
-    }
-
     void UpdateStats()
     {
         desibelOutput = baseDesibelOutput + (desibelLevel - 1) * 2f;
@@ -56,20 +51,41 @@ public class BassKondangan : MonoBehaviour
 
     public void Use(Transform owner)
     {
-        Vector3 spawnPos = owner.position + owner.forward * 1.5f;
-        Quaternion spawnRot = Quaternion.LookRotation(owner.forward);
-        aoeInstance = GameObject.Instantiate(aoePrefab, spawnPos, spawnRot);
-        aoeInstance.transform.localScale = new Vector3(areaJangkauan, 0.1f, areaJangkauan);
+        if (lastActiveTime > Time.time)
+        {
+            lastActiveTime = Time.time - cooldownTime;
+        }
 
-        attackPos = spawnPos;
-    }
+        if (Time.time >= lastActiveTime + cooldownTime)
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray, out RaycastHit hit))
+            {
+                Vector3 flatMousePos = new Vector3(hit.point.x, owner.position.y, hit.point.z);
+                Vector3 shootDir = (flatMousePos - owner.position).normalized;
 
+                Vector3 spawnPos = owner.position + shootDir * 1.5f;
+                Quaternion spawnRot = Quaternion.LookRotation(shootDir, Vector3.up);
 
-    
+                aoeInstance = Instantiate(aoePrefab, spawnPos, spawnRot);
 
-    private void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.pink;
-        Gizmos.DrawWireSphere(transform.position + transform.forward * 1.5f, areaJangkauan);
+                aoeInstance.transform.localScale = Vector3.one;
+                aoeInstance.transform.localScale = new Vector3(areaJangkauan/2, 0.1f, areaJangkauan);
+
+                StaticAoe attribute = aoeInstance.GetComponent<StaticAoe>();
+                attribute.areaJangkauan = areaJangkauan;
+                attribute.duration = duration;
+                attribute.minDesibelOutput = minDesibelOutput;
+                attribute.maxDesibelOutput = maxDesibelOutput;
+
+                attackPos = spawnPos;
+                lastActiveTime = Time.time;
+                Destroy(aoeInstance, duration);
+            }
+        }
+        else
+        {
+            Debug.Log($"Masih cooldown sisa {(lastActiveTime + cooldownTime) - Time.time} lagi, waktu saat ini {Time.time}");
+        }
     }
 }

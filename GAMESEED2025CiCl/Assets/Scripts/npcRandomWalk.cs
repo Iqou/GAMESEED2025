@@ -32,6 +32,7 @@ public class npcRandomWalk : MonoBehaviour
         if (Vector3.Distance(transform.position, destPoint) < 10) walkPointSet = false;
     }
 
+
     void searchForDest()
     {
         float z = Random.Range(-range, range);
@@ -39,9 +40,10 @@ public class npcRandomWalk : MonoBehaviour
 
         destPoint = new Vector3(transform.position.x + x, transform.position.y, transform.position.z + z);
 
-        if (Physics.Raycast(destPoint, Vector3.down, groundLayer))
+        if (Physics.Raycast(destPoint + Vector3.up * 2, Vector3.down, out RaycastHit hit, 5f, groundLayer))
         {
             walkPointSet = true;
-        } 
+            destPoint = hit.point; // Agar tepat di atas tanah
+        }
     }
 }

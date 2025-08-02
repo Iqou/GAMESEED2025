@@ -82,35 +82,20 @@ public class RealHoreg : MonoBehaviour
             MoveTowards mover = aoeInstance.GetComponent<MoveTowards>();
             if (mover != null)
             {
+                mover.areaJangkauan = areaJangkauan;
+                mover.duration = duration;
+                mover.maxDesibelOutput = maxDesibelOutput;
+                mover.minDesibelOutput = minDesibelOutput;
                 mover.SetDirection(shootDir);
             }
 
             attackPos = spawnPos;
             lastActiveTime = Time.time;
-            ShootDaHoreg();
+            Destroy(aoeInstance, duration);
         } 
         else
         {
             Debug.Log($"Masih cooldown sisa {(lastActiveTime + cooldownTime) - Time.time} lagi, waktu saat ini {Time.time}");
         }
     }
-
-
-    public void ShootDaHoreg()
-    {
-
-        Collider[] hit = Physics.OverlapSphere(attackPos, areaJangkauan);
-
-        foreach (Collider hits in hit)
-        {
-            if (hits.CompareTag("NPC"))
-            {
-                desibelOutput = Random.Range(minDesibelOutput, maxDesibelOutput);
-                Debug.Log($"{hits.name} Duarr kena damage dari Real Horeg, damage {desibelOutput} dB");
-            }
-        }
-        Destroy(aoeInstance, duration);
-    }
-
-
 }

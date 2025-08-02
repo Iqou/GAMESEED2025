@@ -9,7 +9,7 @@ public class PathGen : MonoBehaviour
 {
     [Header("World Properties")]
     public int WorldChunks = 40;
-    [HideInInspector]public int ChunkSize = 5;
+    [HideInInspector] public int ChunkSize = 3;
     private int BorderWidth => 3 * ChunkSize;
     public int size => WorldChunks * ChunkSize;
     [Range(1, 100)]
@@ -50,7 +50,7 @@ public class PathGen : MonoBehaviour
     public List<BuildingData> PlacedBuildings = new List<BuildingData>();
     [HideInInspector]
     public int[,] Grid;
-    
+
     private List<List<Vector2Int>> mainPaths = new List<List<Vector2Int>>();
     private Transform tileParent;
     private Transform buildingParent;
@@ -118,6 +118,7 @@ public class PathGen : MonoBehaviour
         Parkmaker();
         WorldBorderMaker();
         SpawnBuildings();
+        SpawnBillboards();
         AddGroundPlaneWithNavMesh();
     }
 
@@ -373,7 +374,7 @@ public class PathGen : MonoBehaviour
         }
     }
 
-    //BAGIAN BUILDING -- HANYA DATA TIDAK DI INSTANTIATE
+    // INI BAGIAN UNTUK BUILDINGS ======================================================================================================================
     void SpawnBuildings()
     {
         if (buildingParent != null) DestroyImmediate(buildingParent.gameObject);
@@ -386,24 +387,23 @@ public class PathGen : MonoBehaviour
         {
             for (int y = 0; y < size; y++)
             {
-                if (Grid[x, y] != 0) continue; // must be on grass
+                if (Grid[x, y] != 0) continue;
 
                 Vector2Int pos = new Vector2Int(x, y);
 
-                // Check alley and main path distances
+                // Check alley & path
                 int distToAlley = FindNearestDistance(pos, 2);
                 int distToMain = FindNearestDistance(pos, 1);
 
                 bool nearAlley = distToAlley > 0 && distToAlley <= maxDistanceToPath;
                 bool nearMain = distToMain > 0 && distToMain <= maxDistanceToPath;
 
-                // Determine which building types to try based on proximity
+                // Tentuin building
                 List<BuildingOption> buildingsToTry = new List<BuildingOption>();
                 if (nearAlley) buildingsToTry.AddRange(Type1);
                 if (nearAlley || nearMain) buildingsToTry.AddRange(Type2);
                 if (nearMain && !nearAlley) buildingsToTry.AddRange(Type3);
 
-                // Try to place a building
                 TryPlaceBuildingAtPosition(pos, buildingsToTry);
             }
         }
@@ -417,7 +417,7 @@ public class PathGen : MonoBehaviour
                 {
                     for (int dy = -r; dy <= r; dy++)
                     {
-                        if (Mathf.Abs(dx) != r && Mathf.Abs(dy) != r) continue; // edge of square only
+                        if (Mathf.Abs(dx) != r && Mathf.Abs(dy) != r) continue;
                         int nx = from.x + dx;
                         int ny = from.y + dy;
                         if (nx >= 0 && nx < size && ny >= 0 && ny < size)
@@ -428,7 +428,7 @@ public class PathGen : MonoBehaviour
                     }
                 }
             }
-            return -1; // not found
+            return -1;
         }
     }
 
@@ -595,11 +595,159 @@ public class PathGen : MonoBehaviour
         }
     }
 
+
+    // INI BAGIAN UNTUK BILLBOARDS ======================================================================================================================
+    [System.Serializable]
+    public class BillboardOption
+    {
+        public GameObject prefab;
+        [Range(0f, 1f)] public float spawnChance = 0.1f;
+        public int minDistanceBetweenSameType = 5; // Minimum distance between same type billboards
+    }
+
+    [Header("Billboard Settings")]
+    public List<BillboardOption> billboardOptions = new List<BillboardOption>();
+    [Range(0f, 1f)] public float spawnChancePerTile = 0.5f;
+    [HideInInspector] public List<BuildingData> PlacedBillboards = new List<BuildingData>();
+
+    void SpawnBillboards()
+    {
+        PlacedBillboards.Clear();
+        Debug.Log("Starting billboard spawning...");
+
+        int spawnedCount = 0;
+
+        // Fixed loop bounds (0 to size-1)
+        for (int x = 0; x < size; x++)
+        {
+            for (int y = 0; y < size; y++)
+            {
+                if (Grid[x, y] == 0) // Only on grass tiles
+                {
+                    Vector2Int pos = new Vector2Int(x, y);
+
+                    // Check if position is available
+                    if (!PlacedBillboards.Exists(b => b.coordinate == pos))
+                    {
+                        if (Random.value < spawnChancePerTile)
+                        {
+                            TryPlaceBillboardAtPosition(pos);
+                            spawnedCount++;
+                        }
+                    }
+                }
+            }
+        }
+
+        Debug.Log($"Spawned {spawnedCount} billboards");
+    }
+
+    void TryPlaceBillboardAtPosition(Vector2Int pos)
+    {
+        if (billboardOptions.Count == 0)
+        {
+            Debug.LogWarning("No billboard options available!");
+            return;
+        }
+
+        Shuffle(billboardOptions);
+
+        foreach (var option in billboardOptions)
+        {
+            if (Random.value < option.spawnChance)
+            {
+                if (CanPlaceBillboardAt(pos, option))
+                {
+                    Vector3 worldPos = new Vector3(pos.x, 0, pos.y);
+                    // 20 degree X tilt + random Y rotation
+                    Quaternion rotation = Quaternion.Euler(20, Random.Range(0f, 360f), 0);
+
+                    PlacedBillboards.Add(new BuildingData(
+                        pos,
+                        worldPos,
+                        rotation,
+                        option.prefab
+                    ));
+
+                    Debug.Log($"Placed {option.prefab.name} at {pos}");
+                    return;
+                }
+            }
+        }
+    }
+
+    bool CanPlaceBillboardAt(Vector2Int pos, BillboardOption option)
+    {
+        // 1. Check against other billboards of same type
+        foreach (var existing in PlacedBillboards)
+        {
+            if (existing.prefabUsed == option.prefab)
+            {
+                float dist = Vector2Int.Distance(pos, existing.coordinate);
+                if (dist < option.minDistanceBetweenSameType)
+                    return false;
+            }
+        }
+
+        // 2. Check if position is inside any building's footprint
+        foreach (var building in PlacedBuildings)
+        {
+            // Find the building's footprint size from Type1, Type2, or Type3 lists
+            Vector2 footprint = GetFootprintForBuilding(building.prefabUsed);
+            
+            int halfWidth = Mathf.CeilToInt(footprint.x / 2f);
+            int halfDepth = Mathf.CeilToInt(footprint.y / 2f);
+
+            // Calculate footprint bounds
+            int minX = building.coordinate.x - halfWidth;
+            int maxX = building.coordinate.x + halfWidth;
+            int minY = building.coordinate.y - halfDepth;
+            int maxY = building.coordinate.y + halfDepth;
+
+            if (pos.x >= minX && pos.x <= maxX && 
+                pos.y >= minY && pos.y <= maxY)
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    Vector2 GetFootprintForBuilding(GameObject buildingPrefab)
+    {
+        // Check Type1 buildings
+        foreach (var option in Type1)
+        {
+            if (option.prefab == buildingPrefab)
+                return option.footprintSize;
+        }
+        
+        // Check Type2 buildings
+        foreach (var option in Type2)
+        {
+            if (option.prefab == buildingPrefab)
+                return option.footprintSize;
+        }
+        
+        // Check Type3 buildings
+        foreach (var option in Type3)
+        {
+            if (option.prefab == buildingPrefab)
+                return option.footprintSize;
+        }
+
+        // Default footprint if not found (1x1)
+        Debug.LogWarning($"Building prefab {buildingPrefab.name} not found in any type list, using default footprint");
+        return Vector2.one;
+    }
+
+
     [ContextMenu("Debug Check Generated Data")]
     public void DebugCheckGeneratedData()
     {
         Debug.Log("=== DEBUG GENERATED DATA ===");
-        
+
         // 1. Check Jalan Utama (Main Paths)
         Debug.Log($"Jumlah Main Paths: {mainPaths.Count}");
         for (int i = 0; i < mainPaths.Count; i++)
@@ -629,6 +777,15 @@ public class PathGen : MonoBehaviour
         // 4. Check Grid (Opsional: Hanya sample beberapa tile)
         Debug.Log("Sample Grid Tile:");
         Debug.Log($"- Tile (0,0): {Grid[0, 0]} (0=Grass, 1=MainPath, 2=Alley, 3=Park)");
-        Debug.Log($"- Tile Tengah ({size/2},{size/2}): {Grid[size/2, size/2]}");
+        Debug.Log($"- Tile Tengah ({size / 2},{size / 2}): {Grid[size / 2, size / 2]}");
+
+        //5. Check Billboards
+        Debug.Log($"Jumlah Billboards: {PlacedBillboards.Count}");
+        if (PlacedBillboards.Count > 0)
+        {
+            var firstBillboard = PlacedBillboards[0];
+            Debug.Log($"- Billboard pertama: {firstBillboard.prefabName} di {firstBillboard.coordinate} (Rotasi: {firstBillboard.rotation.eulerAngles})");
+        }
     }
+
 }

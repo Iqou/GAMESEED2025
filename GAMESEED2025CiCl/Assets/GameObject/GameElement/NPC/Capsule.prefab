@@ -153,7 +153,7 @@ MonoBehaviour:
   playerLayer:
     serializedVersion: 2
     m_Bits: 0
-  range: 10
+  range: 256
 --- !u!1 &3829919319202801441
 GameObject:
   m_ObjectHideFlags: 0

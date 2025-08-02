@@ -9,7 +9,7 @@ public class ToaRW : MonoBehaviour
     private float minDesibelOutput = 70f;
     private float baseDesibelOutput = 70f;
     private float desibelOutput;
-    private float areaJangkauan = 1f;
+    private float areaJangkauan = 5f;
     private float duration = 0.5f;
     private float cooldownTime = 1f;
     private float weight = 2f;
@@ -56,22 +56,17 @@ public class ToaRW : MonoBehaviour
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out RaycastHit hit))
             {
-                Vector3 dirToMouse = (hit.point - owner.position);
-                dirToMouse.y = 0f;
-                Vector3 forwardDir = dirToMouse.normalized;
+                Vector3 flatMousePos = new Vector3(hit.point.x, owner.position.y, hit.point.z);
+                Vector3 shootDir = (flatMousePos - owner.position).normalized;
 
-                // Posisi spawn di player (pangkal cone)
-                Vector3 spawnPos = owner.position;
+                Vector3 spawnPos = owner.position + shootDir * 1.5f;
+                Quaternion spawnRot = Quaternion.LookRotation(shootDir, Vector3.up);
 
-                // Rotasi: cone rebahan dan ujungnya ke arah target
-                Quaternion lookRot = Quaternion.LookRotation(forwardDir);
-                Quaternion spawnRot = lookRot * Quaternion.Euler(90f, 0f, 180f); // rebah ke tanah
-
-                // Spawn AoE segitiga
                 aoeInstance = Instantiate(aoePrefab, spawnPos, spawnRot);
-                aoeInstance.transform.localScale = new Vector3(areaJangkauan, areaJangkauan, 10f);
 
-                // Set atribut AoE
+                aoeInstance.transform.localScale = Vector3.one;
+                aoeInstance.transform.localScale = new Vector3(areaJangkauan, areaJangkauan, areaJangkauan);
+
                 StaticAoe attribute = aoeInstance.GetComponent<StaticAoe>();
                 attribute.areaJangkauan = areaJangkauan;
                 attribute.duration = duration;

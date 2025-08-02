@@ -49,7 +49,8 @@ public class BassKondangan : MonoBehaviour
         cooldownTime = Mathf.Max(1f, cooldownTime - (cooldownLevel - 1) * 0.5f);
     }
 
-    public void Use(Transform owner
+    public void Use(Transform owner)
+    {
         if (lastActiveTime > Time.time)
         {
             lastActiveTime = Time.time - cooldownTime;
@@ -57,24 +58,34 @@ public class BassKondangan : MonoBehaviour
 
         if (Time.time >= lastActiveTime + cooldownTime)
         {
-            Vector3 spawnPos = owner.position + owner.forward * 1.5f;
-            Quaternion spawnRot = Quaternion.LookRotation(owner.forward);
-            aoeInstance = GameObject.Instantiate(aoePrefab, spawnPos, spawnRot);
-            aoeInstance.transform.localScale = new Vector3(areaJangkauan, 1f, areaJangkauan);
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray, out RaycastHit hit))
+            {
+                Vector3 flatMousePos = new Vector3(hit.point.x, owner.position.y, hit.point.z);
+                Vector3 shootDir = (flatMousePos - owner.position).normalized;
 
-            StaticAoe attribute = aoeInstance.GetComponent<StaticAoe>();
+                Vector3 spawnPos = owner.position + shootDir * 1.5f;
+                Quaternion spawnRot = Quaternion.LookRotation(shootDir, Vector3.up);
 
-            attribute.areaJangkauan = areaJangkauan;
-            attribute.duration = duration;
-            attribute.minDesibelOutput = minDesibelOutput;
-            attribute.maxDesibelOutput = maxDesibelOutput;
+                aoeInstance = Instantiate(aoePrefab, spawnPos, spawnRot);
 
-            attackPos = spawnPos;
-            lastActiveTime = Time.time;
-            Destroy(aoeInstance, duration);
+                aoeInstance.transform.localScale = Vector3.one;
+                aoeInstance.transform.localScale = new Vector3(areaJangkauan/2, 0.1f, areaJangkauan);
+
+                StaticAoe attribute = aoeInstance.GetComponent<StaticAoe>();
+                attribute.areaJangkauan = areaJangkauan;
+                attribute.duration = duration;
+                attribute.minDesibelOutput = minDesibelOutput;
+                attribute.maxDesibelOutput = maxDesibelOutput;
+
+                attackPos = spawnPos;
+                lastActiveTime = Time.time;
+                Destroy(aoeInstance, duration);
+            }
         }
         else
         {
             Debug.Log($"Masih cooldown sisa {(lastActiveTime + cooldownTime) - Time.time} lagi, waktu saat ini {Time.time}");
         }
+    }
 }

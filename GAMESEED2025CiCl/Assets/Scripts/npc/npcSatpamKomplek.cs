@@ -28,9 +28,6 @@ public class npcSatpamKomplek : MonoBehaviour, INPCDamageable
     [Range(50, 500)] public int giveExperience = 50;
     public int wantedLevel = 1;
 
-    [Header("Reward Prefabs")]
-    public GameObject expPrefab;
-
     [Header("Attack Prefabs")]
     public GameObject sendalPrefab;
     public Transform firePoint;
@@ -129,27 +126,21 @@ public class npcSatpamKomplek : MonoBehaviour, INPCDamageable
     void Die()
     {
         isDead = true;
-        Debug.Log($"{gameObject.name} mati dan drop exp {giveExperience}!");
-        spawnReward();
-        Destroy(gameObject, 0.5f);
-    }
-
-    void spawnReward()
-    {
-
-        if (expPrefab != null)
+        Debug.Log($"{gameObject.name} mati dan memberikan {giveExperience} EXP!");
+        
+        if (player != null)
         {
-            GameObject exp = Instantiate(expPrefab, transform.position + Vector3.up * 1f, Quaternion.identity);
-            Rigidbody rb = exp.GetComponent<Rigidbody>();
-            if (rb != null)
+            PlayerStats playerStats = player.GetComponent<PlayerStats>();
+            if (playerStats != null)
             {
-                rb.AddForce(new Vector3(Random.Range(-1f, 1f), 1f, Random.Range(-1f, 1f)) * 3f, ForceMode.Impulse);
+                playerStats.AddExperience(giveExperience);
             }
-            // 🔹 Hapus otomatis setelah 10 detik
-            Destroy(exp, 10f);
         }
 
-        Debug.Log($"{gameObject.name} melempar koin dan exp {giveExperience}!");
+        // TODO: Panggil UniversalMoneySpawner untuk drop uang
+        // UniversalMoneySpawner.Instance.SpawnMoney(transform.position, moneyToDrop);
+
+        Destroy(gameObject, 0.5f);
     }
 
     //behavior

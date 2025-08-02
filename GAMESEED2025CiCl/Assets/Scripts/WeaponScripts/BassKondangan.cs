@@ -10,8 +10,8 @@ public class BassKondangan : MonoBehaviour
     private float baseDesibelOutput = 90f;
     private float desibelOutput;
     private float areaJangkauan = 9f;
-    private float duration = 0.5f;
-    private float cooldownTime = 10f;
+    private float duration = 1f;
+    private float cooldownTime = 1.5f;
     private float weight = 6f;
     private float saweranMultiplier = 2.2f;
     private float knockbackForce = 5f;
@@ -30,46 +30,54 @@ public class BassKondangan : MonoBehaviour
     private GameObject aoeInstance;
     public GameObject aoePrefab;
 
-    private PlayerStats playerStats; 
-
-    void Start()
+    public void Use(Transform owner, PlayerStats playerStats)
     {
-        playerStats = GetComponentInParent<PlayerStats>();
-        if (playerStats == null)
+        // Dynamic Stat Calculation
+        float damageMultiplier = playerStats != null ? playerStats.damageMultiplier : 1f;
+        float areaMultiplier = playerStats != null ? playerStats.areaOfEffectBonus : 1f;
+        float cooldownReduction = playerStats != null ? playerStats.cooldownReduction : 0f;
+
+        float currentCooldown = Mathf.Max(0.1f, (1.5f - (cooldownLevel - 1) * 0.5f) * (1 - cooldownReduction));
+        float currentArea = (9f + (areaLevel - 1) * 1.5f) * areaMultiplier;
+        float currentMaxDamage = (100f + (desibelLevel - 1) * 2f) * damageMultiplier;
+        float currentMinDamage = (90f + (desibelLevel - 1) * 2f) * damageMultiplier;
+
+        if (lastActiveTime > Time.time)
         {
-            Debug.LogError("PlayerStats component not found");
+            lastActiveTime = Time.time;
         }
-        UpdateStats();
-    }
-
-    void Update()
-    {
-        // Untuk memudahkan implementasi upgrade, semua logika attack ada di PlayerAttack.cs
-    }
-
-    void UpdateStats()
-    {
-        desibelOutput = baseDesibelOutput + (desibelLevel - 1) * 2f;
-        areaJangkauan += (areaLevel - 1) * 1.5f;
-        cooldownTime = Mathf.Max(1f, cooldownTime - (cooldownLevel - 1) * 0.5f);
-    }
-
-    public void Use(Transform owner)
-    {
-        Vector3 spawnPos = owner.position + owner.forward * 1.5f;
-        Quaternion spawnRot = Quaternion.LookRotation(owner.forward);
-        aoeInstance = GameObject.Instantiate(aoePrefab, spawnPos, spawnRot);
-        aoeInstance.transform.localScale = new Vector3(areaJangkauan, 0.1f, areaJangkauan);
-
-        attackPos = spawnPos;
-    }
 
 
-    
+        if (Time.time >= lastActiveTime + currentCooldown)
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray, out RaycastHit hit))
+            {
+                Vector3 flatMousePos = new Vector3(hit.point.x, owner.position.y, hit.point.z);
+                Vector3 shootDir = (flatMousePos - owner.position).normalized;
 
-    private void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.pink;
-        Gizmos.DrawWireSphere(transform.position + transform.forward * 1.5f, areaJangkauan);
+                Vector3 spawnPos = owner.position + shootDir * 1.5f;
+                Quaternion spawnRot = Quaternion.LookRotation(shootDir, Vector3.up);
+
+                aoeInstance = Instantiate(aoePrefab, spawnPos, spawnRot);
+
+                aoeInstance.transform.localScale = Vector3.one;
+                aoeInstance.transform.localScale = new Vector3(currentArea/2, 0.1f, currentArea);
+
+                StaticAoe attribute = aoeInstance.GetComponent<StaticAoe>();
+                attribute.areaJangkauan = currentArea;
+                attribute.duration = duration;
+                attribute.minDesibelOutput = currentMinDamage;
+                attribute.maxDesibelOutput = currentMaxDamage;
+
+                attackPos = spawnPos;
+                lastActiveTime = Time.time;
+                Destroy(aoeInstance, duration);
+            }
+        }
+        else
+        {
+            Debug.Log($"Masih cooldown sisa {(lastActiveTime + currentCooldown) - Time.time} lagi, waktu saat ini {Time.time}");
+        }
     }
 }

@@ -29,66 +29,45 @@ public class SubwooferDugem : MonoBehaviour
     private GameObject aoeInstance;
     public GameObject aoePrefab;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public void Use(Transform owner, PlayerStats playerStats)
     {
-        UpdateStats();
-    }
+        // Dynamic Stat Calculation
+        float damageMultiplier = playerStats != null ? playerStats.damageMultiplier : 1f;
+        float areaMultiplier = playerStats != null ? playerStats.areaOfEffectBonus : 1f;
+        float cooldownReduction = playerStats != null ? playerStats.cooldownReduction : 0f;
 
-    void UpdateStats()
-    {
-        desibelOutput = baseDesibelOutput + (desibelLevel - 1) * 2f;
-        areaJangkauan += (areaLevel - 1) * 1.5f;
-        cooldownTime = Mathf.Max(1f, cooldownTime - (cooldownLevel - 1) * 0.5f);
-    }
+        float currentCooldown = Mathf.Max(0.1f, (2f - (cooldownLevel - 1) * 0.5f) * (1 - cooldownReduction));
+        float currentArea = (15f + (areaLevel - 1) * 1.5f) * areaMultiplier;
+        float currentMaxDamage = (100f + (desibelLevel - 1) * 2f) * damageMultiplier;
+        float currentMinDamage = (90f + (desibelLevel - 1) * 2f) * damageMultiplier;
 
-    public void Use(Transform owner)
-    {
         if (lastActiveTime > Time.time)
         {
-            lastActiveTime = Time.time - cooldownTime;
+            lastActiveTime = Time.time;
         }
 
-        if (Time.time >= lastActiveTime + cooldownTime)
+
+        if (Time.time >= lastActiveTime + currentCooldown)
         {
             Vector3 spawnPos = owner.position + owner.forward * 1.5f;
             Quaternion spawnRot = Quaternion.LookRotation(owner.forward);
             aoeInstance = GameObject.Instantiate(aoePrefab, spawnPos, spawnRot);
-            aoeInstance.transform.localScale = new Vector3(areaJangkauan, 0.1f, areaJangkauan);
+            aoeInstance.transform.localScale = new Vector3(currentArea, 1f, currentArea);
+
+            StaticAoe attribute = aoeInstance.GetComponent<StaticAoe>();
+
+            attribute.areaJangkauan = currentArea;
+            attribute.duration = duration;
+            attribute.minDesibelOutput = currentMinDamage;
+            attribute.maxDesibelOutput = currentMaxDamage;
 
             attackPos = spawnPos;
             lastActiveTime = Time.time;
-            ActivateDugem();
+            Destroy(aoeInstance, duration);
         }
         else
         {
-            Debug.Log($"Masih cooldown sisa {(lastActiveTime + cooldownTime) - Time.time} lagi, waktu saat ini {Time.time}");
+            Debug.Log($"Masih cooldown sisa {(lastActiveTime + currentCooldown) - Time.time} lagi, waktu saat ini {Time.time}");
         }
-
     }
-
-
-    public void ActivateDugem()
-    {
-        Collider[] hit = Physics.OverlapSphere(attackPos, areaJangkauan);
-
-        foreach (Collider hits in hit)
-        {
-            if (hits.CompareTag("NPC"))
-            {
-                desibelOutput = Random.Range(minDesibelOutput, maxDesibelOutput);
-                Debug.Log($"{hits.name} Duarr kena damage dari subwoofer dugem damage {desibelOutput} dB");
-            }
-        }
-        
-        isAttacking = false;
-        Destroy(aoeInstance, duration);
-    }
-
-    private void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.pink;
-        Gizmos.DrawWireSphere(transform.position + transform.forward * 1.5f, areaJangkauan);
-    }
-
 }

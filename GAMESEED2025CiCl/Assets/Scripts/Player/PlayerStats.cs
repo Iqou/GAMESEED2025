@@ -16,6 +16,17 @@ public class PlayerStats : MonoBehaviour
     // --- Consumable Effects ---
     public float moveSpeedMultiplier = 1f;
 
+    // --- Player Progression ---
+    public int level = 1;
+    public int money = 0;
+    public int currentExperience = 0;
+    public int maxExperience = 150;
+
+    // --- EXP Formula Constants ---
+    private const float BASE_EXP = 150f;
+    private const float EXPONENT = 1.5f;
+
+
     // --- Upgrade Level Tracking ---
     [SerializeField]
     private Dictionary<AttributeType, int> upgradeLevels = new Dictionary<AttributeType, int>();
@@ -26,6 +37,43 @@ public class PlayerStats : MonoBehaviour
         {
             upgradeLevels[attribute] = 0;
         }
+        maxExperience = CalculateMaxExperience();
+    }
+
+    void Update()
+    {
+        // Debug: Add 100 EXP 
+        if (Input.GetKeyDown(KeyCode.F2))
+        {
+            AddExperience(100);
+        }
+    }
+
+    private int CalculateMaxExperience()
+    {
+        return Mathf.RoundToInt(BASE_EXP * Mathf.Pow(level, EXPONENT));
+    }
+
+    public void AddExperience(int amount)
+    {
+        currentExperience += amount;
+        Debug.Log($"Gained {amount} EXP! Current EXP: {currentExperience}/{maxExperience}");
+
+        while (currentExperience >= maxExperience)
+        {
+            currentExperience -= maxExperience;
+            level++;
+            maxExperience = CalculateMaxExperience();
+            Debug.Log($"LEVEL UP! Reached Level {level}! Next level at {maxExperience} EXP.");
+        }
+        OnStatsChanged?.Invoke(); // Notify UI or other systems
+    }
+
+    public void AddMoney(int amount)
+    {
+        money += amount;
+        Debug.Log($"Gained {amount} money! Total Money: {money}");
+        OnStatsChanged?.Invoke(); // Notify UI or other systems
     }
 
     public void ApplyUpgrade(AttributeUpgradeItem upgrade)

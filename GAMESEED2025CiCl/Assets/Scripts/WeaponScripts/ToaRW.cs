@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class ToaRW : MonoBehaviour
 {
@@ -11,7 +12,7 @@ public class ToaRW : MonoBehaviour
     private float desibelOutput;
     private float areaJangkauan = 5f;
     private float duration = 0.5f;
-    private float cooldownTime = 4f;
+    private float cooldownTime = 1f;
     private float weight = 2f;
     private float saweranMultiplier = 1.2f;
 
@@ -28,94 +29,60 @@ public class ToaRW : MonoBehaviour
     private GameObject aoeInstance;
     public GameObject aoePrefab;
 
-    private PlayerStats playerStats;
-
-    void Start()
+    private void Start()
     {
-        playerStats = GetComponentInParent<PlayerStats>();
-        if (playerStats == null) Debug.LogError("PlayerStats component not found on parent!");
-        UpdateStatus();   
+
     }
 
-    void Update()
+    public void Use(Transform owner, PlayerStats playerStats)
     {
-        float finalCooldown = cooldownTime * (1 - playerStats.cooldownReduction);
-        if (Input.GetKeyDown(KeyCode.W) && Time.time >= lastActiveTime + finalCooldown && !isAttacking)
+        // Dynamic Stat Calculation
+        float damageMultiplier = playerStats != null ? playerStats.damageMultiplier : 1f;
+        float areaMultiplier = playerStats != null ? playerStats.areaOfEffectBonus : 1f;
+        float cooldownReduction = playerStats != null ? playerStats.cooldownReduction : 0f;
+
+        float currentCooldown = Mathf.Max(0.1f, (1f - (cooldownLevel - 1) * 0.5f) * (1 - cooldownReduction));
+        float currentArea = (5f + (areaLevel - 1) * 1.5f) * areaMultiplier;
+        float currentMaxDamage = (80f + (desibelLevel - 1) * 2f) * damageMultiplier;
+        float currentMinDamage = (70f + (desibelLevel - 1) * 2f) * damageMultiplier;
+
+        if (lastActiveTime > Time.time)
         {
-            TriggerAOE();
-        } 
-        else if(Input.GetKeyDown(KeyCode.W) && Time.time >= lastActiveTime + finalCooldown && isAttacking)
-        {
-            StopAOE();
+            lastActiveTime = Time.time;
         }
 
-        if (isAttacking)
+
+        if (Time.time >= lastActiveTime + currentCooldown)
         {
-            MouseRotator();
-        }
-    }
-
-    void UpdateStatus()
-    {
-        desibelOutput = baseDesibelOutput + (desibelLevel - 1) * 2f;
-        areaJangkauan += (areaLevel - 1) * 1.5f;
-        cooldownTime = Mathf.Max(1f, cooldownTime - (cooldownLevel - 1) * 0.5f);
-    }
-
-    public void Use(Transform owner)
-    {
-        float finalCooldown = cooldownTime * (1 - playerStats.cooldownReduction);
-        if (Time.time < lastActiveTime + finalCooldown) return;
-
-        Vector3 spawnPos = owner.position + owner.forward * 1.5f;
-        Quaternion spawnRot = Quaternion.LookRotation(owner.forward);
-        aoeInstance = GameObject.Instantiate(aoePrefab, spawnPos, spawnRot);
-
-        attackPos = spawnPos;
-    }
-
-
-    public void TriggerAOE()
-    {
-        aoeInstance.SetActive(true);
-
-        float finalArea = areaJangkauan * playerStats.areaOfEffectBonus;
-        Collider[] hit = Physics.OverlapSphere(attackPos, finalArea);
-
-        foreach (Collider hits in hit)
-        {
-            if (hits.CompareTag("NPC"))
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray, out RaycastHit hit))
             {
-                float randomBase = Random.Range(minDesibelOutput, maxDesibelOutput);
-                desibelOutput = randomBase * playerStats.damageMultiplier;
-                Debug.Log($"{hits.name} Duarr kena damage dari TOA kena damage {desibelOutput} db");
+                Vector3 flatMousePos = new Vector3(hit.point.x, owner.position.y, hit.point.z);
+                Vector3 shootDir = (flatMousePos - owner.position).normalized;
+
+                Vector3 spawnPos = owner.position + shootDir * 1.5f;
+                Quaternion spawnRot = Quaternion.LookRotation(shootDir, Vector3.up);
+
+                aoeInstance = Instantiate(aoePrefab, spawnPos, spawnRot);
+
+                aoeInstance.transform.localScale = Vector3.one;
+                aoeInstance.transform.localScale = new Vector3(currentArea, currentArea, currentArea);
+
+                StaticAoe attribute = aoeInstance.GetComponent<StaticAoe>();
+                attribute.areaJangkauan = currentArea;
+                attribute.duration = duration;
+                attribute.minDesibelOutput = currentMinDamage;
+                attribute.maxDesibelOutput = currentMaxDamage;
+
+                attackPos = spawnPos;
+                lastActiveTime = Time.time;
+                Destroy(aoeInstance, duration);
             }
         }
-
-        isAttacking = true;
-        lastActiveTime = Time.time;
-        Destroy(aoeInstance, duration);
-    }
-
-    void StopAOE()
-    {
-        if (aoeInstance != null)
+        else
         {
-            aoeInstance.SetActive(false);
+            Debug.Log($"Masih cooldown sisa {(lastActiveTime + currentCooldown) - Time.time} lagi, waktu saat ini {Time.time}");
         }
-        isAttacking = false;
     }
+}
 
-    void MouseRotator()
-    {
-        Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        mousePos.z = 0f;
-
-        Vector3 direction = (mousePos - transform.position).normalized;
-        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-
-        transform.rotation = Quaternion.Euler(0f, 0f, angle);
-    }
-
-
-}   

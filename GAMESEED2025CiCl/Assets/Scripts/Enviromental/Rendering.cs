@@ -14,6 +14,7 @@ public class Rendering : MonoBehaviour
 
     [HideInInspector] public Transform tileParent;
     [HideInInspector] public List<BuildingData> placedBuildings;
+    
 
     public int renderDistance = 2;
 
@@ -26,7 +27,7 @@ public class Rendering : MonoBehaviour
     private Dictionary<Vector2Int, GameObject> chunkLoaded = new Dictionary<Vector2Int, GameObject>();
     private Dictionary<Vector2Int, List<BuildingData>> activeBuildings = new Dictionary<Vector2Int, List<BuildingData>>();
     private Dictionary<string, Queue<GameObject>> buildingPools = new Dictionary<string, Queue<GameObject>>();
-    private Dictionary<GameObject, BuildingData> buildingToDataMap = new Dictionary<GameObject, BuildingData>();
+    private Dictionary<GameObject, BuildingData> buildingToDataMap = new Dictionary<GameObject, BuildingData>(); 
 
     void Start()
     {
@@ -42,6 +43,7 @@ public class Rendering : MonoBehaviour
         chunkSize = pathGen.ChunkSize;
         size = pathGen.size;
         player = GameObject.Find("Player");
+        player.transform.position = new Vector3(size / 2f, 0, size / 2f);
         placedBuildings = pathGen.PlacedBuildings;
 
         // Initialize building pools

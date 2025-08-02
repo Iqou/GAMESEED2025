@@ -27,10 +27,16 @@ public class pickUpXp : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            Debug.Log($"Player mendapatkan {expValue} EXP!");
-
-            // Tambahkan logika menambah EXP di script Player di sini
-            // other.GetComponent<PlayerStats>()?.AddExperience(expValue);
+            PlayerStats stats = other.GetComponent<PlayerStats>();
+            if (stats != null)
+            {
+                stats.AddExperience(expValue);
+                Debug.Log($"Player mendapatkan {expValue} EXP!");
+            }
+            else
+            {
+                Debug.LogWarning("Player tidak memiliki komponen PlayerStats!");
+            }
 
             Destroy(gameObject);
         }

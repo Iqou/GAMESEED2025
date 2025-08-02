@@ -42,6 +42,11 @@ public class RealHoreg : MonoBehaviour
         float currentMaxDamage = (110f + (desibelLevel - 1) * 2f) * damageMultiplier;
         float currentMinDamage = (100f + (desibelLevel - 1) * 2f) * damageMultiplier;
 
+        if (lastActiveTime > Time.time)
+        {
+            lastActiveTime = Time.time;
+        }
+
         if (Time.time >= lastActiveTime + currentCooldown)
         {
             Vector3 mouseScreenPos = Input.mousePosition;

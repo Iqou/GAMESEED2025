@@ -48,6 +48,12 @@ public class npcAnakKecil : MonoBehaviour, INPCDamageable
     bool isFleeing = false;
     bool isFan = false;
 
+    [Header("Panic Chain Reaction")]
+    public float panicRadius = 10f;
+    public float panicEffectPercent = 0.5f;
+    public float panicInterval = 3f;
+    private float nextPanicTime = 0f;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -68,7 +74,7 @@ public class npcAnakKecil : MonoBehaviour, INPCDamageable
         }
         else if (isAggro && playerInSight)
         {
-            ChasePlayer();
+            HandlePanicChainReaction();
             tryCallPolice();
         }
         else if (playerInSight)
@@ -78,6 +84,33 @@ public class npcAnakKecil : MonoBehaviour, INPCDamageable
         else
         {
             Patrol();
+        }
+    }
+
+    void HandlePanicChainReaction()
+    {
+        if (Time.time >= nextPanicTime)
+        {
+            // Ambil semua collider dalam radius panic
+            Collider[] nearbyObjects = Physics.OverlapSphere(transform.position, panicRadius);
+
+            foreach (Collider col in nearbyObjects)
+            {
+                // Cek apakah objek bertag "NPC" dan bukan dirinya sendiri
+                if (col.CompareTag("NPC") && col.gameObject != this.gameObject)
+                {
+                    npcAnakKecil otherNPC = col.GetComponent<npcAnakKecil>();
+                    if (otherNPC != null)
+                    {
+                        otherNPC.currEmotion -= panicEffectPercent;
+                        otherNPC.currEmotion = Mathf.Clamp(otherNPC.currEmotion, 0f, 100f);
+
+                        Debug.Log($"{gameObject.name} menyebabkan PANIC ke {otherNPC.name}! Emotion turun {panicEffectPercent}% -> {otherNPC.currEmotion:F1}%");
+                    }
+                }
+            }
+
+            nextPanicTime = Time.time + panicInterval;
         }
     }
 

@@ -16,7 +16,7 @@ TagManager:
   - UI
   - navMesh
   - Player
-  - 
+  - UI
   - 
   - 
   - 
@@ -43,6 +43,12 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Arrows
+    uniqueID: 903982291
+    locked: 0
+  - name: Background
+    uniqueID: 93329335
     locked: 0
   m_RenderingLayers:
   - Default

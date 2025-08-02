@@ -29,7 +29,7 @@ public class npcSatpamKomplek : MonoBehaviour, INPCDamageable
     public int wantedLevel = 1;
 
     [Header("Attack Prefabs")]
-    public GameObject bulletPrefab;
+    public GameObject sendalPrefab;
     public Transform firePoint;
 
     bool playerInSight;
@@ -107,21 +107,18 @@ public class npcSatpamKomplek : MonoBehaviour, INPCDamageable
 
     void TryRangedAttack()
     {
-        if (Time.time >= nextAttackTime && bulletPrefab != null && firePoint != null)
+        if (Time.time >= nextAttackTime && sendalPrefab != null && firePoint != null)
         {
             nextAttackTime = Time.time + attackCooldown;
 
-            // Spawn peluru
-            GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
-            Rigidbody rb = bullet.GetComponent<Rigidbody>();
-            if (rb != null)
-            {
-                Vector3 dir = (player.transform.position - firePoint.position).normalized;
-                rb.linearVelocity = dir * 10f; // Kecepatan peluru
-            }
+            // Spawn sendal
+            GameObject bullet = Instantiate(sendalPrefab, firePoint.position, firePoint.rotation);
+            Vector3 dir = (player.transform.position - firePoint.position).normalized;
 
-            Destroy(bullet, 5f);
-            Debug.Log($"{gameObject.name} menembak player!");
+            // Set arah ke script SendalProjectile
+            bullet.GetComponent<sendalProjectile>()?.SetDirection(dir);
+
+            Debug.Log($"{gameObject.name} melempar sendal ke player!");
         }
     }
 
@@ -168,49 +165,6 @@ public class npcSatpamKomplek : MonoBehaviour, INPCDamageable
         }
     }
 
-    void ChasePlayer()
-    {
-        float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
-
-        if (distanceToPlayer > stopDistance)
-        {
-            Agent.SetDestination(player.transform.position);
-        }
-        else
-        {
-            Agent.ResetPath(); // berhenti bergerak jika sudah cukup dekat
-        }
-    }
-
-    void ChaseAndAttackPlayer()
-    {
-        float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
-
-        if (distanceToPlayer > attackRange)
-        {
-            Agent.SetDestination(player.transform.position);
-        }
-        else
-        {
-            Agent.ResetPath();
-            TryAttackPlayer();
-        }
-    }
-
-    void TryAttackPlayer()
-    {
-        if (Time.time >= nextAttackTime)
-        {
-            nextAttackTime = Time.time + attackCooldown;
-
-            // 🔹 Lakukan serangan melee
-            Debug.Log($"{gameObject.name} menyerang player dengan damage {attackDamage}!");
-
-            // Kalau player punya script Health:
-            // player.GetComponent<PlayerHealth>()?.TakeDamage(attackDamage);
-        }
-    }
-
     void CheckLineOfSight()
     {
         Vector3 directionToPlayer = player.transform.position - transform.position;
@@ -230,16 +184,5 @@ public class npcSatpamKomplek : MonoBehaviour, INPCDamageable
         }
 
         playerInSight = false;
-    }
-
-    void FleeFromPlayer()
-    {
-        Vector3 direction = (transform.position - player.transform.position).normalized;
-        Vector3 fleePoint = transform.position + direction * range;
-
-        if (NavMesh.SamplePosition(fleePoint, out NavMeshHit hit, range, NavMesh.AllAreas))
-        {
-            Agent.SetDestination(hit.position);
-        }
     }
 }

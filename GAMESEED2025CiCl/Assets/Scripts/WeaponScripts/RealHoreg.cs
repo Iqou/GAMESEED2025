@@ -30,36 +30,19 @@ public class RealHoreg : MonoBehaviour
     
     public GameObject aoePrefab;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public void Use(Transform owner, PlayerStats playerStats)
     {
-        UpdateStats();
-    }
+        // Dynamic Stat Calculation
+        float damageMultiplier = playerStats != null ? playerStats.damageMultiplier : 1f;
+        float areaMultiplier = playerStats != null ? playerStats.areaOfEffectBonus : 1f;
+        float cooldownReduction = playerStats != null ? playerStats.cooldownReduction : 0f;
 
-    void Update()
-    {
-       
-    }
+        float currentCooldown = Mathf.Max(0.1f, (3f - (cooldownLevel - 1) * 0.5f) * (1 - cooldownReduction));
+        float currentArea = (5f + (areaLevel - 1) * 1.5f) * areaMultiplier;
+        float currentMaxDamage = (110f + (desibelLevel - 1) * 2f) * damageMultiplier;
+        float currentMinDamage = (100f + (desibelLevel - 1) * 2f) * damageMultiplier;
 
-    void UpdateStats()
-    {
-        desibelLevel = Mathf.Max(1, desibelLevel);
-        areaLevel = Mathf.Max(1, areaLevel);
-        cooldownLevel = Mathf.Max(1, cooldownLevel);
-
-        desibelOutput = baseDesibelOutput + (desibelLevel - 1) * 2f;
-        areaJangkauan = 5f + (areaLevel - 1) * 1.5f;
-        cooldownTime = Mathf.Max(1f, baseCooldownTime - (cooldownLevel - 1) * 0.5f);
-    }
-
-    public void Use(Transform owner)
-    {
-        if (lastActiveTime > Time.time)
-        {
-            lastActiveTime = Time.time - cooldownTime;
-        }
-
-        if (Time.time >= lastActiveTime + cooldownTime)
+        if (Time.time >= lastActiveTime + currentCooldown)
         {
             Vector3 mouseScreenPos = Input.mousePosition;
             mouseScreenPos.z = Camera.main.WorldToScreenPoint(owner.position).z;
@@ -77,15 +60,15 @@ public class RealHoreg : MonoBehaviour
             aoeInstance.transform.localScale = Vector3.one;
 
             // Scale sesuai area jangkauan
-            aoeInstance.transform.localScale = new Vector3(areaJangkauan / 2f, areaJangkauan / 2f, areaJangkauan);
+            aoeInstance.transform.localScale = new Vector3(currentArea / 2f, currentArea / 2f, currentArea);
 
             MoveTowards mover = aoeInstance.GetComponent<MoveTowards>();
             if (mover != null)
             {
-                mover.areaJangkauan = areaJangkauan;
+                mover.areaJangkauan = currentArea;
                 mover.duration = duration;
-                mover.maxDesibelOutput = maxDesibelOutput;
-                mover.minDesibelOutput = minDesibelOutput;
+                mover.maxDesibelOutput = currentMaxDamage;
+                mover.minDesibelOutput = currentMinDamage;
                 mover.SetDirection(shootDir);
             }
 
@@ -95,7 +78,7 @@ public class RealHoreg : MonoBehaviour
         } 
         else
         {
-            Debug.Log($"Masih cooldown sisa {(lastActiveTime + cooldownTime) - Time.time} lagi, waktu saat ini {Time.time}");
+            Debug.Log($"Masih cooldown sisa {(lastActiveTime + currentCooldown) - Time.time} lagi, waktu saat ini {Time.time}");
         }
     }
 }

@@ -1,9 +1,9 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-public class npcAnakKecil : MonoBehaviour, INPCDamageable
+public class npcPremanPasar : MonoBehaviour, INPCDamageable
 {
-    GameObject player;
+   GameObject player;
     NavMeshAgent Agent;
 
     [Header("Layer Settings")]
@@ -38,21 +38,23 @@ public class npcAnakKecil : MonoBehaviour, INPCDamageable
 
     public int giveCoin = 5000;
 
-    [Range(0, 500)]
+    [Range(50, 500)]
     public int giveExperience = 100;
 
     [Header("Reward Prefabs")]
     public GameObject coinPrefab;
+    public GameObject expPrefab;
 
     bool isAggro = false;
     bool isFleeing = false;
     bool isFan = false;
 
-    [Header("Panic Chain Reaction")]
-    public float panicRadius = 10f;
-    public float panicEffectPercent = 0.5f;
-    public float panicInterval = 3f;
-    private float nextPanicTime = 0f;
+    [Header("Copet Settings")]
+    public float copetRadius = 5f;
+    public float copetDelay = 10f;
+    public int copetAmountPerSecond = 100;
+    private float playerStayTime = 0f;
+    private float nextCopetTime = 0f;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -68,14 +70,23 @@ public class npcAnakKecil : MonoBehaviour, INPCDamageable
 
         UpdateNPCState();
 
+        if (isFan)
+        {
+            HandleCopet();
+        }
+        else
+        {
+            // reset jika bukan fan
+            playerStayTime = 0f;
+        }
+
         if (isFleeing && playerInSight)
         {
             FleeFromPlayer();
         }
         else if (isAggro && playerInSight)
         {
-            HandlePanicChainReaction();
-            tryCallPolice();
+            ChasePlayer();
         }
         else if (playerInSight)
         {
@@ -87,30 +98,37 @@ public class npcAnakKecil : MonoBehaviour, INPCDamageable
         }
     }
 
-    void HandlePanicChainReaction()
+    void HandleCopet()
     {
-        if (Time.time >= nextPanicTime)
+        float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
+
+        if (distanceToPlayer <= copetRadius)
         {
-            // Ambil semua collider dalam radius panic
-            Collider[] nearbyObjects = Physics.OverlapSphere(transform.position, panicRadius);
+            // Hitung berapa lama pemain berada di area
+            playerStayTime += Time.deltaTime;
 
-            foreach (Collider col in nearbyObjects)
+            // Jika sudah 10 detik berada di area, mulai mencopet
+            if (playerStayTime >= copetDelay)
             {
-                // Cek apakah objek bertag "NPC" dan bukan dirinya sendiri
-                if (col.CompareTag("NPC") && col.gameObject != this.gameObject)
+                if (Time.time >= nextCopetTime)
                 {
-                    npcAnakKecil otherNPC = col.GetComponent<npcAnakKecil>();
-                    if (otherNPC != null)
+                    // Ambil uang pemain
+                    //PlayerWallet playerWallet = player.GetComponent<PlayerWallet>();
+                    //if (playerWallet != null)
                     {
-                        otherNPC.currEmotion -= panicEffectPercent;
-                        otherNPC.currEmotion = Mathf.Clamp(otherNPC.currEmotion, 0f, 100f);
-
-                        Debug.Log($"{gameObject.name} menyebabkan PANIC ke {otherNPC.name}! Emotion turun {panicEffectPercent}% -> {otherNPC.currEmotion:F1}%");
+                       // playerWallet.TakeMoney(copetAmountPerSecond);
+                        Debug.Log($"{gameObject.name} mencopet Rp{copetAmountPerSecond} dari Player!");
                     }
+
+                    // delay 1 detik per copet
+                    nextCopetTime = Time.time + 1f;
                 }
             }
-
-            nextPanicTime = Time.time + panicInterval;
+        }
+        else
+        {
+            // Keluar area => reset timer
+            playerStayTime = 0f;
         }
     }
 
@@ -189,26 +207,31 @@ public class npcAnakKecil : MonoBehaviour, INPCDamageable
 
     void spawnReward()
     {
-        // Directly give EXP to the player
-        if (player != null)
+        if (coinPrefab != null)
         {
-            PlayerStats playerStats = player.GetComponent<PlayerStats>();
-            if (playerStats != null)
+            GameObject coin = Instantiate(coinPrefab, transform.position + Vector3.up * 1f, Quaternion.identity);
+            Rigidbody rb = coin.GetComponent<Rigidbody>();
+            if (rb != null)
             {
-                playerStats.AddExperience(giveExperience);
+                rb.AddForce(new Vector3(Random.Range(-1f, 1f), 1f, Random.Range(-1f, 1f)) * 3f, ForceMode.Impulse);
             }
+            // 🔹 Hapus otomatis setelah 10 detik
+            Destroy(coin, 10f);
         }
 
-        // Spawn money using the universal spawner
-        if (UniversalMoneySpawner.Instance != null)
+        if (expPrefab != null)
         {
-            UniversalMoneySpawner.Instance.SpawnMoney(transform.position, giveCoin);
+            GameObject exp = Instantiate(expPrefab, transform.position + Vector3.up * 1f, Quaternion.identity);
+            Rigidbody rb = exp.GetComponent<Rigidbody>();
+            if (rb != null)
+            {
+                rb.AddForce(new Vector3(Random.Range(-1f, 1f), 1f, Random.Range(-1f, 1f)) * 3f, ForceMode.Impulse);
+            }
+            // 🔹 Hapus otomatis setelah 10 detik
+            Destroy(exp, 10f);
         }
 
-        Debug.Log($"{gameObject.name} gave {giveExperience} EXP and dropped {giveCoin} money!");
-
-        // Prevent giving rewards multiple times
-        isFan = false;
+        Debug.Log($"{gameObject.name} melempar koin {giveCoin} dan exp {giveExperience}!");
     }
 
 

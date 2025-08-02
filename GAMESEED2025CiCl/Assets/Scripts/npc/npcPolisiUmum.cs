@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-public class npcSatpamKomplek : MonoBehaviour, INPCDamageable
+public class npcPolisiUmum : MonoBehaviour, INPCDamageable
 {
     GameObject player;
     NavMeshAgent Agent;
@@ -18,7 +18,6 @@ public class npcSatpamKomplek : MonoBehaviour, INPCDamageable
     [SerializeField] float sightRange = 20f;
     [SerializeField] float stopDistance = 3f;
     [SerializeField] float attackRange = 2f;      // Melee
-    [SerializeField] float rangedRange = 10f;     // Ranged mulai menyerang
     [SerializeField] float attackCooldown = 2f;
     [Range(10, 40)] public int attackDamage = 10;
     float nextAttackTime = 0f;
@@ -28,9 +27,8 @@ public class npcSatpamKomplek : MonoBehaviour, INPCDamageable
     [Range(50, 500)] public int giveExperience = 50;
     public int wantedLevel = 1;
 
-    [Header("Attack Prefabs")]
-    public GameObject sendalPrefab;
-    public Transform firePoint;
+    [Header("Reward Prefabs")]
+    public GameObject expPrefab;
 
     bool playerInSight;
     bool isDead = false;
@@ -81,12 +79,6 @@ public class npcSatpamKomplek : MonoBehaviour, INPCDamageable
         if (distanceToPlayer > attackRange)
         {
             Agent.SetDestination(player.transform.position);
-
-            // 🔹 Ranged attack jika dalam jarak tertentu
-            if (distanceToPlayer <= rangedRange)
-            {
-                TryRangedAttack();
-            }
         }
         else
         {
@@ -105,42 +97,31 @@ public class npcSatpamKomplek : MonoBehaviour, INPCDamageable
         }
     }
 
-    void TryRangedAttack()
-    {
-        if (Time.time >= nextAttackTime && sendalPrefab != null && firePoint != null)
-        {
-            nextAttackTime = Time.time + attackCooldown;
-
-            // Spawn sendal
-            GameObject bullet = Instantiate(sendalPrefab, firePoint.position, firePoint.rotation);
-            Vector3 dir = (player.transform.position - firePoint.position).normalized;
-
-            // Set arah ke script SendalProjectile
-            bullet.GetComponent<sendalProjectile>()?.SetDirection(dir);
-
-            Debug.Log($"{gameObject.name} melempar sendal ke player!");
-        }
-    }
-
 
     void Die()
     {
         isDead = true;
-        Debug.Log($"{gameObject.name} mati dan memberikan {giveExperience} EXP!");
-        
-        if (player != null)
+        Debug.Log($"{gameObject.name} mati dan drop exp {giveExperience}!");
+        spawnReward();
+        Destroy(gameObject, 0.5f);
+    }
+
+    void spawnReward()
+    {
+
+        if (expPrefab != null)
         {
-            PlayerStats playerStats = player.GetComponent<PlayerStats>();
-            if (playerStats != null)
+            GameObject exp = Instantiate(expPrefab, transform.position + Vector3.up * 1f, Quaternion.identity);
+            Rigidbody rb = exp.GetComponent<Rigidbody>();
+            if (rb != null)
             {
-                playerStats.AddExperience(giveExperience);
+                rb.AddForce(new Vector3(Random.Range(-1f, 1f), 1f, Random.Range(-1f, 1f)) * 3f, ForceMode.Impulse);
             }
+            // 🔹 Hapus otomatis setelah 10 detik
+            Destroy(exp, 10f);
         }
 
-        // TODO: Panggil UniversalMoneySpawner untuk drop uang
-        // UniversalMoneySpawner.Instance.SpawnMoney(transform.position, moneyToDrop);
-
-        Destroy(gameObject, 0.5f);
+        Debug.Log($"{gameObject.name} melempar koin dan exp {giveExperience}!");
     }
 
     //behavior

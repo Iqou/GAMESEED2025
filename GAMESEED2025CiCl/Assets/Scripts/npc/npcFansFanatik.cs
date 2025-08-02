@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-public class npcAnakKecil : MonoBehaviour, INPCDamageable
+public class npcFansFanatik : MonoBehaviour, INPCDamageable
 {
     GameObject player;
     NavMeshAgent Agent;
@@ -38,21 +38,16 @@ public class npcAnakKecil : MonoBehaviour, INPCDamageable
 
     public int giveCoin = 5000;
 
-    [Range(0, 500)]
+    [Range(50, 500)]
     public int giveExperience = 100;
 
     [Header("Reward Prefabs")]
     public GameObject coinPrefab;
+    public GameObject expPrefab;
 
     bool isAggro = false;
     bool isFleeing = false;
     bool isFan = false;
-
-    [Header("Panic Chain Reaction")]
-    public float panicRadius = 10f;
-    public float panicEffectPercent = 0.5f;
-    public float panicInterval = 3f;
-    private float nextPanicTime = 0f;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -74,8 +69,7 @@ public class npcAnakKecil : MonoBehaviour, INPCDamageable
         }
         else if (isAggro && playerInSight)
         {
-            HandlePanicChainReaction();
-            tryCallPolice();
+            ChasePlayer();
         }
         else if (playerInSight)
         {
@@ -84,33 +78,6 @@ public class npcAnakKecil : MonoBehaviour, INPCDamageable
         else
         {
             Patrol();
-        }
-    }
-
-    void HandlePanicChainReaction()
-    {
-        if (Time.time >= nextPanicTime)
-        {
-            // Ambil semua collider dalam radius panic
-            Collider[] nearbyObjects = Physics.OverlapSphere(transform.position, panicRadius);
-
-            foreach (Collider col in nearbyObjects)
-            {
-                // Cek apakah objek bertag "NPC" dan bukan dirinya sendiri
-                if (col.CompareTag("NPC") && col.gameObject != this.gameObject)
-                {
-                    npcAnakKecil otherNPC = col.GetComponent<npcAnakKecil>();
-                    if (otherNPC != null)
-                    {
-                        otherNPC.currEmotion -= panicEffectPercent;
-                        otherNPC.currEmotion = Mathf.Clamp(otherNPC.currEmotion, 0f, 100f);
-
-                        Debug.Log($"{gameObject.name} menyebabkan PANIC ke {otherNPC.name}! Emotion turun {panicEffectPercent}% -> {otherNPC.currEmotion:F1}%");
-                    }
-                }
-            }
-
-            nextPanicTime = Time.time + panicInterval;
         }
     }
 
@@ -173,42 +140,39 @@ public class npcAnakKecil : MonoBehaviour, INPCDamageable
         isFleeing = false;
     }
 
-    void tryCallPolice()
-    {
-        if (nextPhoneTime <= 0)
-            {
-                CallPolice();
-                nextPhoneTime = phoneCooldown;
-            }
-    }
-
-    void CallPolice()
-    {
-        Debug.Log($"{gameObject.name} menelpon aparat!");
-    }
-
     void spawnReward()
     {
-        // Directly give EXP to the player
-        if (player != null)
+        int finalCoin = giveCoin;
+        int finalExp = giveExperience;
+        if (isAggro)
         {
-            PlayerStats playerStats = player.GetComponent<PlayerStats>();
-            if (playerStats != null)
+            finalCoin = Mathf.RoundToInt(giveCoin * 1.1f);
+            finalExp = Mathf.RoundToInt(giveExperience * 1.1f);
+        }
+
+        if (coinPrefab != null)
+        {
+            GameObject coin = Instantiate(coinPrefab, transform.position + Vector3.up * 1f, Quaternion.identity);
+            Rigidbody rb = coin.GetComponent<Rigidbody>();
+            if (rb != null)
             {
-                playerStats.AddExperience(giveExperience);
+                rb.AddForce(new Vector3(Random.Range(-1f, 1f), 1f, Random.Range(-1f, 1f)) * 3f, ForceMode.Impulse);
             }
+            Destroy(coin, 10f);
         }
 
-        // Spawn money using the universal spawner
-        if (UniversalMoneySpawner.Instance != null)
+        if (expPrefab != null)
         {
-            UniversalMoneySpawner.Instance.SpawnMoney(transform.position, giveCoin);
+            GameObject exp = Instantiate(expPrefab, transform.position + Vector3.up * 1f, Quaternion.identity);
+            Rigidbody rb = exp.GetComponent<Rigidbody>();
+            if (rb != null)
+            {
+                rb.AddForce(new Vector3(Random.Range(-1f, 1f), 1f, Random.Range(-1f, 1f)) * 3f, ForceMode.Impulse);
+            }
+            Destroy(exp, 10f);
         }
 
-        Debug.Log($"{gameObject.name} gave {giveExperience} EXP and dropped {giveCoin} money!");
-
-        // Prevent giving rewards multiple times
-        isFan = false;
+        Debug.Log($"{gameObject.name} melempar koin {finalCoin} dan exp {finalExp}!");
     }
 
 

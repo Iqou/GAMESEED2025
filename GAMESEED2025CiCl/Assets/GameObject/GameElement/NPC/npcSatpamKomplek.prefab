@@ -45,9 +45,9 @@ GameObject:
   - component: {fileID: 2840639631591792999}
   - component: {fileID: 4898246971411587218}
   - component: {fileID: 6473968938489683447}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: npcSatpamKomplek
-  m_TagString: Untagged
+  m_TagString: NPC
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -213,7 +213,7 @@ GameObject:
   - component: {fileID: 2228197150829926101}
   - component: {fileID: 2289052114144544768}
   - component: {fileID: 7552166431369149289}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}

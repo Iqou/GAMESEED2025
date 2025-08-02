@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 667014155028314936}
   - component: {fileID: 1223818028270230122}
   - component: {fileID: 4084763935504847998}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -122,7 +122,7 @@ GameObject:
   - component: {fileID: 619645625456651903}
   - component: {fileID: 3535325712837792311}
   - component: {fileID: 8951339230279042676}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: npcBapakBapakPensiunan
   m_TagString: NPC
   m_Icon: {fileID: 0}
@@ -268,7 +268,7 @@ MonoBehaviour:
   sightRange: 13
   stopDistance: 3
   attackRange: 2
-  attackCooldown: 2
+  attackCooldown: 3
   attackDamage: 10
   sensitivitasDesibel: 110
   currEmotion: 100

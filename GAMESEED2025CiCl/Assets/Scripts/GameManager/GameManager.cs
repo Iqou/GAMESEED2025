@@ -30,15 +30,15 @@ public class GameManager : MonoBehaviour
         }
     }
 
-public void SaveProgress()
-{
-    SaveProgressToSlot(currentSlot);
-}
+    public void SaveProgress()
+    {
+        SaveProgressToSlot(currentSlot);
+    }
 
-public void LoadProgress()
-{
-    LoadProgressFromSlot(currentSlot);
-}
+    public void LoadProgress()
+    {
+        LoadProgressFromSlot(currentSlot);
+    }
 
     public void ResetProgress()
     {
@@ -51,35 +51,64 @@ public void LoadProgress()
     }
 
     public void SaveProgressToSlot(int slot)
-{
-    string path = Path.Combine(Application.persistentDataPath, $"saveData_slot{slot}.json");
-    SaveData data = new SaveData()
     {
-        levelUnlocked = levelUnlocked,
-        totalCoins = totalCoins,
-        lastCharacterUsed = lastCharacterUsed,
-        unlockedItems = unlockedItems
-    };
+        string path = Path.Combine(Application.persistentDataPath, $"saveData_slot{slot}.json");
+        SaveData data = new SaveData()
+        {
+            levelUnlocked = levelUnlocked,
+            totalCoins = totalCoins,
+            lastCharacterUsed = lastCharacterUsed,
+            unlockedItems = unlockedItems
+        };
 
-    string json = JsonUtility.ToJson(data, true);
-    File.WriteAllText(path, json);
-    currentSlot = slot;
-}
-
-public void LoadProgressFromSlot(int slot)
-{
-    string path = Path.Combine(Application.persistentDataPath, $"saveData_slot{slot}.json");
-    if (File.Exists(path))
-    {
-        string json = File.ReadAllText(path);
-        SaveData data = JsonUtility.FromJson<SaveData>(json);
-
-        levelUnlocked = data.levelUnlocked;
-        totalCoins = data.totalCoins;
-        lastCharacterUsed = data.lastCharacterUsed;
-        unlockedItems = data.unlockedItems ?? new List<string>();
+        string json = JsonUtility.ToJson(data, true);
+        File.WriteAllText(path, json);
         currentSlot = slot;
     }
-}
+
+    public void LoadProgressFromSlot(int slot)
+    {
+        string path = Path.Combine(Application.persistentDataPath, $"saveData_slot{slot}.json");
+        if (File.Exists(path))
+        {
+            string json = File.ReadAllText(path);
+            SaveData data = JsonUtility.FromJson<SaveData>(json);
+
+            levelUnlocked = data.levelUnlocked;
+            totalCoins = data.totalCoins;
+            lastCharacterUsed = data.lastCharacterUsed;
+            unlockedItems = data.unlockedItems ?? new List<string>();
+            currentSlot = slot;
+        }
+    }
+
+    void Start()
+    {
+        // Example: Player earns 200 soundchips
+        SaveManager.CurrentProgression.currentSoundchip += 200;
+
+        // Example: Upgrade speaker cooldown
+        SaveManager.CurrentProgression.speakerData.cooldownLevel++;
+
+        // Example: Calculate new desibel stat
+        float newStat = SaveManager.CurrentProgression.speakerData.GetStat(100f);
+        Debug.Log("Current Speaker Power: " + newStat);
+    }
+
+    public void OnPlayerScored(int score)
+    {
+        if (score > SaveManager.CurrentProgression.highestScore)
+        {
+            SaveManager.CurrentProgression.highestScore = score;
+        }
+    }
+
+    public void OnSpendSoundchips(int amount)
+    {
+        if (SaveManager.CurrentProgression.currentSoundchip >= amount)
+        {
+            SaveManager.CurrentProgression.currentSoundchip -= amount;
+        }
+    }
 
 }

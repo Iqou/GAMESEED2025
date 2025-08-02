@@ -14,11 +14,39 @@ public class PlayerAttack : MonoBehaviour
     private float nextBeatTime = 0.0f;
 
 
+    private ToaRW toa;
+    private BassKondangan kondangan;
+    private SubwooferDugem dugem;
+    private RealHoreg superHoreg;
+    private PlayerStats playerStats;
+
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         nextBeatTime = Time.time * beatInterval;
         activeHoregs = new List<GameObject>();
+        playerStats = GetComponent<PlayerStats>();
+
+        foreach (GameObject horeg in horegPrefabs)
+        {
+            if (horeg.GetComponent<ToaRW>() != null)
+            {
+                toa = horeg.GetComponent<ToaRW>();
+            }
+            if (horeg.GetComponent<BassKondangan>() != null)
+            {
+                kondangan = horeg.GetComponent<BassKondangan>();
+            }
+            if (horeg.GetComponent<SubwooferDugem>() != null)
+            {
+                dugem = horeg.GetComponent<SubwooferDugem>();
+            }
+            if (horeg.GetComponent<RealHoreg>() != null)
+            {
+                superHoreg = horeg.GetComponent<RealHoreg>();
+            }
+        }
     }
 
     // Update is called once per frame
@@ -28,35 +56,24 @@ public class PlayerAttack : MonoBehaviour
 
         bool isOnBeat = Mathf.Abs(Time.time - nextBeatTime) <= beatWindow;
 
-        foreach (GameObject horeg in horegPrefabs)
+        if (toa != null && Input.GetKeyDown(KeyCode.W))
         {
-            ToaRW toa = horeg.GetComponent<ToaRW>();
-            if (toa != null && Input.GetKeyDown(KeyCode.W))
-            {
-                toa.Use(transform);
-                continue;
-            }
+            toa.Use(transform, playerStats);
+        }
 
-            BassKondangan kondangan = horeg.GetComponent<BassKondangan>();
-            if (kondangan != null && Input.GetKeyDown(KeyCode.A))
-            {
-                kondangan.Use(transform);
-                continue;
-            }
+        if (kondangan != null && Input.GetKeyDown(KeyCode.A))
+        {
+            kondangan.Use(transform, playerStats);
+        }
 
-            SubwooferDugem dugem = horeg.GetComponent<SubwooferDugem>();
-            if (dugem != null && Input.GetKeyDown(KeyCode.S))
-            {
-                dugem.Use(transform);
-                continue;
-            }
+        if (dugem != null && Input.GetKeyDown(KeyCode.S))
+        {
+            dugem.Use(transform, playerStats);
+        }
 
-            RealHoreg superHoreg = horeg.GetComponent<RealHoreg>();
-            if (superHoreg != null && Input.GetKeyDown(KeyCode.D))
-            {
-                superHoreg.Use(transform);
-                continue;
-            }
+        if (superHoreg != null && Input.GetKeyDown(KeyCode.D))
+        {
+            superHoreg.Use(transform, playerStats);
         }
     }
 

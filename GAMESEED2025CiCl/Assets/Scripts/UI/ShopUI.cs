@@ -58,7 +58,6 @@ public class ShopUI : MonoBehaviour
 
     private void DisplayShopOffers(List<ShopItem> items)
     {
-        // Clear any existing offers
         foreach (Transform child in itemOfferContainer)
         {
             Destroy(child.gameObject);
@@ -93,7 +92,6 @@ public class ShopUI : MonoBehaviour
 
             itemNameText.text = item.itemName;
 
-            // Get the dynamic description and cost for attribute upgrades
             if (item is AttributeUpgradeItem upgradeItem)
             {
                 itemDescriptionText.text = upgradeItem.GetFormattedDescription(playerStats);
@@ -102,16 +100,14 @@ public class ShopUI : MonoBehaviour
             else
             {
                 itemDescriptionText.text = item.description;
-                itemCostText.text = $"Rp {item.GetCurrentCost()}";
+                itemCostText.text = $"Rp {item.GetCurrentCost(playerStats)}";
             }
 
-            // Set up the purchase button
+            // Tombol Purchase
             purchaseButton.onClick.AddListener(() => {
                 bool success = ShopManager.Instance.PurchaseItem(item, player);
                 if (success)
                 {
-                    // Refresh the shop offers to reflect the new state (e.g., updated costs, item removed from pool)
-                    // This is a simple way to handle it. A more complex UI might just update the specific item.
                     ShopManager.Instance.PrepareShopOffers(playerStats);
                 }
             });

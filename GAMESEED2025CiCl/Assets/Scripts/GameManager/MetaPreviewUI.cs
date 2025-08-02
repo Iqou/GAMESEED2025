@@ -1,18 +1,26 @@
 using UnityEngine;
 using UnityEngine.UI;
+using System.Linq;
 
 public class MetaPreviewUI : MonoBehaviour
 {
-    public Text levelText;
-    public Text coinText;
+    public Text soundChipText;
     public Text characterText;
-    public Text unlockedText;
+    public Text unlockedHoregsText;
 
     void Start()
     {
-        levelText.text = "Level Unlocked: " + GameManager.Instance.levelUnlocked;
-        coinText.text = "Coins: " + GameManager.Instance.totalCoins;
-        characterText.text = "Character: " + GameManager.Instance.lastCharacterUsed;
-        unlockedText.text = "Unlocked: " + string.Join(", ", GameManager.Instance.unlockedItems);
+        if (GameManager.Instance != null)
+        {
+            soundChipText.text = "SoundChips: " + GameManager.Instance.soundChips;
+            characterText.text = "Character: " + GameManager.Instance.lastCharacterUsed;
+            unlockedHoregsText.text = "Unlocked Horegs: " + string.Join(", ", GameManager.Instance.unlockedHoregs);
+        }
+        else
+        {
+            soundChipText.text = "SoundChips: N/A";
+            characterText.text = "Character: N/A";
+            unlockedHoregsText.text = "Unlocked Horegs: N/A";
+        }
     }
 }

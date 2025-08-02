@@ -28,25 +28,42 @@ public class PlayerAttack : MonoBehaviour
         activeHoregs = new List<GameObject>();
         playerStats = GetComponent<PlayerStats>();
 
-        foreach (GameObject horeg in horegPrefabs)
+        // Initial setup from the prefab list
+        AssignHoregsFromPrefabs();
+    }
+
+    private void AssignHoregsFromPrefabs()
+    {
+        if (horegPrefabs.Count > 0 && horegPrefabs[0] != null) toa = horegPrefabs[0].GetComponent<ToaRW>();
+        if (horegPrefabs.Count > 1 && horegPrefabs[1] != null) kondangan = horegPrefabs[1].GetComponent<BassKondangan>();
+        if (horegPrefabs.Count > 2 && horegPrefabs[2] != null) dugem = horegPrefabs[2].GetComponent<SubwooferDugem>();
+        if (horegPrefabs.Count > 3 && horegPrefabs[3] != null) superHoreg = horegPrefabs[3].GetComponent<RealHoreg>();
+    }
+
+    public List<GameObject> GetEquippedHoregPrefabs()
+    {
+        return new List<GameObject>(horegPrefabs);
+    }
+
+    public void EquipNewHoreg(GameObject newHoregPrefab, int slotIndex)
+    {
+        if (slotIndex < 1 || slotIndex > 4)
         {
-            if (horeg.GetComponent<ToaRW>() != null)
-            {
-                toa = horeg.GetComponent<ToaRW>();
-            }
-            if (horeg.GetComponent<BassKondangan>() != null)
-            {
-                kondangan = horeg.GetComponent<BassKondangan>();
-            }
-            if (horeg.GetComponent<SubwooferDugem>() != null)
-            {
-                dugem = horeg.GetComponent<SubwooferDugem>();
-            }
-            if (horeg.GetComponent<RealHoreg>() != null)
-            {
-                superHoreg = horeg.GetComponent<RealHoreg>();
-            }
+            Debug.LogError($"Invalid slot index: {slotIndex}. Must be between 1 and 4.");
+            return;
         }
+
+        // Ensure the prefab list is large enough
+        while (horegPrefabs.Count < slotIndex)
+        {
+            horegPrefabs.Add(null);
+        }
+
+        horegPrefabs[slotIndex - 1] = newHoregPrefab;
+        Debug.Log($"Equipped {newHoregPrefab.name} into slot {slotIndex}.");
+
+        // Re-assign all weapon references
+        AssignHoregsFromPrefabs();
     }
 
     // Update is called once per frame
@@ -56,22 +73,26 @@ public class PlayerAttack : MonoBehaviour
 
         bool isOnBeat = Mathf.Abs(Time.time - nextBeatTime) <= beatWindow;
 
+        // Slot 1 (W) is always available
         if (toa != null && Input.GetKeyDown(KeyCode.W))
         {
             toa.Use(transform, playerStats);
         }
 
-        if (kondangan != null && Input.GetKeyDown(KeyCode.A))
+        // Slot 2 (A)
+        if (playerStats.unlockedHoregSlots >= 2 && kondangan != null && Input.GetKeyDown(KeyCode.A))
         {
             kondangan.Use(transform, playerStats);
         }
 
-        if (dugem != null && Input.GetKeyDown(KeyCode.S))
+        // Slot 3 (S)
+        if (playerStats.unlockedHoregSlots >= 3 && dugem != null && Input.GetKeyDown(KeyCode.S))
         {
             dugem.Use(transform, playerStats);
         }
 
-        if (superHoreg != null && Input.GetKeyDown(KeyCode.D))
+        // Slot 4 (D)
+        if (playerStats.unlockedHoregSlots >= 4 && superHoreg != null && Input.GetKeyDown(KeyCode.D))
         {
             superHoreg.Use(transform, playerStats);
         }

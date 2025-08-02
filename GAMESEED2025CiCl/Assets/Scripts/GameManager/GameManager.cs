@@ -6,14 +6,14 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
 
-    public int levelUnlocked = 1;
-    public int totalCoins = 0;
+    // --- Meta Progression Data ---
+    public int soundChips = 0;
+    public Dictionary<string, int> metaUpgradeLevels = new Dictionary<string, int>();
+    public List<string> unlockedHoregs = new List<string> { "ToaRW" }; // Dimulai dari ToaRW
     public string lastCharacterUsed = "Default";
-    public List<string> unlockedItems = new List<string>();
-
+    
     private string savePath;
-
-    public int currentSlot = 0; // Default ke slot 0
+    public int currentSlot = 0;
 
     void Awake()
     {
@@ -44,10 +44,11 @@ public class GameManager : MonoBehaviour
     {
         if (File.Exists(savePath))
             File.Delete(savePath);
-        levelUnlocked = 1;
-        totalCoins = 0;
+        
+        soundChips = 0;
+        metaUpgradeLevels.Clear();
+        unlockedHoregs = new List<string> { "ToaRW" };
         lastCharacterUsed = "Default";
-        unlockedItems.Clear();
     }
 
     public void SaveProgressToSlot(int slot)
@@ -55,10 +56,10 @@ public class GameManager : MonoBehaviour
         string path = Path.Combine(Application.persistentDataPath, $"saveData_slot{slot}.json");
         SaveData data = new SaveData()
         {
-            levelUnlocked = levelUnlocked,
-            totalCoins = totalCoins,
-            lastCharacterUsed = lastCharacterUsed,
-            unlockedItems = unlockedItems
+            soundChips = this.soundChips,
+            metaUpgradeLevels = this.metaUpgradeLevels,
+            unlockedHoregs = this.unlockedHoregs,
+            lastCharacterUsed = this.lastCharacterUsed
         };
 
         string json = JsonUtility.ToJson(data, true);
@@ -74,23 +75,31 @@ public class GameManager : MonoBehaviour
             string json = File.ReadAllText(path);
             SaveData data = JsonUtility.FromJson<SaveData>(json);
 
-            levelUnlocked = data.levelUnlocked;
-            totalCoins = data.totalCoins;
+            soundChips = data.soundChips;
+            metaUpgradeLevels = data.metaUpgradeLevels ?? new Dictionary<string, int>();
+            unlockedHoregs = data.unlockedHoregs ?? new List<string> { "ToaRW" };
             lastCharacterUsed = data.lastCharacterUsed;
-            unlockedItems = data.unlockedItems ?? new List<string>();
             currentSlot = slot;
         }
     }
 
+    // Helper method buat meta upgrades
+    public int GetMetaUpgradeLevel(string upgradeId)
+    {
+        return metaUpgradeLevels.ContainsKey(upgradeId) ? metaUpgradeLevels[upgradeId] : 0;
+    }
+
+    public void SetMetaUpgradeLevel(string upgradeId, int level)
+    {
+        metaUpgradeLevels[upgradeId] = level;
+    }
+
     void Start()
     {
-        // Example: Player earns 200 soundchips
         SaveManager.CurrentProgression.currentSoundchip += 200;
 
-        // Example: Upgrade speaker cooldown
         SaveManager.CurrentProgression.speakerData.cooldownLevel++;
 
-        // Example: Calculate new desibel stat
         float newStat = SaveManager.CurrentProgression.speakerData.GetStat(100f);
         Debug.Log("Current Speaker Power: " + newStat);
     }
@@ -110,5 +119,4 @@ public class GameManager : MonoBehaviour
             SaveManager.CurrentProgression.currentSoundchip -= amount;
         }
     }
-
 }

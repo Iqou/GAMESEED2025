@@ -80,24 +80,20 @@ public class ShopManager : MonoBehaviour
     public bool PurchaseItem(ShopItem item, GameObject buyer)
     {
         PlayerStats playerStats = buyer.GetComponent<PlayerStats>();
-        int cost = 0;
-
-        if (item is AttributeUpgradeItem upgradeItem)
+        if (playerStats == null)
         {
-            cost = upgradeItem.GetCurrentCost(playerStats);
-        }
-        else
-        {
-            cost = item.GetCurrentCost();
+            Debug.LogError("Buyer does not have a PlayerStats component!");
+            return false;
         }
 
-        if (GameManager.Instance.totalCoins >= cost)
+        int cost = item.GetCurrentCost(playerStats);
+
+        if (playerStats.money >= cost)
         {
             if (item.Purchase(buyer))
             {
-                GameManager.Instance.totalCoins -= cost;
-                Debug.Log($"Purchase successful: {item.itemName}. Remaining Rupiah: {GameManager.Instance.totalCoins}");
-
+                playerStats.AddMoney(-cost); // Use the AddMoney method to correctly track spending
+                Debug.Log($"Purchase successful: {item.itemName}. Remaining Rupiah: {playerStats.money}");
                 return true;
             }
             else
@@ -108,7 +104,7 @@ public class ShopManager : MonoBehaviour
         }
         else
         {
-            Debug.Log($"Not enough Rupiah to purchase {item.itemName}. Required: {cost}, Have: {GameManager.Instance.totalCoins}");
+            Debug.Log($"Not enough Rupiah to purchase {item.itemName}. Required: {cost}, Have: {playerStats.money}");
             return false;
         }
     }

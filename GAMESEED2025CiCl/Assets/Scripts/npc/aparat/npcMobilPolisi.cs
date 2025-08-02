@@ -1,9 +1,10 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-public class npcMobilPolisiElit : MonoBehaviour, INPCDamageable
+public class npcMobilPolisi : MonoBehaviour, INPCDamageable
 {
     GameObject player;
+    OverworldHealth playerHealth;
     NavMeshAgent Agent;
 
     [Header("Layer Settings")]
@@ -18,7 +19,6 @@ public class npcMobilPolisiElit : MonoBehaviour, INPCDamageable
     [SerializeField] float sightRange = 20f;
     [SerializeField] float stopDistance = 3f;
     [SerializeField] float attackRange = 2f;      // Melee
-    [SerializeField] float rangedRange = 10f;     // Ranged mulai menyerang
     [SerializeField] float attackCooldown = 2f;
     [Range(10, 40)] public int attackDamage = 10;
     float nextAttackTime = 0f;
@@ -30,10 +30,6 @@ public class npcMobilPolisiElit : MonoBehaviour, INPCDamageable
 
     [Header("Reward Prefabs")]
     public GameObject expPrefab;
-
-    [Header("Attack Prefabs")]
-    public GameObject sendalPrefab;
-    public Transform firePoint;
 
     bool playerInSight;
     bool isDead = false;
@@ -84,12 +80,6 @@ public class npcMobilPolisiElit : MonoBehaviour, INPCDamageable
         if (distanceToPlayer > attackRange)
         {
             Agent.SetDestination(player.transform.position);
-
-            // 🔹 Ranged attack jika dalam jarak tertentu
-            if (distanceToPlayer <= rangedRange)
-            {
-                TryRangedAttack();
-            }
         }
         else
         {
@@ -105,23 +95,10 @@ public class npcMobilPolisiElit : MonoBehaviour, INPCDamageable
             nextAttackTime = Time.time + attackCooldown;
             Debug.Log($"{gameObject.name} menyerang melee player dengan damage {attackDamage}!");
             // player.GetComponent<PlayerHealth>()?.TakeDamage(attackDamage);
-        }
-    }
-
-    void TryRangedAttack()
-    {
-        if (Time.time >= nextAttackTime && sendalPrefab != null && firePoint != null)
-        {
-            nextAttackTime = Time.time + attackCooldown;
-
-            // Spawn sendal
-            GameObject bullet = Instantiate(sendalPrefab, firePoint.position, firePoint.rotation);
-            Vector3 dir = (player.transform.position - firePoint.position).normalized;
-
-            // Set arah ke script SendalProjectile
-            bullet.GetComponent<sendalProjectile>()?.SetDirection(dir);
-
-            Debug.Log($"{gameObject.name} melempar sendal ke player!");
+             if (playerHealth != null)
+            {
+                playerHealth.ChangeHealth(-attackDamage);
+            }
         }
     }
 
@@ -130,26 +107,15 @@ public class npcMobilPolisiElit : MonoBehaviour, INPCDamageable
     {
         isDead = true;
         Debug.Log($"{gameObject.name} mati dan drop exp {giveExperience}!");
-        spawnReward();
-        Destroy(gameObject, 0.5f);
-    }
-
-    void spawnReward()
-    {
-
-        if (expPrefab != null)
+        if (player != null)
         {
-            GameObject exp = Instantiate(expPrefab, transform.position + Vector3.up * 1f, Quaternion.identity);
-            Rigidbody rb = exp.GetComponent<Rigidbody>();
-            if (rb != null)
+            PlayerStats playerStats = player.GetComponent<PlayerStats>();
+            if (playerStats != null)
             {
-                rb.AddForce(new Vector3(Random.Range(-1f, 1f), 1f, Random.Range(-1f, 1f)) * 3f, ForceMode.Impulse);
+                playerStats.AddExperience(giveExperience);
             }
-            // 🔹 Hapus otomatis setelah 10 detik
-            Destroy(exp, 10f);
         }
-
-        Debug.Log($"{gameObject.name} melempar koin dan exp {giveExperience}!");
+        Destroy(gameObject, 0.5f);
     }
 
     //behavior

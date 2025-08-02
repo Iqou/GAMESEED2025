@@ -1,9 +1,10 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-public class npcSatpamKomplek : MonoBehaviour, INPCDamageable
+public class npcMobilPolisiElit : MonoBehaviour, INPCDamageable
 {
     GameObject player;
+    OverworldHealth playerHealth;
     NavMeshAgent Agent;
 
     [Header("Layer Settings")]
@@ -27,6 +28,9 @@ public class npcSatpamKomplek : MonoBehaviour, INPCDamageable
     [Range(500, 1000)] public int Tolerance = 500;
     [Range(50, 500)] public int giveExperience = 50;
     public int wantedLevel = 1;
+
+    [Header("Reward Prefabs")]
+    public GameObject expPrefab;
 
     [Header("Attack Prefabs")]
     public GameObject sendalPrefab;
@@ -101,7 +105,11 @@ public class npcSatpamKomplek : MonoBehaviour, INPCDamageable
         {
             nextAttackTime = Time.time + attackCooldown;
             Debug.Log($"{gameObject.name} menyerang melee player dengan damage {attackDamage}!");
-            player.GetComponent<OverworldHealth>()?.ChangeHealth(-attackDamage);
+            // player.GetComponent<PlayerHealth>()?.TakeDamage(attackDamage);
+            if (playerHealth != null)
+            {
+                playerHealth.ChangeHealth(-attackDamage);
+            }
         }
     }
 
@@ -126,8 +134,7 @@ public class npcSatpamKomplek : MonoBehaviour, INPCDamageable
     void Die()
     {
         isDead = true;
-        Debug.Log($"{gameObject.name} mati dan memberikan {giveExperience} EXP!");
-        
+        Debug.Log($"{gameObject.name} mati dan drop exp {giveExperience}!");
         if (player != null)
         {
             PlayerStats playerStats = player.GetComponent<PlayerStats>();
@@ -136,12 +143,9 @@ public class npcSatpamKomplek : MonoBehaviour, INPCDamageable
                 playerStats.AddExperience(giveExperience);
             }
         }
-
-        // TODO: Panggil UniversalMoneySpawner untuk drop uang
-        // UniversalMoneySpawner.Instance.SpawnMoney(transform.position, moneyToDrop);
-
         Destroy(gameObject, 0.5f);
     }
+
 
     //behavior
     void Patrol()

@@ -4,6 +4,7 @@ using UnityEngine.AI;
 public class npcPolisiUmum : MonoBehaviour, INPCDamageable
 {
     GameObject player;
+    OverworldHealth playerHealth;
     NavMeshAgent Agent;
 
     [Header("Layer Settings")]
@@ -37,6 +38,11 @@ public class npcPolisiUmum : MonoBehaviour, INPCDamageable
     {
         Agent = GetComponent<NavMeshAgent>();
         player = GameObject.Find("Player");
+
+        if (player != null)
+        {
+            playerHealth = player.GetComponent<OverworldHealth>();
+        }
     }
 
     // Update is called once per frame
@@ -64,6 +70,7 @@ public class npcPolisiUmum : MonoBehaviour, INPCDamageable
 
         Tolerance -= finalDamage;
         Debug.Log($"{gameObject.name} terkena serangan {finalDamage}! Sisa Tolerance: {Tolerance}");
+
 
         if (Tolerance <= 0)
         {
@@ -94,6 +101,10 @@ public class npcPolisiUmum : MonoBehaviour, INPCDamageable
             nextAttackTime = Time.time + attackCooldown;
             Debug.Log($"{gameObject.name} menyerang melee player dengan damage {attackDamage}!");
             // player.GetComponent<PlayerHealth>()?.TakeDamage(attackDamage);
+            if (playerHealth != null)
+            {
+                playerHealth.ChangeHealth(-attackDamage);
+            }
         }
     }
 
@@ -102,26 +113,15 @@ public class npcPolisiUmum : MonoBehaviour, INPCDamageable
     {
         isDead = true;
         Debug.Log($"{gameObject.name} mati dan drop exp {giveExperience}!");
-        spawnReward();
-        Destroy(gameObject, 0.5f);
-    }
-
-    void spawnReward()
-    {
-
-        if (expPrefab != null)
+        if (player != null)
         {
-            GameObject exp = Instantiate(expPrefab, transform.position + Vector3.up * 1f, Quaternion.identity);
-            Rigidbody rb = exp.GetComponent<Rigidbody>();
-            if (rb != null)
+            PlayerStats playerStats = player.GetComponent<PlayerStats>();
+            if (playerStats != null)
             {
-                rb.AddForce(new Vector3(Random.Range(-1f, 1f), 1f, Random.Range(-1f, 1f)) * 3f, ForceMode.Impulse);
+                playerStats.AddExperience(giveExperience);
             }
-            // 🔹 Hapus otomatis setelah 10 detik
-            Destroy(exp, 10f);
         }
-
-        Debug.Log($"{gameObject.name} melempar koin dan exp {giveExperience}!");
+        Destroy(gameObject, 0.5f);
     }
 
     //behavior

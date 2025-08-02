@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-public class npcFansFanatik : MonoBehaviour, INPCDamageable
+public class npcBapakBapakPensiunan : MonoBehaviour, INPCDamageable
 {
     GameObject player;
     NavMeshAgent Agent;
@@ -17,6 +17,10 @@ public class npcFansFanatik : MonoBehaviour, INPCDamageable
     //chase
     [SerializeField] float sightRange = 20f;
     [SerializeField] float stopDistance = 3f;
+    [SerializeField] float attackRange = 2f;
+    [SerializeField] float attackCooldown = 2f;
+    [SerializeField] int attackDamage = 10;
+    float nextAttackTime = 0f;
     bool playerInSight;
 
     //Atribut NPC
@@ -40,10 +44,9 @@ public class npcFansFanatik : MonoBehaviour, INPCDamageable
 
     [Range(50, 500)]
     public int giveExperience = 100;
-
+    
     [Header("Reward Prefabs")]
     public GameObject coinPrefab;
-    public GameObject expPrefab;
 
     bool isAggro = false;
     bool isFleeing = false;
@@ -69,7 +72,8 @@ public class npcFansFanatik : MonoBehaviour, INPCDamageable
         }
         else if (isAggro && playerInSight)
         {
-            ChasePlayer();
+            ChaseAndAttackPlayer();
+            tryCallPolice();
         }
         else if (playerInSight)
         {
@@ -120,7 +124,7 @@ public class npcFansFanatik : MonoBehaviour, INPCDamageable
             if (!isFleeing) Debug.Log($"{gameObject.name} isFleeing=true");
             isFleeing = true;
             isAggro = false;
-            return; // ⬅ Hentikan di sini
+            return;
         }
 
         // Aggro
@@ -129,7 +133,7 @@ public class npcFansFanatik : MonoBehaviour, INPCDamageable
             if (!isAggro) Debug.Log($"{gameObject.name} isAggro=true)");
             isAggro = true;
             isFleeing = false;
-            return; // ⬅ Hentikan di sini
+            return;
         }
 
         // fan
@@ -140,41 +144,42 @@ public class npcFansFanatik : MonoBehaviour, INPCDamageable
         isFleeing = false;
     }
 
-    void spawnReward()
+    void tryCallPolice()
     {
-        int finalCoin = giveCoin;
-        int finalExp = giveExperience;
-        if (isAggro)
-        {
-            finalCoin = Mathf.RoundToInt(giveCoin * 1.1f);
-            finalExp = Mathf.RoundToInt(giveExperience * 1.1f);
-        }
-
-        if (coinPrefab != null)
-        {
-            GameObject coin = Instantiate(coinPrefab, transform.position + Vector3.up * 1f, Quaternion.identity);
-            Rigidbody rb = coin.GetComponent<Rigidbody>();
-            if (rb != null)
+        if (nextPhoneTime <= 0)
             {
-                rb.AddForce(new Vector3(Random.Range(-1f, 1f), 1f, Random.Range(-1f, 1f)) * 3f, ForceMode.Impulse);
+                CallPolice();
+                nextPhoneTime = phoneCooldown;
             }
-            Destroy(coin, 10f);
-        }
-
-        if (expPrefab != null)
-        {
-            GameObject exp = Instantiate(expPrefab, transform.position + Vector3.up * 1f, Quaternion.identity);
-            Rigidbody rb = exp.GetComponent<Rigidbody>();
-            if (rb != null)
-            {
-                rb.AddForce(new Vector3(Random.Range(-1f, 1f), 1f, Random.Range(-1f, 1f)) * 3f, ForceMode.Impulse);
-            }
-            Destroy(exp, 10f);
-        }
-
-        Debug.Log($"{gameObject.name} melempar koin {finalCoin} dan exp {finalExp}!");
     }
 
+    void CallPolice()
+    {
+        Debug.Log($"{gameObject.name} menelpon aparat!");
+    }
+
+    void spawnReward()
+    {
+        // Langsung aja ngasih player xpnya
+        if (player != null)
+        {
+            PlayerStats playerStats = player.GetComponent<PlayerStats>();
+            if (playerStats != null)
+            {
+                playerStats.AddExperience(giveExperience);
+            }
+        }
+
+        // Fungsi Spawn duit
+        if (UniversalMoneySpawner.Instance != null)
+        {
+            UniversalMoneySpawner.Instance.SpawnMoney(transform.position, giveCoin);
+        }
+
+        Debug.Log($"{gameObject.name} gave {giveExperience} EXP and dropped {giveCoin} money!");
+
+        isFan = false;
+    }
 
     //behavior
     void Patrol()
@@ -209,6 +214,35 @@ public class npcFansFanatik : MonoBehaviour, INPCDamageable
         else
         {
             Agent.ResetPath(); // berhenti bergerak jika sudah cukup dekat
+        }
+    }
+
+    void ChaseAndAttackPlayer()
+    {
+        float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
+
+        if (distanceToPlayer > attackRange)
+        {
+            Agent.SetDestination(player.transform.position);
+        }
+        else
+        {
+            Agent.ResetPath();
+            TryAttackPlayer();
+        }
+    }
+
+    void TryAttackPlayer()
+    {
+        if (Time.time >= nextAttackTime)
+        {
+            nextAttackTime = Time.time + attackCooldown;
+
+            // 🔹 Lakukan serangan melee
+            Debug.Log($"{gameObject.name} menyerang player dengan damage {attackDamage}!");
+
+            // Kalau player punya script Health:
+            player.GetComponent<OverworldHealth>()?.ChangeHealth(-attackDamage);
         }
     }
 

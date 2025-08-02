@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-public class npcBapakBapakPensiunan : MonoBehaviour, INPCDamageable
+public class npcFansFanatik : MonoBehaviour, INPCDamageable
 {
     GameObject player;
     NavMeshAgent Agent;
@@ -17,10 +17,6 @@ public class npcBapakBapakPensiunan : MonoBehaviour, INPCDamageable
     //chase
     [SerializeField] float sightRange = 20f;
     [SerializeField] float stopDistance = 3f;
-    [SerializeField] float attackRange = 2f;
-    [SerializeField] float attackCooldown = 2f;
-    [SerializeField] int attackDamage = 10;
-    float nextAttackTime = 0f;
     bool playerInSight;
 
     //Atribut NPC
@@ -72,8 +68,7 @@ public class npcBapakBapakPensiunan : MonoBehaviour, INPCDamageable
         }
         else if (isAggro && playerInSight)
         {
-            ChaseAndAttackPlayer();
-            tryCallPolice();
+            ChasePlayer();
         }
         else if (playerInSight)
         {
@@ -124,7 +119,7 @@ public class npcBapakBapakPensiunan : MonoBehaviour, INPCDamageable
             if (!isFleeing) Debug.Log($"{gameObject.name} isFleeing=true");
             isFleeing = true;
             isAggro = false;
-            return;
+            return; // ⬅ Hentikan di sini
         }
 
         // Aggro
@@ -133,7 +128,7 @@ public class npcBapakBapakPensiunan : MonoBehaviour, INPCDamageable
             if (!isAggro) Debug.Log($"{gameObject.name} isAggro=true)");
             isAggro = true;
             isFleeing = false;
-            return;
+            return; // ⬅ Hentikan di sini
         }
 
         // fan
@@ -144,42 +139,36 @@ public class npcBapakBapakPensiunan : MonoBehaviour, INPCDamageable
         isFleeing = false;
     }
 
-    void tryCallPolice()
-    {
-        if (nextPhoneTime <= 0)
-            {
-                CallPolice();
-                nextPhoneTime = phoneCooldown;
-            }
-    }
-
-    void CallPolice()
-    {
-        Debug.Log($"{gameObject.name} menelpon aparat!");
-    }
-
     void spawnReward()
     {
-        // Langsung aja ngasih player hpnya
+        int finalCoin = giveCoin;
+        int finalExp = giveExperience;
+        if (isAggro)
+        {
+            finalCoin = Mathf.RoundToInt(giveCoin * 1.1f);
+            finalExp = Mathf.RoundToInt(giveExperience * 1.1f);
+        }
+
         if (player != null)
         {
             PlayerStats playerStats = player.GetComponent<PlayerStats>();
             if (playerStats != null)
             {
-                playerStats.AddExperience(giveExperience);
+                playerStats.AddExperience(finalExp);
             }
         }
 
         // Fungsi Spawn duit
         if (UniversalMoneySpawner.Instance != null)
         {
-            UniversalMoneySpawner.Instance.SpawnMoney(transform.position, giveCoin);
+            UniversalMoneySpawner.Instance.SpawnMoney(transform.position, finalCoin);
         }
 
         Debug.Log($"{gameObject.name} gave {giveExperience} EXP and dropped {giveCoin} money!");
 
         isFan = false;
     }
+
 
     //behavior
     void Patrol()
@@ -214,35 +203,6 @@ public class npcBapakBapakPensiunan : MonoBehaviour, INPCDamageable
         else
         {
             Agent.ResetPath(); // berhenti bergerak jika sudah cukup dekat
-        }
-    }
-
-    void ChaseAndAttackPlayer()
-    {
-        float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
-
-        if (distanceToPlayer > attackRange)
-        {
-            Agent.SetDestination(player.transform.position);
-        }
-        else
-        {
-            Agent.ResetPath();
-            TryAttackPlayer();
-        }
-    }
-
-    void TryAttackPlayer()
-    {
-        if (Time.time >= nextAttackTime)
-        {
-            nextAttackTime = Time.time + attackCooldown;
-
-            // 🔹 Lakukan serangan melee
-            Debug.Log($"{gameObject.name} menyerang player dengan damage {attackDamage}!");
-
-            // Kalau player punya script Health:
-            player.GetComponent<OverworldHealth>()?.ChangeHealth(-attackDamage);
         }
     }
 

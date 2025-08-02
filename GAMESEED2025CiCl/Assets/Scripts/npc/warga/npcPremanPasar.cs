@@ -43,7 +43,6 @@ public class npcPremanPasar : MonoBehaviour, INPCDamageable
 
     [Header("Reward Prefabs")]
     public GameObject coinPrefab;
-    public GameObject expPrefab;
 
     bool isAggro = false;
     bool isFleeing = false;
@@ -156,7 +155,7 @@ public class npcPremanPasar : MonoBehaviour, INPCDamageable
 
         if (isFan)
         {
-            spawnReward();
+
         }
     }
 
@@ -190,50 +189,6 @@ public class npcPremanPasar : MonoBehaviour, INPCDamageable
         isAggro = false;
         isFleeing = false;
     }
-
-    void tryCallPolice()
-    {
-        if (nextPhoneTime <= 0)
-            {
-                CallPolice();
-                nextPhoneTime = phoneCooldown;
-            }
-    }
-
-    void CallPolice()
-    {
-        Debug.Log($"{gameObject.name} menelpon aparat!");
-    }
-
-    void spawnReward()
-    {
-        if (coinPrefab != null)
-        {
-            GameObject coin = Instantiate(coinPrefab, transform.position + Vector3.up * 1f, Quaternion.identity);
-            Rigidbody rb = coin.GetComponent<Rigidbody>();
-            if (rb != null)
-            {
-                rb.AddForce(new Vector3(Random.Range(-1f, 1f), 1f, Random.Range(-1f, 1f)) * 3f, ForceMode.Impulse);
-            }
-            // 🔹 Hapus otomatis setelah 10 detik
-            Destroy(coin, 10f);
-        }
-
-        if (expPrefab != null)
-        {
-            GameObject exp = Instantiate(expPrefab, transform.position + Vector3.up * 1f, Quaternion.identity);
-            Rigidbody rb = exp.GetComponent<Rigidbody>();
-            if (rb != null)
-            {
-                rb.AddForce(new Vector3(Random.Range(-1f, 1f), 1f, Random.Range(-1f, 1f)) * 3f, ForceMode.Impulse);
-            }
-            // 🔹 Hapus otomatis setelah 10 detik
-            Destroy(exp, 10f);
-        }
-
-        Debug.Log($"{gameObject.name} melempar koin {giveCoin} dan exp {giveExperience}!");
-    }
-
 
     //behavior
     void Patrol()

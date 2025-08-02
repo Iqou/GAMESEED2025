@@ -252,28 +252,28 @@ MonoBehaviour:
   m_GameObject: {fileID: 7708272947473252093}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 797f05dd9a6d9fc428e9b70c07bca255, type: 3}
+  m_Script: {fileID: 11500000, guid: a938df5007fa7234a80760360748548c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   groundLayer:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 0
   playerLayer:
     serializedVersion: 2
-    m_Bits: 128
+    m_Bits: 0
   obstacleLayer:
     serializedVersion: 2
     m_Bits: 0
   range: 10
-  sightRange: 13
+  sightRange: 20
   stopDistance: 3
   sensitivitasDesibel: 100
-  currEmotion: 100
-  aggroLevel: 20
-  fearLevel: 15
-  phoneCooldown: 0
+  currEmotion: 0
+  aggroLevel: 0
+  fearLevel: 0
+  phoneCooldown: 120
   nextPhoneTime: 0
-  giveCoin: 10000
-  giveExperience: 300
-  coinPrefab: {fileID: 9206503487750994625, guid: 17b5c74cbc8df124aa640b1ea0777240, type: 3}
-  expPrefab: {fileID: 771062891091849834, guid: 2f69958459b6ac14082ab0bead613853, type: 3}
+  giveCoin: 5000
+  giveExperience: 100
+  coinPrefab: {fileID: 0}
+  expPrefab: {fileID: 0}

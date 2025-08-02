@@ -10,7 +10,7 @@ public class MetaPreviewUI : MonoBehaviour
 
     void Start()
     {
-        levelText.text = "Level Unlocked: " + GameManager.Instance.levelUnlocked;
+        levelText.text = "Player level: " + GameManager.Instance.level;
         coinText.text = "Coins: " + GameManager.Instance.totalCoins;
         characterText.text = "Character: " + GameManager.Instance.lastCharacterUsed;
         unlockedText.text = "Unlocked: " + string.Join(", ", GameManager.Instance.unlockedItems);

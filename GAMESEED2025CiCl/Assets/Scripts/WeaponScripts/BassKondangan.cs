@@ -30,19 +30,33 @@ public class BassKondangan : MonoBehaviour
     private GameObject aoeInstance;
     public GameObject aoePrefab;
 
-    public void Use(Transform owner, PlayerStats playerStats)
+    private PlayerStats playerStats; 
+
+    void Start()
     {
-        // Dynamic Stat Calculation
-        float damageMultiplier = playerStats != null ? playerStats.damageMultiplier : 1f;
-        float areaMultiplier = playerStats != null ? playerStats.areaOfEffectBonus : 1f;
-        float cooldownReduction = playerStats != null ? playerStats.cooldownReduction : 0f;
+        playerStats = GetComponentInParent<PlayerStats>();
+        if (playerStats == null)
+        {
+            Debug.LogError("PlayerStats component not found");
+        }
+        UpdateStats();
+    }
 
-        float currentCooldown = Mathf.Max(0.1f, (1.5f - (cooldownLevel - 1) * 0.5f) * (1 - cooldownReduction));
-        float currentArea = (9f + (areaLevel - 1) * 1.5f) * areaMultiplier;
-        float currentMaxDamage = (100f + (desibelLevel - 1) * 2f) * damageMultiplier;
-        float currentMinDamage = (90f + (desibelLevel - 1) * 2f) * damageMultiplier;
+    void UpdateStats()
+    {
+        desibelOutput = baseDesibelOutput + (desibelLevel - 1) * 2f;
+        areaJangkauan += (areaLevel - 1) * 1.5f;
+        cooldownTime = Mathf.Max(1f, cooldownTime - (cooldownLevel - 1) * 0.5f);
+    }
 
-        if (Time.time >= lastActiveTime + currentCooldown)
+    public void Use(Transform owner)
+    {
+        if (lastActiveTime > Time.time)
+        {
+            lastActiveTime = Time.time - cooldownTime;
+        }
+
+        if (Time.time >= lastActiveTime + cooldownTime)
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out RaycastHit hit))
@@ -56,13 +70,13 @@ public class BassKondangan : MonoBehaviour
                 aoeInstance = Instantiate(aoePrefab, spawnPos, spawnRot);
 
                 aoeInstance.transform.localScale = Vector3.one;
-                aoeInstance.transform.localScale = new Vector3(currentArea/2, 0.1f, currentArea);
+                aoeInstance.transform.localScale = new Vector3(areaJangkauan/2, 0.1f, areaJangkauan);
 
                 StaticAoe attribute = aoeInstance.GetComponent<StaticAoe>();
-                attribute.areaJangkauan = currentArea;
+                attribute.areaJangkauan = areaJangkauan;
                 attribute.duration = duration;
-                attribute.minDesibelOutput = currentMinDamage;
-                attribute.maxDesibelOutput = currentMaxDamage;
+                attribute.minDesibelOutput = minDesibelOutput;
+                attribute.maxDesibelOutput = maxDesibelOutput;
 
                 attackPos = spawnPos;
                 lastActiveTime = Time.time;
@@ -71,7 +85,7 @@ public class BassKondangan : MonoBehaviour
         }
         else
         {
-            Debug.Log($"Masih cooldown sisa {(lastActiveTime + currentCooldown) - Time.time} lagi, waktu saat ini {Time.time}");
+            Debug.Log($"Masih cooldown sisa {(lastActiveTime + cooldownTime) - Time.time} lagi, waktu saat ini {Time.time}");
         }
     }
 }

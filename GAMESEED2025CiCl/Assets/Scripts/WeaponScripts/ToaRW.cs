@@ -28,20 +28,30 @@ public class ToaRW : MonoBehaviour
     private GameObject aoeInstance;
     public GameObject aoePrefab;
 
-    public void Use(Transform owner, PlayerStats playerStats)
+    private PlayerStats playerStats;
+
+    void Start()
     {
-        // Dynamic Stat Calculation
-        float damageMultiplier = playerStats != null ? playerStats.damageMultiplier : 1f;
-        float areaMultiplier = playerStats != null ? playerStats.areaOfEffectBonus : 1f;
-        float cooldownReduction = playerStats != null ? playerStats.cooldownReduction : 0f;
+        playerStats = GetComponentInParent<PlayerStats>();
+        if (playerStats == null) Debug.LogError("PlayerStats component not found on parent!");
+        UpdateStatus();   
+    }
+    
+    void UpdateStatus()
+    {
+        desibelOutput = baseDesibelOutput + (desibelLevel - 1) * 2f;
+        areaJangkauan += (areaLevel - 1) * 1.5f;
+        cooldownTime = Mathf.Max(1f, cooldownTime - (cooldownLevel - 1) * 0.5f);
+    }
 
-        float currentCooldown = Mathf.Max(0.1f, (1f - (cooldownLevel - 1) * 0.5f) * (1 - cooldownReduction));
-        float currentArea = (5f + (areaLevel - 1) * 1.5f) * areaMultiplier;
-        float currentMaxDamage = (80f + (desibelLevel - 1) * 2f) * damageMultiplier;
-        float currentMinDamage = (70f + (desibelLevel - 1) * 2f) * damageMultiplier;
+    public void Use(Transform owner)
+    {
+        if (lastActiveTime > Time.time)
+        {
+            lastActiveTime = Time.time - cooldownTime;
+        }
 
-
-        if (Time.time >= lastActiveTime + currentCooldown)
+        if (Time.time >= lastActiveTime + cooldownTime)
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out RaycastHit hit))
@@ -55,13 +65,13 @@ public class ToaRW : MonoBehaviour
                 aoeInstance = Instantiate(aoePrefab, spawnPos, spawnRot);
 
                 aoeInstance.transform.localScale = Vector3.one;
-                aoeInstance.transform.localScale = new Vector3(currentArea, currentArea, currentArea);
+                aoeInstance.transform.localScale = new Vector3(areaJangkauan, areaJangkauan, areaJangkauan);
 
                 StaticAoe attribute = aoeInstance.GetComponent<StaticAoe>();
-                attribute.areaJangkauan = currentArea;
+                attribute.areaJangkauan = areaJangkauan;
                 attribute.duration = duration;
-                attribute.minDesibelOutput = currentMinDamage;
-                attribute.maxDesibelOutput = currentMaxDamage;
+                attribute.minDesibelOutput = minDesibelOutput;
+                attribute.maxDesibelOutput = maxDesibelOutput;
 
                 attackPos = spawnPos;
                 lastActiveTime = Time.time;
@@ -70,7 +80,7 @@ public class ToaRW : MonoBehaviour
         }
         else
         {
-            Debug.Log($"Masih cooldown sisa {(lastActiveTime + currentCooldown) - Time.time} lagi, waktu saat ini {Time.time}");
+            Debug.Log($"Masih cooldown sisa {(lastActiveTime + cooldownTime) - Time.time} lagi, waktu saat ini {Time.time}");
         }
     }
 }

@@ -41,6 +41,12 @@ public class SubwooferDugem : MonoBehaviour
         float currentMaxDamage = (100f + (desibelLevel - 1) * 2f) * damageMultiplier;
         float currentMinDamage = (90f + (desibelLevel - 1) * 2f) * damageMultiplier;
 
+        if (lastActiveTime > Time.time)
+        {
+            lastActiveTime = Time.time;
+        }
+
+
         if (Time.time >= lastActiveTime + currentCooldown)
         {
             Vector3 spawnPos = owner.position + owner.forward * 1.5f;

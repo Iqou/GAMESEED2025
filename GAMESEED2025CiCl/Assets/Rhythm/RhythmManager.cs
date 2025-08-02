@@ -24,16 +24,20 @@ public class RhythmManager : MonoBehaviour
     public float noteApproachTime = 1.5f;
 
     [Header("Mekanik Boss")]
-    [Tooltip("Kekuatan dasar pergerakan bar, 0-100 float")]
+    [Tooltip("Kekuatan drain health secara terus menerus, 0-100 float")]
     public float beatForce = 35f;
-    [Tooltip("Multiplier untuk menambah BeatForce, 1-5 kali float")]
+    [Tooltip("Multiplier untuk menambah drain health, 1-5 kali float")]
     public float beatMultiplier = 2f;
     [Tooltip("Frekuensi boss menggunakan beat multiplier, 0-5 kali/lagu integer")]
-    public int pressure = 3;
+    public int pressure = 2;
     [Tooltip("Batasan waktu beat multiplier aktif, 1-20 detik float")]
     public float beatMultiplierThreshold = 5f;
     [Tooltip("Jumlah kali boss merubah BPM, 1-5 kali integer")]
     public int tempoShiftCount = 4;
+    [Tooltip("Multiplier untuk mempercepat BPM secara acak")]
+    public float tempoShiftSpeedUpMultiplier = 1.5f;
+    [Tooltip("Multiplier untuk memperlambat BPM secara acak")]
+    public float tempoShiftSlowDownMultiplier = 0.7f;
     [Tooltip("Text UI untuk menampilkan peringatan BPM")]
     public TextMeshProUGUI bpmWarningText;
     public float bpmWarningDuration = 1.5f;
@@ -41,9 +45,8 @@ public class RhythmManager : MonoBehaviour
     private BeatmapData beatmapData;
     private List<HitObject> sortedHitObjects;
     private int nextHitObjectIndex = 0;
-    private bool beatMultiplierActive = false;
-    private int tempoShiftedCount = 0;
     private float defaultAudioPitch;
+    public Health healthScript;
 
     void Start()
     {
@@ -51,7 +54,8 @@ public class RhythmManager : MonoBehaviour
             leftArrowPrefab == null || downArrowPrefab == null ||
             upArrowPrefab == null || rightArrowPrefab == null ||
             leftLaneSpawnPoint == null || downLaneSpawnPoint == null ||
-            upLaneSpawnPoint == null || rightLaneSpawnPoint == null)
+            upLaneSpawnPoint == null || rightLaneSpawnPoint == null ||
+            healthScript == null)
         {
             Debug.LogError("RhythmManager is not fully configured. Disabling script.");
             enabled = false;
@@ -211,12 +215,7 @@ public class RhythmManager : MonoBehaviour
             MoveSpawn moveSpawnScript = newArrow.GetComponent<MoveSpawn>();
             if (moveSpawnScript != null)
             {
-                float currentSpeed = beatForce;
-                if(beatMultiplierActive)
-                {
-                    currentSpeed *= beatMultiplier;
-                }
-                moveSpawnScript.SetSpeed(currentSpeed);
+                moveSpawnScript.SetSpeed(beatForce);
             }
         }
     }
@@ -227,9 +226,9 @@ public class RhythmManager : MonoBehaviour
         {
             yield return new WaitForSeconds(audioSource.clip.length / pressure);
             Debug.Log("Beat Multiplier Activated!");
-            beatMultiplierActive = true;
+            healthScript.SetDrainRate(beatForce * beatMultiplier);
             yield return new WaitForSeconds(beatMultiplierThreshold);
-            beatMultiplierActive = false;
+            healthScript.SetDrainRate(0f);
             Debug.Log("Beat Multiplier Deactivated.");
             pressure--;
         }
@@ -243,8 +242,19 @@ public class RhythmManager : MonoBehaviour
         {
             yield return new WaitForSeconds(segmentTime);
             
-            audioSource.pitch = defaultAudioPitch * beatMultiplier;
-            Debug.Log("Tempo Shift Activated!");
+            // Logika acak untuk memilih apakah akan mempercepat atau memperlambat
+            float currentTempoMultiplier;
+            if (Random.value > 0.5f) // 50% kemungkinan untuk mempercepat
+            {
+                currentTempoMultiplier = tempoShiftSpeedUpMultiplier;
+            }
+            else // 50% kemungkinan untuk memperlambat
+            {
+                currentTempoMultiplier = tempoShiftSlowDownMultiplier;
+            }
+            
+            audioSource.pitch = defaultAudioPitch * currentTempoMultiplier;
+            Debug.Log("Tempo Shift Activated with multiplier: " + currentTempoMultiplier);
             
             if(bpmWarningText != null)
             {
@@ -254,6 +264,7 @@ public class RhythmManager : MonoBehaviour
                 bpmWarningText.text = "";
             }
             
+            // Kembali ke BPM normal
             audioSource.pitch = defaultAudioPitch;
         }
     }

@@ -3,8 +3,6 @@ using System.Collections.Generic;
 
 public class PlayerAttack : MonoBehaviour
 {
-    public GameObject aoePrefab;
-
     [Header("Assign Weapon Prefabs Here")]
     public List<GameObject> horegPrefabs; // Untuk konsistensi, gunakan List<GameObject> untuk menyimpan prefab senjata.
 
@@ -19,17 +17,8 @@ public class PlayerAttack : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        activeHoregs = new List<GameObject>();
-        foreach (GameObject prefab in horegPrefabs)
-        {
-            if (prefab != null)
-            {
-                GameObject weaponInstance = Instantiate(prefab, transform.position, transform.rotation, transform);
-                activeHoregs.Add(weaponInstance);
-            }
-        }
-
         nextBeatTime = Time.time * beatInterval;
+        activeHoregs = new List<GameObject>();
     }
 
     // Update is called once per frame
@@ -39,7 +28,7 @@ public class PlayerAttack : MonoBehaviour
 
         bool isOnBeat = Mathf.Abs(Time.time - nextBeatTime) <= beatWindow;
 
-        foreach (GameObject horeg in activeHoregs)
+        foreach (GameObject horeg in horegPrefabs)
         {
             ToaRW toa = horeg.GetComponent<ToaRW>();
             if (toa != null && Input.GetKeyDown(KeyCode.W))

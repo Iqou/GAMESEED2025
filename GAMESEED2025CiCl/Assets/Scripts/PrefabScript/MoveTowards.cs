@@ -39,8 +39,16 @@ public class MoveTowards : MonoBehaviour
     {
         if (other.CompareTag("NPC"))
         {
-            float damage = Random.Range(minDesibelOutput, maxDesibelOutput);
-            Debug.Log($"{other.name} Duarr kena damage dari Real Horeg, damage {damage} dB");
+            INPCDamageable damageable = other.GetComponent<INPCDamageable>();
+            if (damageable != null)
+            {
+                float damage = Random.Range(minDesibelOutput, maxDesibelOutput);
+
+                damageable.TakeDamage(damage);
+
+                Debug.Log($"{other.name} Duarr kena damage dari Real Horeg, damage {damage} dB");
+            }
+            
         }
     }
 

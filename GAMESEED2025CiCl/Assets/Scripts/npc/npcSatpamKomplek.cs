@@ -101,7 +101,7 @@ public class npcSatpamKomplek : MonoBehaviour, INPCDamageable
         {
             nextAttackTime = Time.time + attackCooldown;
             Debug.Log($"{gameObject.name} menyerang melee player dengan damage {attackDamage}!");
-            // player.GetComponent<PlayerHealth>()?.TakeDamage(attackDamage);
+            player.GetComponent<OverworldHealth>()?.ChangeHealth(-attackDamage);
         }
     }
 

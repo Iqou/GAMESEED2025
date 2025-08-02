@@ -160,15 +160,15 @@ MonoBehaviour:
   range: 10
   sightRange: 13
   stopDistance: 1
-  attackRange: 2
-  rangedRange: 10
-  attackCooldown: 2
+  attackRange: 8
+  rangedRange: 12
+  attackCooldown: 6
   attackDamage: 40
   Tolerance: 1000
   giveExperience: 250
   wantedLevel: 4
   expPrefab: {fileID: 771062891091849834, guid: 2f69958459b6ac14082ab0bead613853, type: 3}
-  sendalPrefab: {fileID: 0}
+  sendalPrefab: {fileID: 4044192123564303144, guid: de890222dd69ef647a1a8adb0a2e9ff4, type: 3}
   firePoint: {fileID: 4579051498908344256}
 --- !u!1 &3704832789186792894
 GameObject:

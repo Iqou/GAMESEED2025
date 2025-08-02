@@ -242,7 +242,7 @@ public class npcBapakBapakPensiunan : MonoBehaviour, INPCDamageable
             Debug.Log($"{gameObject.name} menyerang player dengan damage {attackDamage}!");
 
             // Kalau player punya script Health:
-            // player.GetComponent<PlayerHealth>()?.TakeDamage(attackDamage);
+            player.GetComponent<OverworldHealth>()?.ChangeHealth(-attackDamage);
         }
     }
 

@@ -32,7 +32,7 @@ public class npcSatpamKomplek : MonoBehaviour, INPCDamageable
     public GameObject expPrefab;
 
     [Header("Attack Prefabs")]
-    public GameObject bulletPrefab;
+    public GameObject sendalPrefab;
     public Transform firePoint;
 
     bool playerInSight;
@@ -110,21 +110,18 @@ public class npcSatpamKomplek : MonoBehaviour, INPCDamageable
 
     void TryRangedAttack()
     {
-        if (Time.time >= nextAttackTime && bulletPrefab != null && firePoint != null)
+        if (Time.time >= nextAttackTime && sendalPrefab != null && firePoint != null)
         {
             nextAttackTime = Time.time + attackCooldown;
 
-            // Spawn peluru
-            GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
-            Rigidbody rb = bullet.GetComponent<Rigidbody>();
-            if (rb != null)
-            {
-                Vector3 dir = (player.transform.position - firePoint.position).normalized;
-                rb.linearVelocity = dir * 10f; // Kecepatan peluru
-            }
+            // Spawn sendal
+            GameObject bullet = Instantiate(sendalPrefab, firePoint.position, firePoint.rotation);
+            Vector3 dir = (player.transform.position - firePoint.position).normalized;
 
-            Destroy(bullet, 5f);
-            Debug.Log($"{gameObject.name} menembak player!");
+            // Set arah ke script SendalProjectile
+            bullet.GetComponent<sendalProjectile>()?.SetDirection(dir);
+
+            Debug.Log($"{gameObject.name} melempar sendal ke player!");
         }
     }
 

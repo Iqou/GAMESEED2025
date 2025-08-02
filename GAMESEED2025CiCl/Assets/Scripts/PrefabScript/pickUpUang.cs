@@ -21,10 +21,16 @@ public class pickUpUang : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            Debug.Log($"Player mendapatkan {coinValue} koin!");
-
-            // Tambahkan logika menambah coin di script Player di sini
-            // other.GetComponent<PlayerInventory>()?.AddCoins(coinValue);
+            PlayerStats stats = other.GetComponent<PlayerStats>();
+            if (stats != null)
+            {
+                stats.AddMoney(coinValue);
+                Debug.Log($"Player mendapatkan {coinValue} koin!");
+            }
+            else
+            {
+                Debug.LogWarning("Player tidak memiliki komponen PlayerStats!");
+            }
 
             Destroy(gameObject);
         }

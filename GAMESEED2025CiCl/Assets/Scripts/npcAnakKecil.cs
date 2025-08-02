@@ -43,7 +43,6 @@ public class npcAnakKecil : MonoBehaviour, INPCDamageable
 
     [Header("Reward Prefabs")]
     public GameObject coinPrefab;
-    public GameObject expPrefab;
 
     bool isAggro = false;
     bool isFleeing = false;
@@ -157,31 +156,26 @@ public class npcAnakKecil : MonoBehaviour, INPCDamageable
 
     void spawnReward()
     {
-        if (coinPrefab != null)
+        // Directly give EXP to the player
+        if (player != null)
         {
-            GameObject coin = Instantiate(coinPrefab, transform.position + Vector3.up * 1f, Quaternion.identity);
-            Rigidbody rb = coin.GetComponent<Rigidbody>();
-            if (rb != null)
+            PlayerStats playerStats = player.GetComponent<PlayerStats>();
+            if (playerStats != null)
             {
-                rb.AddForce(new Vector3(Random.Range(-1f, 1f), 1f, Random.Range(-1f, 1f)) * 3f, ForceMode.Impulse);
+                playerStats.AddExperience(giveExperience);
             }
-            // 🔹 Hapus otomatis setelah 10 detik
-            Destroy(coin, 10f);
         }
 
-        if (expPrefab != null)
+        // Spawn money using the universal spawner
+        if (UniversalMoneySpawner.Instance != null)
         {
-            GameObject exp = Instantiate(expPrefab, transform.position + Vector3.up * 1f, Quaternion.identity);
-            Rigidbody rb = exp.GetComponent<Rigidbody>();
-            if (rb != null)
-            {
-                rb.AddForce(new Vector3(Random.Range(-1f, 1f), 1f, Random.Range(-1f, 1f)) * 3f, ForceMode.Impulse);
-            }
-            // 🔹 Hapus otomatis setelah 10 detik
-            Destroy(exp, 10f);
+            UniversalMoneySpawner.Instance.SpawnMoney(transform.position, giveCoin);
         }
 
-        Debug.Log($"{gameObject.name} melempar koin {giveCoin} dan exp {giveExperience}!");
+        Debug.Log($"{gameObject.name} gave {giveExperience} EXP and dropped {giveCoin} money!");
+
+        // Prevent giving rewards multiple times
+        isFan = false;
     }
 
 

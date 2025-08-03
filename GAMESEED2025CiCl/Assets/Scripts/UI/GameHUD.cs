@@ -5,12 +5,14 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 
+[RequireComponent(typeof(CanvasGroup))]
 public class GameHUD : MonoBehaviour
 {
     public static GameHUD Instance { get; private set; }
 
     [Header("Player Info")]
     public TextMeshProUGUI playerInfoText; // For "Rp. xxx Lv. xxx"
+    public TextMeshProUGUI timeText;
     public Image healthBar;
     public Image mamadPortrait;
     public TextMeshProUGUI wantedLevelText; // Using text for angry emotes
@@ -30,6 +32,7 @@ public class GameHUD : MonoBehaviour
     private PlayerStats playerStats;
     private Coroutine expAnimationCoroutine;
     private StringBuilder wantedStringBuilder = new StringBuilder();
+    private CanvasGroup canvasGroup;
 
     void Awake()
     {
@@ -40,6 +43,7 @@ public class GameHUD : MonoBehaviour
         else
         {
             Instance = this;
+            canvasGroup = GetComponent<CanvasGroup>();
         }
     }
 
@@ -68,6 +72,15 @@ public class GameHUD : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             TogglePauseMenu();
+        }
+
+        // Update the timer every frame
+        if (playerStats != null && timeText != null)
+        {
+            float time = playerStats.timePlayedThisRun;
+            int minutes = Mathf.FloorToInt(time / 60f);
+            int seconds = Mathf.FloorToInt(time % 60f);
+            timeText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
         }
     }
 
@@ -159,5 +172,20 @@ public class GameHUD : MonoBehaviour
     {
         pauseMenuPanel.SetActive(!pauseMenuPanel.activeSelf);
         Time.timeScale = pauseMenuPanel.activeSelf ? 0f : 1f;
+    }
+
+    public IEnumerator FadeOut(float duration)
+    {
+        float startAlpha = canvasGroup.alpha;
+        float time = 0;
+
+        while (time < 1)
+        {
+            canvasGroup.alpha = Mathf.Lerp(startAlpha, 0f, time / 1);
+            time += Time.deltaTime;
+            yield return null;
+        }
+
+        canvasGroup.alpha = 0f;
     }
 }

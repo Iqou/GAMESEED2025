@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
@@ -31,6 +32,18 @@ public class OverworldHealth : MonoBehaviour
         if (playerStats != null)
         {
             PlayerStats.OnStatsChanged -= UpdateMaxHealth;
+        }
+    }
+
+    void Update()
+    {
+        // For debug purposes: Press F4 to trigger the game over sequence.
+        if (Input.GetKeyDown(KeyCode.F4))
+        {
+            Debug.Log("F4 pressed. Forcing game over.");
+            // Set health to 0 to trigger death sequence. 
+            // We pass a large negative number to ensure health becomes 0.
+            ChangeHealth(-maxHealth);
         }
     }
 
@@ -71,22 +84,52 @@ public class OverworldHealth : MonoBehaviour
 
     private void Die()
     {
-        Debug.Log("Player has died! Calculating SoundChips and returning to menu.");
+        // Prevent the Die method from being called multiple times
+        if (currentHealth > 0) return;
 
-        // --- End of Run Calculation ---
-        if (GameManager.Instance != null && playerStats != null)
+        Debug.Log("Player has died! Starting game over sequence.");
+
+        // --- Disable Player Controls ---
+        // Find and disable movement and attack scripts.
+        PlayerMovement movement = GetComponent<PlayerMovement>();
+        if (movement != null) movement.enabled = false;
+
+        PlayerAttack attack = GetComponent<PlayerAttack>();
+        if (attack != null) attack.enabled = false;
+
+        // Start the fade-out/fade-in sequence
+        StartCoroutine(GameOverSequence());
+    }
+
+    private IEnumerator GameOverSequence()
+    {
+        // --- Start Fades ---
+        if (GameHUD.Instance != null) StartCoroutine(GameHUD.Instance.FadeOut(3.0f));
+        if (GameOverUI.Instance != null)
         {
-            // Soundchip = (Total Rupiah Terkumpul / 5000) + (Jumlah Boss Dikalahkan * 50)
-            int soundChipsEarned = (playerStats.totalRupiahCollectedThisRun / 5000) + (playerStats.bossesKilledThisRun * 50);
-            
-            Debug.Log($"Rupiah Collected: {playerStats.totalRupiahCollectedThisRun}, Bosses Killed: {playerStats.bossesKilledThisRun}");
-            Debug.Log($"SoundChips Earned: {soundChipsEarned}");
+            // Calculate stats before showing the screen
+            int soundChipsEarned = 0;
+            if (GameManager.Instance != null && playerStats != null)
+            {
+                soundChipsEarned = (playerStats.money / 5000) + (playerStats.bossesKilledThisRun * 50);
+                GameManager.Instance.soundChips += soundChipsEarned;
+                GameManager.Instance.SaveProgressToSlot(GameManager.Instance.currentSlot);
+            }
 
-            GameManager.Instance.soundChips += soundChipsEarned;
-            GameManager.Instance.SaveProgressToSlot(GameManager.Instance.currentSlot);
+            GameOverUI.Instance.ShowGameOverScreen(
+                playerStats.money,
+                playerStats.bossesKilledThisRun,
+                soundChipsEarned,
+                playerStats.timePlayedThisRun,
+                playerStats.level
+            );
         }
 
-        // Load the Main Menu scene (assuming it's at build index 0)
-        SceneManager.LoadScene(0);
+        // Wait for the fade to complete
+        yield return new WaitForSeconds(3.0f);
+
+        // --- Pause Game ---
+        Debug.Log("Fades complete. Pausing game.");
+        Time.timeScale = 0f;
     }
 }

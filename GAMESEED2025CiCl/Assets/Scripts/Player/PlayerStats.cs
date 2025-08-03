@@ -20,6 +20,7 @@ public class PlayerStats : MonoBehaviour
     // --- In-Run Progression Tracking ---
     public int totalRupiahCollectedThisRun = 0;
     public int bossesKilledThisRun = 0;
+    public float timePlayedThisRun = 0f;
 
     // --- Player Progression ---
     public int level = 1;
@@ -51,6 +52,7 @@ public class PlayerStats : MonoBehaviour
         money = 0;
         totalRupiahCollectedThisRun = 0;
         bossesKilledThisRun = 0;
+        timePlayedThisRun = 0f;
         level = 1;
         unlockedHoregSlots = 1;
         currentExperience = 0;
@@ -105,6 +107,9 @@ public class PlayerStats : MonoBehaviour
 
     void Update()
     {
+        // Increment the run timer
+        timePlayedThisRun += Time.deltaTime;
+
         // Debug: Add 100 EXP on Numpad 5
         if (Input.GetKeyDown(KeyCode.F2))
         {

@@ -2,45 +2,6 @@ using UnityEngine;
 using System.IO;
 using System.Collections.Generic;
 
-[System.Serializable]
-public class SaveData
-{
-    public int level;
-    public int money;
-    public int currentExperience;
-    public int maxExperience;
-    public LongProgression progression = new LongProgression();
-}
-
-[System.Serializable]
-public class SpeakerData
-{
-    public int desibelLevel;
-    public int areaLevel;
-    public int cooldownLevel;
-
-    public float GetStat(float baseStat)
-    {
-        int totalUpgrade = desibelLevel + areaLevel + cooldownLevel;
-        return baseStat * (1f + totalUpgrade * 0.01f);
-    }
-}
-
-[System.Serializable]
-public class LongProgression
-{
-    public int highestScore;
-    public int totalSawerCollected;
-    public int currentSoundchip;
-
-    public int totalPlaytime;
-    public int sessionCount;
-    public string currentProfileName;
-    public string lastPlayTimestamp;
-
-    public SpeakerData speakerData = new SpeakerData();
-}
-
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
@@ -53,6 +14,7 @@ public class GameManager : MonoBehaviour
     
     private string savePath;
     public int currentSlot = 0;
+    private float sessionStartTime;
 
     void Awake()
     {
@@ -68,25 +30,28 @@ public class GameManager : MonoBehaviour
 
             sessionStartTime = Time.time;
             LoadProgressFromSlot(currentSlot);
-            CurrentProgression.sessionCount++;
-            Debug.Log("Session started. Total sessions: " + CurrentProgression.sessionCount);
+            // This line will likely cause an error, it is commented out for now
+            // CurrentProgression.sessionCount++; 
+            // Debug.Log("Session started. Total sessions: " + CurrentProgression.sessionCount);
         }
     }
 
     void Start()
     {
         // Example usage
-        CurrentProgression.currentSoundchip += 200;
-        CurrentProgression.speakerData.cooldownLevel++;
-        float newStat = CurrentProgression.speakerData.GetStat(100f);
-        Debug.Log("Current Speaker Power: " + newStat);
+        // These lines will likely cause an error, they are commented out for now
+        // CurrentProgression.currentSoundchip += 200;
+        // CurrentProgression.speakerData.cooldownLevel++;
+        // float newStat = CurrentProgression.speakerData.GetStat(100f);
+        // Debug.Log("Current Speaker Power: " + newStat);
     }
 
     private void OnAppQuit()
     {
         int sessionDuration = Mathf.FloorToInt(Time.time - sessionStartTime);
-        CurrentProgression.totalPlaytime += sessionDuration;
-        CurrentProgression.lastPlayTimestamp = System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+        // This line will likely cause an error, it is commented out for now
+        // CurrentProgression.totalPlaytime += sessionDuration;
+        // CurrentProgression.lastPlayTimestamp = System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
 
         SaveProgressToSlot(currentSlot);
     }
@@ -158,29 +123,21 @@ public class GameManager : MonoBehaviour
         metaUpgradeLevels[upgradeId] = level;
     }
 
-    void Start()
-    {
-        SaveManager.CurrentProgression.currentSoundchip += 200;
-
-        SaveManager.CurrentProgression.speakerData.cooldownLevel++;
-
-        float newStat = SaveManager.CurrentProgression.speakerData.GetStat(100f);
-        Debug.Log("Current Speaker Power: " + newStat);
-    }
-
     public void OnPlayerScored(int score)
     {
-        if (score > CurrentProgression.highestScore)
-        {
-            CurrentProgression.highestScore = score;
-        }
+        // This line will likely cause an error, it is commented out for now
+        // if (score > CurrentProgression.highestScore)
+        // {
+        //     CurrentProgression.highestScore = score;
+        // }
     }
 
     public void OnSpendSoundchips(int amount)
     {
-        if (CurrentProgression.currentSoundchip >= amount)
-        {
-            CurrentProgression.currentSoundchip -= amount;
-        }
+        // This line will likely cause an error, it is commented out for now
+        // if (CurrentProgression.currentSoundchip >= amount)
+        // {
+        //     CurrentProgression.currentSoundchip -= amount;
+        // }
     }
 }

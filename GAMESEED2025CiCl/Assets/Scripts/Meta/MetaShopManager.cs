@@ -62,7 +62,7 @@ public class MetaShopManager : MonoBehaviour
         {
             GameManager.Instance.soundChips -= cost;
             GameManager.Instance.SetMetaUpgradeLevel(upgrade.upgradeId, currentLevel + 1);
-            GameManager.Instance.SaveProgress();
+            GameManager.Instance.SaveProgressToSlot(GameManager.Instance.currentSlot);
 
             Debug.Log($"Purchased '{upgrade.upgradeName}'. New Level: {currentLevel + 1}");
             RefreshUI(); // Refresh the entire shop to update all costs and buttons

@@ -119,8 +119,14 @@ public class PlayerStats : MonoBehaviour
 
     public void AddExperience(int amount)
     {
+        int oldExperience = currentExperience;
         currentExperience += amount;
         Debug.Log($"Gained {amount} EXP! Current EXP: {currentExperience}/{maxExperience}");
+
+        if (GameHUD.Instance != null)
+        {
+            GameHUD.Instance.AnimateExperienceBar(oldExperience, currentExperience, maxExperience);
+        }
 
         bool leveledUp = false;
         while (currentExperience >= maxExperience)

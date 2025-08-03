@@ -63,9 +63,9 @@ public class OverworldHealth : MonoBehaviour
 
     private void UpdateHealthUI()
     {
-        if (playerHealthBar != null)
+        if (GameHUD.Instance != null)
         {
-            playerHealthBar.fillAmount = (float)currentHealth / maxHealth;
+            GameHUD.Instance.SetHealth(currentHealth, maxHealth);
         }
     }
 
@@ -83,7 +83,7 @@ public class OverworldHealth : MonoBehaviour
             Debug.Log($"SoundChips Earned: {soundChipsEarned}");
 
             GameManager.Instance.soundChips += soundChipsEarned;
-            GameManager.Instance.SaveProgress();
+            GameManager.Instance.SaveProgressToSlot(GameManager.Instance.currentSlot);
         }
 
         // Load the Main Menu scene (assuming it's at build index 0)

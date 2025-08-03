@@ -1,7 +1,3 @@
-// using System.Collections.Generic;
-// using UnityEngine;
-// using System;
-
 using System.Collections.Generic;
 
 [System.Serializable]
@@ -17,4 +13,3 @@ public class SaveData
     public List<string> unlockedHoregs; // e.g., "SubwooferDugem"
     public string lastCharacterUsed;
 }
-

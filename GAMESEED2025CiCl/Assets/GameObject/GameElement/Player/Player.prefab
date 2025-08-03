@@ -165,9 +165,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   horegPrefabs:
   - {fileID: 2612908848125322223, guid: bd200d1561b9c0246ae8caef24d5be27, type: 3}
-  - {fileID: 7447160595838918263, guid: 91427b1ebfb4d6f4ab45f5f2b9e58478, type: 3}
-  - {fileID: 1462489726569395729, guid: eb18047bdd4eeaa45b7ed63b51d5960d, type: 3}
-  - {fileID: 5489858013434526524, guid: 2eae9df597bc3954183caf55944db689, type: 3}
   beatInterval: 1
   beatWindow: 0.15
 --- !u!114 &5769818381487466352
@@ -211,6 +208,7 @@ MonoBehaviour:
   baseMaxHealth: 100
   currentHealth: 100
   maxHealth: 100
+  playerHealthBar: {fileID: 0}
 --- !u!1001 &4880993273716259849
 PrefabInstance:
   m_ObjectHideFlags: 0

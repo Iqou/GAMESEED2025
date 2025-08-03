@@ -31,7 +31,6 @@ public class BillboardRendering : MonoBehaviour
         placedBillboards = pathGen.PlacedBillboards;
 
         InitializeBillboardPools();
-        Debug.Log("[BillboardRendering] Placed Billboards Count: " + placedBillboards.Count);
     }
 
     void LateUpdate()
@@ -40,7 +39,6 @@ public class BillboardRendering : MonoBehaviour
         {
             if (Camera.main.orthographic)
             {
-                Debug.Log("Camera is in Orthographic mode");
                 foreach (var kvp in billboardToDataMap)
                 {
                     GameObject billboardObj = kvp.Key;
@@ -53,7 +51,6 @@ public class BillboardRendering : MonoBehaviour
             }
             else
             {
-                Debug.Log("Camera is in Perspective mode");
                 Quaternion tiltRotation = Quaternion.Euler(0, 0, 0);
 
                 foreach (var kvp in billboardToDataMap)

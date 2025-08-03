@@ -771,7 +771,6 @@ public class PathGen : MonoBehaviour
                         option.prefab
                     ));
 
-                    Debug.Log($"Placed {option.prefab.name} at {pos}");
                     return;
                 }
             }
@@ -844,7 +843,6 @@ public class PathGen : MonoBehaviour
         Debug.Log("=== DEBUG GENERATED DATA ===");
 
         // 1. Check Jalan Utama (Main Paths)
-        Debug.Log($"Jumlah Main Paths: {mainPaths.Count}");
         for (int i = 0; i < mainPaths.Count; i++)
         {
             Debug.Log($"- Path {i}: {mainPaths[i].Count} titik");
@@ -855,7 +853,6 @@ public class PathGen : MonoBehaviour
         }
 
         // 2. Check Taman (Parks)
-        Debug.Log($"Jumlah Taman: {PlacedParks.Count}");
         foreach (var park in PlacedParks)
         {
             Debug.Log($"- Taman di {park.startPosition} (Ukuran: {park.width}x{park.height})");

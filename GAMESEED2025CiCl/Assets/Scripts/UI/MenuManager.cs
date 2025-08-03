@@ -3,65 +3,78 @@ using UnityEngine.SceneManagement;
 
 public class MainMenuManager : MonoBehaviour
 {
-    // Variabel publik untuk menampung panel-panel UI
+    public GameObject homescreenPanel;
     public GameObject mainMenuPanel;
     public GameObject upgradePanel;
     public GameObject optionsPanel;
     public GameObject creditsPanel;
 
-    // Metode Start() akan berjalan saat scene pertama kali dimuat
+    public MenuKeyboardNavigation menuKeyboardNavigation;
+
     void Start()
     {
-        // Panggil metode untuk hanya menampilkan menu utama di awal
+        ShowPanel(homescreenPanel, true);
+        ShowPanel(mainMenuPanel, false);
+        ShowPanel(upgradePanel, false);
+        ShowPanel(optionsPanel, false);
+        ShowPanel(creditsPanel, false);
+    }
+    
+    public void ShowMainMenuWithFade()
+    {
+        ShowPanel(homescreenPanel, false);
         ShowMainMenu();
     }
 
-    // Metode untuk tombol Play
     public void PlayGame()
     {
-        // Ganti nama scene permainan agar sesuai
         SceneManager.LoadScene("TestScene");
     }
 
-    // Metode untuk tombol Quit
     public void QuitGame()
     {
         Application.Quit();
     }
 
-    // Metode untuk mengalihkan ke panel Main Menu
     public void ShowMainMenu()
     {
-        if (mainMenuPanel != null) mainMenuPanel.SetActive(true);
-        if (upgradePanel != null) upgradePanel.SetActive(false);
-        if (optionsPanel != null) optionsPanel.SetActive(false);
-        if (creditsPanel != null) creditsPanel.SetActive(false);
+        ShowPanel(mainMenuPanel, true);
+        ShowPanel(upgradePanel, false);
+        ShowPanel(optionsPanel, false);
+        ShowPanel(creditsPanel, false);
+        
+        if (menuKeyboardNavigation != null)
+        {
+            menuKeyboardNavigation.Initialize();
+        }
     }
 
-    // Metode untuk mengalihkan ke panel Upgrade
     public void ShowUpgrade()
     {
-        if (mainMenuPanel != null) mainMenuPanel.SetActive(false);
-        if (upgradePanel != null) upgradePanel.SetActive(true);
-        if (optionsPanel != null) optionsPanel.SetActive(false);
-        if (creditsPanel != null) creditsPanel.SetActive(false);
+        ShowPanel(mainMenuPanel, false);
+        ShowPanel(upgradePanel, true);
+        ShowPanel(optionsPanel, false);
+        ShowPanel(creditsPanel, false);
     }
     
-    // Metode untuk mengalihkan ke panel Options
     public void ShowOptions()
     {
-        if (mainMenuPanel != null) mainMenuPanel.SetActive(false);
-        if (upgradePanel != null) upgradePanel.SetActive(false);
-        if (optionsPanel != null) optionsPanel.SetActive(true);
-        if (creditsPanel != null) creditsPanel.SetActive(false);
+        ShowPanel(mainMenuPanel, false);
+        ShowPanel(upgradePanel, false);
+        ShowPanel(optionsPanel, true);
+        ShowPanel(creditsPanel, false);
     }
 
-    // Metode untuk mengalihkan ke panel Credits
     public void ShowCredits()
     {
-        if (mainMenuPanel != null) mainMenuPanel.SetActive(false);
-        if (upgradePanel != null) upgradePanel.SetActive(false);
-        if (optionsPanel != null) optionsPanel.SetActive(false);
-        if (creditsPanel != null) creditsPanel.SetActive(true);
+        ShowPanel(mainMenuPanel, false);
+        ShowPanel(upgradePanel, false);
+        ShowPanel(optionsPanel, false);
+        ShowPanel(creditsPanel, true);
+    }
+
+    private void ShowPanel(GameObject panel, bool state)
+    {
+        if (panel != null) panel.SetActive(state);
     }
 }

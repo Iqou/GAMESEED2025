@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1106027682191813792}
   - component: {fileID: 7876045548789956644}
   - component: {fileID: 8937533237089588093}
-  - component: {fileID: 4872893238563875810}
+  - component: {fileID: 8193455059243998111}
   m_Layer: 0
   m_Name: firePoint
   m_TagString: Untagged
@@ -78,7 +78,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 488c988c44410be4ab26d7c87bf7a7c9, type: 3}
+  m_Sprite: {fileID: 21300000, guid: f054b76eddddf9f4bbe2716d7e134eae, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -99,7 +99,7 @@ Animator:
   m_GameObject: {fileID: 1106847090777044787}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 69b46c18917a12749a35a7a9f36c811b, type: 2}
+  m_Controller: {fileID: 9100000, guid: 3930d8802c52bb8469170b6fce2b601b, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -111,7 +111,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &4872893238563875810
+--- !u!114 &8193455059243998111
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -120,7 +120,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1106847090777044787}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eb00f55bddacee24cb66c110a392f64a, type: 3}
+  m_Script: {fileID: 11500000, guid: 60f1ac3e3af64bb429be4dd9cd0260d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 8937533237089588093}
@@ -137,8 +137,8 @@ GameObject:
   - component: {fileID: 1117001845378627385}
   - component: {fileID: 2840639631591792999}
   - component: {fileID: 4898246971411587218}
-  - component: {fileID: 7698380062458424309}
   - component: {fileID: -6951876901302933664}
+  - component: {fileID: 3937649363757027186}
   m_Layer: 0
   m_Name: npcSatpamKomplek
   m_TagString: NPC
@@ -193,7 +193,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 16cda194bea4892429d39f164b092b6a, type: 2}
+  - {fileID: 2100000, guid: 20d15c0ec191e54449457b1fff25b1e2, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -260,7 +260,7 @@ NavMeshAgent:
   m_BaseOffset: 1
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &7698380062458424309
+--- !u!114 &-6951876901302933664
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -269,7 +269,26 @@ MonoBehaviour:
   m_GameObject: {fileID: 3851010145339708242}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 804749457522ce049a1d557375036687, type: 3}
+  m_Script: {fileID: 11500000, guid: 7dc8f7e66028a4e408c796f6bfbb0ce3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  range: 0
+--- !u!114 &3937649363757027186
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3851010145339708242}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dbbcbec609a116c449d8ce6abf978b14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   groundLayer:
@@ -294,22 +313,3 @@ MonoBehaviour:
   expPrefab: {fileID: 0}
   sendalPrefab: {fileID: 0}
   firePoint: {fileID: 0}
---- !u!114 &-6951876901302933664
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3851010145339708242}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7dc8f7e66028a4e408c796f6bfbb0ce3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 0
-  playerLayer:
-    serializedVersion: 2
-    m_Bits: 0
-  range: 0

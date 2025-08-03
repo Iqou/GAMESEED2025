@@ -288,6 +288,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5369536440573085775, guid: b5d07810aeeff3143b73716d7a3af07b, type: 3}
+      propertyPath: 'horegPrefabs.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2612908848125322223, guid: bd200d1561b9c0246ae8caef24d5be27, type: 3}
+    - target: {fileID: 5369536440573085775, guid: b5d07810aeeff3143b73716d7a3af07b, type: 3}
+      propertyPath: 'horegPrefabs.Array.data[1]'
+      value: 
+      objectReference: {fileID: 7447160595838918263, guid: 91427b1ebfb4d6f4ab45f5f2b9e58478, type: 3}
+    - target: {fileID: 5369536440573085775, guid: b5d07810aeeff3143b73716d7a3af07b, type: 3}
+      propertyPath: 'horegPrefabs.Array.data[2]'
+      value: 
+      objectReference: {fileID: 1462489726569395729, guid: eb18047bdd4eeaa45b7ed63b51d5960d, type: 3}
+    - target: {fileID: 5369536440573085775, guid: b5d07810aeeff3143b73716d7a3af07b, type: 3}
+      propertyPath: 'horegPrefabs.Array.data[3]'
+      value: 
+      objectReference: {fileID: 5489858013434526524, guid: 2eae9df597bc3954183caf55944db689, type: 3}
     - target: {fileID: 9087427083776352970, guid: b5d07810aeeff3143b73716d7a3af07b, type: 3}
       propertyPath: m_Name
       value: Player

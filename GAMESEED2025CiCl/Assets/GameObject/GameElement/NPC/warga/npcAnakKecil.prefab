@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1243933396192508748}
   - component: {fileID: 6604117668006302381}
   - component: {fileID: 834527361894042949}
-  - component: {fileID: 1778057963458232380}
+  - component: {fileID: 8578228807214141716}
   m_Layer: 0
   m_Name: Sprite
   m_TagString: Untagged
@@ -78,7 +78,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 1c2dd125831e59040948564fbc35150d, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 73b69320d9e3d2a478f366032b1a5f2b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -99,7 +99,7 @@ Animator:
   m_GameObject: {fileID: 2058564527144639405}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 1f58da15925c428468d08e6465b03757, type: 2}
+  m_Controller: {fileID: 9100000, guid: 8bfc53e9ccc45db43a6c801b5a8a590a, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -111,7 +111,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &1778057963458232380
+--- !u!114 &8578228807214141716
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -120,7 +120,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2058564527144639405}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eb00f55bddacee24cb66c110a392f64a, type: 3}
+  m_Script: {fileID: 11500000, guid: 60f1ac3e3af64bb429be4dd9cd0260d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 834527361894042949}
@@ -137,8 +137,8 @@ GameObject:
   - component: {fileID: 6169574240742018289}
   - component: {fileID: 2102787573772941761}
   - component: {fileID: 7219591662969294766}
-  - component: {fileID: 8799924344394824234}
   - component: {fileID: 1689941053140165378}
+  - component: {fileID: 6305635999837920244}
   m_Layer: 0
   m_Name: npcAnakKecil
   m_TagString: NPC
@@ -193,7 +193,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 16cda194bea4892429d39f164b092b6a, type: 2}
+  - {fileID: 2100000, guid: 20d15c0ec191e54449457b1fff25b1e2, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -260,7 +260,7 @@ NavMeshAgent:
   m_BaseOffset: 1
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &8799924344394824234
+--- !u!114 &1689941053140165378
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -269,15 +269,34 @@ MonoBehaviour:
   m_GameObject: {fileID: 3504922048683469504}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 76d91d16435a8b34582fb0fbcd02db44, type: 3}
+  m_Script: {fileID: 11500000, guid: 7dc8f7e66028a4e408c796f6bfbb0ce3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   groundLayer:
     serializedVersion: 2
-    m_Bits: 8
+    m_Bits: 72
   playerLayer:
     serializedVersion: 2
     m_Bits: 128
+  range: 20
+--- !u!114 &6305635999837920244
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3504922048683469504}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 074e6ab9d8a6f654386bc731f93b2c0a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 0
   obstacleLayer:
     serializedVersion: 2
     m_Bits: 0
@@ -296,22 +315,3 @@ MonoBehaviour:
   panicRadius: 10
   panicEffectPercent: 0.5
   panicInterval: 3
---- !u!114 &1689941053140165378
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3504922048683469504}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7dc8f7e66028a4e408c796f6bfbb0ce3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 8
-  playerLayer:
-    serializedVersion: 2
-    m_Bits: 128
-  range: 20

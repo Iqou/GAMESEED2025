@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8356896781317921257}
   - component: {fileID: 5333301021176012560}
   - component: {fileID: 3594247213855838984}
-  - component: {fileID: 1660853609806626912}
+  - component: {fileID: 2376955529826287804}
   m_Layer: 0
   m_Name: Sprite
   m_TagString: Untagged
@@ -78,7 +78,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: dedd35278882c794099aa4796d25ef22, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 2a0f63ce7be955342bac0b419b416558, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -99,7 +99,7 @@ Animator:
   m_GameObject: {fileID: 443882438683545048}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: da300a66279a7384283107c76a434681, type: 2}
+  m_Controller: {fileID: 9100000, guid: 529df15671c6526499d269164fbd458d, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -111,7 +111,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &1660853609806626912
+--- !u!114 &2376955529826287804
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -120,10 +120,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 443882438683545048}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eb00f55bddacee24cb66c110a392f64a, type: 3}
+  m_Script: {fileID: 11500000, guid: 60f1ac3e3af64bb429be4dd9cd0260d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animator: {fileID: 0}
+  animator: {fileID: 3594247213855838984}
 --- !u!1 &6199174921339498322
 GameObject:
   m_ObjectHideFlags: 0
@@ -137,8 +137,8 @@ GameObject:
   - component: {fileID: 5167381004875581074}
   - component: {fileID: 8628131411880492450}
   - component: {fileID: 6776740988300434947}
-  - component: {fileID: 2779638999133290822}
   - component: {fileID: 3263296868761222779}
+  - component: {fileID: 7169480380330687221}
   m_Layer: 6
   m_Name: npcPremanPasar
   m_TagString: NPC
@@ -193,7 +193,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 16cda194bea4892429d39f164b092b6a, type: 2}
+  - {fileID: 2100000, guid: 20d15c0ec191e54449457b1fff25b1e2, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -260,42 +260,6 @@ NavMeshAgent:
   m_BaseOffset: 1
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &2779638999133290822
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6199174921339498322}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b15bea4420121e54a8d95c2950fe19f1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 8
-  playerLayer:
-    serializedVersion: 2
-    m_Bits: 128
-  obstacleLayer:
-    serializedVersion: 2
-    m_Bits: 0
-  range: 10
-  sightRange: 20
-  stopDistance: 3
-  sensitivitasDesibel: 100
-  currEmotion: 0
-  aggroLevel: 0
-  fearLevel: 0
-  phoneCooldown: 120
-  nextPhoneTime: 0
-  giveCoin: 5000
-  giveExperience: 100
-  coinPrefab: {fileID: 0}
-  copetRadius: 5
-  copetDelay: 10
-  copetAmountPerSecond: 100
 --- !u!114 &3263296868761222779
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -315,3 +279,39 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   range: 0
+--- !u!114 &7169480380330687221
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6199174921339498322}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c37249f4506c91b408a6cf0f5595524e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  obstacleLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  range: 10
+  sightRange: 20
+  stopDistance: 3
+  sensitivitasDesibel: 100
+  currEmotion: 0
+  aggroLevel: 0
+  fearLevel: 0
+  phoneCooldown: 120
+  nextPhoneTime: 0
+  giveCoin: 5000
+  giveExperience: 100
+  coinPrefab: {fileID: 0}
+  copetRadius: 5
+  copetDelay: 10
+  copetAmountPerSecond: 100

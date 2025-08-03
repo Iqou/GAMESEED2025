@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 1487482261245762782}
   - component: {fileID: 7932883925799489921}
   - component: {fileID: 5292374913109780077}
+  - component: {fileID: 419887413726109186}
   - component: {fileID: 3369979755953978811}
   - component: {fileID: 8546159960160777220}
-  - component: {fileID: 6659866079115270918}
   - component: {fileID: -5661270702157490501}
   m_Layer: 6
   m_Name: npcMobilPolisiElit
@@ -69,7 +69,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 16cda194bea4892429d39f164b092b6a, type: 2}
+  - {fileID: 2100000, guid: 20d15c0ec191e54449457b1fff25b1e2, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -91,6 +91,40 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &419887413726109186
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3454787582132426773}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2d9c79a1eb5bd24abd16dca2c963ebd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  obstacleLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  range: 10
+  sightRange: 20
+  stopDistance: 3
+  attackRange: 2
+  rangedRange: 10
+  attackCooldown: 2
+  attackDamage: 10
+  Tolerance: 500
+  giveExperience: 50
+  wantedLevel: 1
+  expPrefab: {fileID: 0}
+  sendalPrefab: {fileID: 0}
+  firePoint: {fileID: 0}
 --- !u!136 &3369979755953978811
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -136,40 +170,6 @@ NavMeshAgent:
   m_BaseOffset: 1
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &6659866079115270918
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3454787582132426773}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: faa88deb907d12d4cbd20386a6107976, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 8
-  playerLayer:
-    serializedVersion: 2
-    m_Bits: 128
-  obstacleLayer:
-    serializedVersion: 2
-    m_Bits: 0
-  range: 10
-  sightRange: 20
-  stopDistance: 3
-  attackRange: 2
-  rangedRange: 10
-  attackCooldown: 2
-  attackDamage: 10
-  Tolerance: 500
-  giveExperience: 50
-  wantedLevel: 1
-  expPrefab: {fileID: 0}
-  sendalPrefab: {fileID: 0}
-  firePoint: {fileID: 0}
 --- !u!114 &-5661270702157490501
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -200,7 +200,7 @@ GameObject:
   - component: {fileID: 4579051498908344256}
   - component: {fileID: 672397592863408841}
   - component: {fileID: 5744098312176549681}
-  - component: {fileID: 1404958214336862049}
+  - component: {fileID: 5414630216631468954}
   m_Layer: 0
   m_Name: firePoint
   m_TagString: Untagged
@@ -267,7 +267,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: d0dd49c041c1e914d890954a3462d440, type: 3}
+  m_Sprite: {fileID: 21300000, guid: dcae9f3cf0c2dcb43a542d00218dba91, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -288,7 +288,7 @@ Animator:
   m_GameObject: {fileID: 7895328846811226851}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: e7a7fb4a0648ada499e7b7bbc1a101be, type: 2}
+  m_Controller: {fileID: 9100000, guid: 74f19b141fac924499342dda5355268f, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -300,7 +300,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &1404958214336862049
+--- !u!114 &5414630216631468954
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -309,7 +309,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7895328846811226851}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eb00f55bddacee24cb66c110a392f64a, type: 3}
+  m_Script: {fileID: 11500000, guid: 60f1ac3e3af64bb429be4dd9cd0260d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 5744098312176549681}

@@ -13,8 +13,8 @@ GameObject:
   - component: {fileID: 690807223059605542}
   - component: {fileID: 4568320282802517689}
   - component: {fileID: 7270422242739389152}
-  - component: {fileID: 4943825730960761468}
   - component: {fileID: -8498228700704209491}
+  - component: {fileID: 7222692117234280595}
   m_Layer: 6
   m_Name: npcFansFanatik
   m_TagString: NPC
@@ -69,7 +69,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 16cda194bea4892429d39f164b092b6a, type: 2}
+  - {fileID: 2100000, guid: 20d15c0ec191e54449457b1fff25b1e2, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -136,39 +136,6 @@ NavMeshAgent:
   m_BaseOffset: 1
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &4943825730960761468
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7708272947473252093}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eae1524d1ea2eae4b9c11b72778d5919, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 8
-  playerLayer:
-    serializedVersion: 2
-    m_Bits: 128
-  obstacleLayer:
-    serializedVersion: 2
-    m_Bits: 0
-  range: 10
-  sightRange: 20
-  stopDistance: 3
-  sensitivitasDesibel: 100
-  currEmotion: 0
-  aggroLevel: 0
-  fearLevel: 0
-  phoneCooldown: 120
-  nextPhoneTime: 0
-  giveCoin: 5000
-  giveExperience: 100
-  coinPrefab: {fileID: 0}
 --- !u!114 &-8498228700704209491
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -188,6 +155,39 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   range: 20
+--- !u!114 &7222692117234280595
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7708272947473252093}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d601717ce792f554ebf5c210e2ae32b5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  obstacleLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  range: 10
+  sightRange: 20
+  stopDistance: 3
+  sensitivitasDesibel: 100
+  currEmotion: 0
+  aggroLevel: 0
+  fearLevel: 0
+  phoneCooldown: 120
+  nextPhoneTime: 0
+  giveCoin: 5000
+  giveExperience: 100
+  coinPrefab: {fileID: 0}
 --- !u!1 &8543452034602996808
 GameObject:
   m_ObjectHideFlags: 0
@@ -199,7 +199,7 @@ GameObject:
   - component: {fileID: 1379587597986487920}
   - component: {fileID: 6610706679977837479}
   - component: {fileID: 3785788276674061486}
-  - component: {fileID: 788022970232403559}
+  - component: {fileID: 3918789476683833904}
   m_Layer: 0
   m_Name: Sprite
   m_TagString: Untagged
@@ -274,7 +274,7 @@ SpriteRenderer:
   m_Size: {x: 2.5, y: 1.5}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!95 &3785788276674061486
@@ -287,7 +287,7 @@ Animator:
   m_GameObject: {fileID: 8543452034602996808}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 52788ea1bbae7e1469c83abdda08521a, type: 2}
+  m_Controller: {fileID: 9100000, guid: a4646bfcd19528f4294ec1e7a081c8c6, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -299,7 +299,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &788022970232403559
+--- !u!114 &3918789476683833904
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -308,7 +308,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 8543452034602996808}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eb00f55bddacee24cb66c110a392f64a, type: 3}
+  m_Script: {fileID: 11500000, guid: 60f1ac3e3af64bb429be4dd9cd0260d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 3785788276674061486}

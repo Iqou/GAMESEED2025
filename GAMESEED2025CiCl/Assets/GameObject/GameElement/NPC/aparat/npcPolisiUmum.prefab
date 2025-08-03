@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6498187455471563304}
   - component: {fileID: 5165365447253350101}
   - component: {fileID: 2749803752133146082}
-  - component: {fileID: 4371725690365356140}
+  - component: {fileID: 7102380657402599643}
   m_Layer: 0
   m_Name: Sprite
   m_TagString: Untagged
@@ -78,7 +78,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 726da2137c9109b4783be916d525fea1, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 7befc79c0d3621d43b2c6b9eae403198, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -99,7 +99,7 @@ Animator:
   m_GameObject: {fileID: 5868581938006353677}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 8ea8e0f56df8d684190eed38f35837ae, type: 2}
+  m_Controller: {fileID: 9100000, guid: fee6f35163f398840afb0b71720e085d, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -111,7 +111,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &4371725690365356140
+--- !u!114 &7102380657402599643
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -120,7 +120,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 5868581938006353677}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eb00f55bddacee24cb66c110a392f64a, type: 3}
+  m_Script: {fileID: 11500000, guid: 60f1ac3e3af64bb429be4dd9cd0260d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 2749803752133146082}
@@ -137,7 +137,7 @@ GameObject:
   - component: {fileID: 1388273612305256677}
   - component: {fileID: 1411353444474405837}
   - component: {fileID: 6090647552489661984}
-  - component: {fileID: -8301431926349778234}
+  - component: {fileID: 4398857254768702032}
   - component: {fileID: -5013716992274049460}
   m_Layer: 0
   m_Name: npcPolisiUmum
@@ -193,7 +193,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 16cda194bea4892429d39f164b092b6a, type: 2}
+  - {fileID: 2100000, guid: 20d15c0ec191e54449457b1fff25b1e2, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -260,7 +260,7 @@ NavMeshAgent:
   m_BaseOffset: 1
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &-8301431926349778234
+--- !u!114 &4398857254768702032
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -269,7 +269,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 6032967875809309308}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7f4e07ea595141444ac51bee971aedcd, type: 3}
+  m_Script: {fileID: 11500000, guid: d6b18e710f825b5468198af929d97cac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   groundLayer:

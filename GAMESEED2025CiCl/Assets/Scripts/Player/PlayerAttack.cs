@@ -13,7 +13,6 @@ public class PlayerAttack : MonoBehaviour
 
     private float nextBeatTime = 0.0f;
 
-
     private ToaRW toa;
     private BassKondangan kondangan;
     private SubwooferDugem dugem;

@@ -143,7 +143,7 @@ GameObject:
   - component: {fileID: 2751533691659690992}
   m_Layer: 0
   m_Name: AOEBoom
-  m_TagString: Untagged
+  m_TagString: SoundWave
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

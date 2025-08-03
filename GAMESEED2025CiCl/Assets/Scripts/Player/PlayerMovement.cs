@@ -90,6 +90,12 @@ public class PlayerMovement : MonoBehaviour
     {
         animator.SetBool("Moving", true);
 
+        PlayerStats playerStatus = GetComponent<PlayerStats>();
+
+        int horegLevel = playerStatus.unlockedHoregSlots;
+
+        animator.SetInteger("Level", horegLevel);
+
         animator.ResetTrigger("Right");
         animator.ResetTrigger("Left");
         animator.ResetTrigger("Up");

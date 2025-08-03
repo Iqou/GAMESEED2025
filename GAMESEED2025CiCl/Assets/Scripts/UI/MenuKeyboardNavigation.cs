@@ -6,7 +6,7 @@ public class MenuKeyboardNavigation : MonoBehaviour
 {
     public Button[] menuButtons;
 
-    private int currentSelectedIndex = 0;
+    private int currentSelectedIndex = -1;
     private ButtonHoverAnimation previousHoverAnimation;
 
     void Start()
@@ -15,7 +15,7 @@ public class MenuKeyboardNavigation : MonoBehaviour
 
     public void Initialize()
     {
-        if (menuButtons.Length > 0)
+        if (menuButtons.Length == 0)
         {
             EventSystem.current.SetSelectedGameObject(menuButtons[0].gameObject);
             previousHoverAnimation = menuButtons[0].GetComponent<ButtonHoverAnimation>();

@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.AI;
+using System.Collections;
 
 public class npcMobilPolisiElit : MonoBehaviour, INPCDamageable
 {
@@ -23,6 +24,7 @@ public class npcMobilPolisiElit : MonoBehaviour, INPCDamageable
     [SerializeField] float attackCooldown = 2f;
     [Range(10, 40)] public int attackDamage = 10;
     float nextAttackTime = 0f;
+    float nextDashTime = 0f;
 
     //atribut npc
     [Range(500, 1000)] public int Tolerance = 500;
@@ -81,21 +83,23 @@ public class npcMobilPolisiElit : MonoBehaviour, INPCDamageable
     void HandleCombat()
     {
         float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
+        
+        Agent.SetDestination(player.transform.position);
 
-        if (distanceToPlayer > attackRange)
+        if (distanceToPlayer <= attackRange)
         {
-            Agent.SetDestination(player.transform.position);
-
-            // 🔹 Ranged attack jika dalam jarak tertentu
-            if (distanceToPlayer <= rangedRange)
-            {
-                TryRangedAttack();
-            }
+            //StartCoroutine(DashAttack());
+            TryMeleeAttack();
+        }
+        // Ranged attack jika masih dalam sight
+        else if (distanceToPlayer <= rangedRange && Time.time >= nextAttackTime)
+        {
+            TryRangedAttack();
         }
         else
         {
-            Agent.ResetPath();
-            TryMeleeAttack();
+            // Kejar player jika belum bisa attack
+
         }
     }
 
@@ -153,6 +157,20 @@ public class npcMobilPolisiElit : MonoBehaviour, INPCDamageable
         if (!walkPointSet) searchForDest();
         if (walkPointSet) Agent.SetDestination(destPoint);
         if (Vector3.Distance(transform.position, destPoint) < 1f) walkPointSet = false;
+    }
+
+    void ChasePlayer()
+    {
+        float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
+
+        if (distanceToPlayer > stopDistance)
+        {
+            Agent.SetDestination(player.transform.position);
+        }
+        else
+        {
+            Agent.ResetPath();
+        }
     }
 
     void searchForDest()

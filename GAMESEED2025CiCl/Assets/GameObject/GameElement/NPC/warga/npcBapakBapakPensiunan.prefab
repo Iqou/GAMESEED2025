@@ -57,7 +57,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -78,7 +78,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 3d1790a020a838744968909eefef66ff, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 0b7994a197bae254699f67d9e1c69bc8, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -99,7 +99,7 @@ Animator:
   m_GameObject: {fileID: 4505513606880990139}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: a47ee9630ae4d06459716fc47ba015ea, type: 2}
+  m_Controller: {fileID: 9100000, guid: 9b5cfbd7b28ee05459a83ac304abd948, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -120,7 +120,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 4505513606880990139}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eb00f55bddacee24cb66c110a392f64a, type: 3}
+  m_Script: {fileID: 11500000, guid: 60f1ac3e3af64bb429be4dd9cd0260d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 2776233828643236938}
@@ -138,7 +138,6 @@ GameObject:
   - component: {fileID: 3535325712837792311}
   - component: {fileID: 3263900859651175519}
   - component: {fileID: -2344585205649737288}
-  - component: {fileID: 3094185103682114492}
   m_Layer: 0
   m_Name: npcBapakBapakPensiunan
   m_TagString: NPC
@@ -189,10 +188,10 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.41379827
-  m_Height: 1.4783874
+  m_Radius: 0.3
+  m_Height: 0.88
   m_Direction: 1
-  m_Center: {x: -0.04003626, y: -0.011843681, z: -0.12623793}
+  m_Center: {x: -0.04003626, y: 0.05, z: -0.12623793}
 --- !u!195 &3535325712837792311
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -238,7 +237,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 16cda194bea4892429d39f164b092b6a, type: 2}
+  - {fileID: 2100000, guid: 20d15c0ec191e54449457b1fff25b1e2, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -269,12 +268,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 7016649551768180652}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 95707deba6cd7064791591c59578fd4b, type: 3}
+  m_Script: {fileID: 11500000, guid: a8108474ddf98e14dafd8a5642faeeef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   groundLayer:
     serializedVersion: 2
-    m_Bits: 8
+    m_Bits: 64
   playerLayer:
     serializedVersion: 2
     m_Bits: 128
@@ -282,36 +281,17 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 0
   range: 10
-  sightRange: 20
-  stopDistance: 3
+  sightRange: 13
+  stopDistance: 1
   attackRange: 2
-  attackCooldown: 2
+  attackCooldown: 3
   attackDamage: 10
-  sensitivitasDesibel: 100
-  currEmotion: 0
-  aggroLevel: 0
-  fearLevel: 0
-  phoneCooldown: 120
+  sensitivitasDesibel: 110
+  currEmotion: 100
+  aggroLevel: 30
+  fearLevel: 20
+  phoneCooldown: 40
   nextPhoneTime: 0
-  giveCoin: 5000
+  giveCoin: 3000
   giveExperience: 100
   coinPrefab: {fileID: 0}
---- !u!114 &3094185103682114492
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7016649551768180652}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7dc8f7e66028a4e408c796f6bfbb0ce3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 8
-  playerLayer:
-    serializedVersion: 2
-    m_Bits: 128
-  range: 20

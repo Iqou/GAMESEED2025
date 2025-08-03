@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 443882438683545048}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.33839, y: 0.082949996, z: -0.36810002}
+  m_LocalPosition: {x: 0, y: 0.082949996, z: -0.014}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -78,7 +78,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: dedd35278882c794099aa4796d25ef22, type: 3}
+  m_Sprite: {fileID: 21300000, guid: a3a304bbd4fe2694b80498d1c560508f, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -99,7 +99,7 @@ Animator:
   m_GameObject: {fileID: 443882438683545048}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: da300a66279a7384283107c76a434681, type: 2}
+  m_Controller: {fileID: 9100000, guid: 529df15671c6526499d269164fbd458d, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -120,10 +120,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 443882438683545048}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eb00f55bddacee24cb66c110a392f64a, type: 3}
+  m_Script: {fileID: 11500000, guid: 60f1ac3e3af64bb429be4dd9cd0260d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animator: {fileID: 0}
+  animator: {fileID: 3594247213855838984}
 --- !u!1 &6199174921339498322
 GameObject:
   m_ObjectHideFlags: 0
@@ -138,7 +138,6 @@ GameObject:
   - component: {fileID: 8628131411880492450}
   - component: {fileID: 6776740988300434947}
   - component: {fileID: 2779638999133290822}
-  - component: {fileID: 3263296868761222779}
   m_Layer: 6
   m_Name: npcPremanPasar
   m_TagString: NPC
@@ -193,7 +192,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 16cda194bea4892429d39f164b092b6a, type: 2}
+  - {fileID: 2100000, guid: 20d15c0ec191e54449457b1fff25b1e2, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -234,10 +233,10 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.5
-  m_Height: 2
+  m_Radius: 0.4
+  m_Height: 1.13
   m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: 0.11, z: 0}
 --- !u!195 &6776740988300434947
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -269,12 +268,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 6199174921339498322}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b15bea4420121e54a8d95c2950fe19f1, type: 3}
+  m_Script: {fileID: 11500000, guid: c37249f4506c91b408a6cf0f5595524e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   groundLayer:
     serializedVersion: 2
-    m_Bits: 8
+    m_Bits: 64
   playerLayer:
     serializedVersion: 2
     m_Bits: 128
@@ -282,36 +281,17 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 0
   range: 10
-  sightRange: 20
+  sightRange: 13
   stopDistance: 3
-  sensitivitasDesibel: 100
+  sensitivitasDesibel: 80
   currEmotion: 0
-  aggroLevel: 0
-  fearLevel: 0
-  phoneCooldown: 120
+  aggroLevel: 90
+  fearLevel: 70
+  phoneCooldown: 0
   nextPhoneTime: 0
-  giveCoin: 5000
-  giveExperience: 100
+  giveCoin: 0
+  giveExperience: 50
   coinPrefab: {fileID: 0}
   copetRadius: 5
   copetDelay: 10
   copetAmountPerSecond: 100
---- !u!114 &3263296868761222779
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6199174921339498322}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7dc8f7e66028a4e408c796f6bfbb0ce3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 8
-  playerLayer:
-    serializedVersion: 2
-    m_Bits: 128
-  range: 0

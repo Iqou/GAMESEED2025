@@ -14,7 +14,6 @@ GameObject:
   - component: {fileID: 4568320282802517689}
   - component: {fileID: 7270422242739389152}
   - component: {fileID: 4943825730960761468}
-  - component: {fileID: -8498228700704209491}
   m_Layer: 6
   m_Name: npcFansFanatik
   m_TagString: NPC
@@ -69,7 +68,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 16cda194bea4892429d39f164b092b6a, type: 2}
+  - {fileID: 2100000, guid: 20d15c0ec191e54449457b1fff25b1e2, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -145,15 +144,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 7708272947473252093}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eae1524d1ea2eae4b9c11b72778d5919, type: 3}
+  m_Script: {fileID: 11500000, guid: d601717ce792f554ebf5c210e2ae32b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   groundLayer:
     serializedVersion: 2
-    m_Bits: 8
+    m_Bits: 0
   playerLayer:
     serializedVersion: 2
-    m_Bits: 128
+    m_Bits: 0
   obstacleLayer:
     serializedVersion: 2
     m_Bits: 0
@@ -169,25 +168,6 @@ MonoBehaviour:
   giveCoin: 5000
   giveExperience: 100
   coinPrefab: {fileID: 0}
---- !u!114 &-8498228700704209491
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7708272947473252093}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7dc8f7e66028a4e408c796f6bfbb0ce3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 8
-  playerLayer:
-    serializedVersion: 2
-    m_Bits: 128
-  range: 20
 --- !u!1 &8543452034602996808
 GameObject:
   m_ObjectHideFlags: 0
@@ -266,7 +246,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 580f2a93b5ce89f4597937321c0d4cc2, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 0689a62bfde932341b73d5e9a7fd35c6, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -287,7 +267,7 @@ Animator:
   m_GameObject: {fileID: 8543452034602996808}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 52788ea1bbae7e1469c83abdda08521a, type: 2}
+  m_Controller: {fileID: 9100000, guid: a4646bfcd19528f4294ec1e7a081c8c6, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -308,7 +288,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 8543452034602996808}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eb00f55bddacee24cb66c110a392f64a, type: 3}
+  m_Script: {fileID: 11500000, guid: 60f1ac3e3af64bb429be4dd9cd0260d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 3785788276674061486}

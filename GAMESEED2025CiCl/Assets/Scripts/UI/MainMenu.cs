@@ -5,8 +5,7 @@ public class MainMenu : MonoBehaviour
 {
     public void PlayGame()
     {
-        // Directly load the scene named "game". Ensure this scene is in your Build Settings.
-        SceneManager.LoadScene("game");
+        SceneManager.LoadScene("TestScene");
     }
 
     public void UpgradeMenu()
@@ -29,4 +28,3 @@ public class MainMenu : MonoBehaviour
         Application.Quit();
     }
 }
-

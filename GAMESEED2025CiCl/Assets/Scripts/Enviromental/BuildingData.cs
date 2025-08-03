@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class BuildingOption
 {
     public GameObject prefab;
+    public GameObject destroyedPrefab;
     [Range(0f, 0.5f)] public float spawnChance = 0.1f;
     public Vector2 footprintSize = Vector2.one;
 }
@@ -31,20 +32,5 @@ public class BuildingData
         isDestroyed = false;
         isRendered = false;
         isActive = false;
-    }
-}
-
-[System.Serializable]
-public class FenceData
-{
-    public Vector3 position;
-    public Quaternion rotation;
-    public bool isGate;
-    
-    public FenceData(Vector3 pos, Quaternion rot, bool gate)
-    {
-        position = pos;
-        rotation = rot;
-        isGate = gate;
     }
 }

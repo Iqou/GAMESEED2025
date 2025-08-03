@@ -30,8 +30,6 @@ public class PathGen : MonoBehaviour
 
     [Range(0f, 1f)]
     public float parkSpawnChance = 0.3f;
-    public int parkWidth = 6;
-    public int parkHeight = 4;
     public class ParkData
     {
         public Vector2Int startPosition;
@@ -120,7 +118,6 @@ public class PathGen : MonoBehaviour
         Parkmaker();
         WorldBorderMaker();
         SpawnBuildings();
-        GenerateParkFences();
         SpawnBillboards();
         AddGroundPlaneWithNavMesh();
     }
@@ -144,6 +141,8 @@ public class PathGen : MonoBehaviour
 
     void Parkmaker()
     {
+        int parkWidth = 4;
+        int parkHeight = 3;
         PlacedParks.Clear();
 
         for (int x = BorderWidth; x <= size - BorderWidth - parkWidth; x++)
@@ -619,85 +618,7 @@ public class PathGen : MonoBehaviour
 }
 
 
-    // INI BAGIAN UNTUK FENCE ======================================================================================================================
 
-    [HideInInspector] public List<FenceData> fenceDataList = new List<FenceData>();
-
-    void GenerateParkFences()
-    {
-        fenceDataList.Clear();
-        
-        foreach (ParkData park in PlacedParks)
-        {
-            int startX = park.startPosition.x;
-            int startY = park.startPosition.y;
-            int endX = startX + park.width;
-            int endY = startY + park.height;
-
-            List<Vector2Int> potentialGates = new List<Vector2Int>();
-            
-           
-            GenerateFenceLine(startX, startY, endX, startY, 0, potentialGates);
-            GenerateFenceLine(startX, endY, endX, endY, 180, potentialGates);
-            GenerateFenceLine(startX, startY, startX, endY, 90, potentialGates);
-            GenerateFenceLine(endX, startY, endX, endY, 270, potentialGates);
-
-            if (potentialGates.Count > 0)
-            {
-                var gatePos = potentialGates[0];
-                fenceDataList.Add(new FenceData(
-                    new Vector3(gatePos.x, 0, gatePos.y),
-                    Quaternion.Euler(0, potentialGates[0].y, 0),
-                    true
-                ));
-            }
-        }
-    }
-
-    void GenerateFenceLine(int x1, int y1, int x2, int y2, float gateRotation, List<Vector2Int> potentialGates)
-    {
-        bool isHorizontal = y1 == y2;
-        int steps = isHorizontal ? Mathf.Abs(x2 - x1) : Mathf.Abs(y2 - y1);
-        
-        // Calculate center position for gate
-        int gateX = isHorizontal ? x1 + steps / 2 : x1;
-        int gateY = isHorizontal ? y1 : y1 + steps / 2;
-        potentialGates.Add(new Vector2Int(gateX, (int)gateRotation));
-
-        for (int i = 0; i <= steps; i++)
-        {
-            Vector3 position = new Vector3(
-                isHorizontal ? x1 + i : x1,
-                0,
-                isHorizontal ? y1 : y1 + i
-            );
-
-            bool isCorner = (i == 0 || i == steps);
-            bool isGateSpot = (i == steps / 2);
-            
-            if (isGateSpot) continue; // Skip gate
-
-            if (isCorner)
-            {
-                // Corner
-                Quaternion rot1 = isHorizontal ? Quaternion.identity : Quaternion.Euler(0, 90, 0);
-                Quaternion rot2 = isHorizontal ? Quaternion.Euler(0, 90, 0) : Quaternion.identity;
-                
-                // Offset
-                Vector3 offset1 = Vector3.zero;
-                Vector3 offset2 = isHorizontal ? new Vector3(0, 0, 0.1f) : new Vector3(0.1f, 0, 0);
-                
-                fenceDataList.Add(new FenceData(position + offset1, rot1, false));
-                fenceDataList.Add(new FenceData(position + offset2, rot2, false));
-            }
-            else
-            {
-                // Pagar normal
-                Quaternion rotation = isHorizontal ? Quaternion.identity : Quaternion.Euler(0, 90, 0);
-                fenceDataList.Add(new FenceData(position, rotation, false));
-            }
-        }
-    }
     // INI BAGIAN UNTUK BILLBOARDS ======================================================================================================================
     [System.Serializable]
     public class BillboardOption
@@ -780,6 +701,7 @@ public class PathGen : MonoBehaviour
 
     bool CanPlaceBillboardAt(Vector2Int pos, BillboardOption option)
     {
+        // 1. Check against other billboards of same type
         foreach (var existing in PlacedBillboards)
         {
             if (existing.prefabUsed == option.prefab)
@@ -790,14 +712,16 @@ public class PathGen : MonoBehaviour
             }
         }
 
+        // 2. Check if position is inside any building's footprint
         foreach (var building in PlacedBuildings)
         {
-            // Check footprint
+            // Find the building's footprint size from Type1, Type2, or Type3 lists
             Vector2 footprint = GetFootprintForBuilding(building.prefabUsed);
             
             int halfWidth = Mathf.CeilToInt(footprint.x / 2f);
             int halfDepth = Mathf.CeilToInt(footprint.y / 2f);
 
+            // Calculate footprint bounds
             int minX = building.coordinate.x - halfWidth;
             int maxX = building.coordinate.x + halfWidth;
             int minY = building.coordinate.y - halfDepth;
@@ -815,24 +739,28 @@ public class PathGen : MonoBehaviour
 
     Vector2 GetFootprintForBuilding(GameObject buildingPrefab)
     {
+        // Check Type1 buildings
         foreach (var option in Type1)
         {
             if (option.prefab == buildingPrefab)
                 return option.footprintSize;
         }
         
+        // Check Type2 buildings
         foreach (var option in Type2)
         {
             if (option.prefab == buildingPrefab)
                 return option.footprintSize;
         }
         
+        // Check Type3 buildings
         foreach (var option in Type3)
         {
             if (option.prefab == buildingPrefab)
                 return option.footprintSize;
         }
 
+        // Default footprint if not found (1x1)
         Debug.LogWarning($"Building prefab {buildingPrefab.name} not found in any type list, using default footprint");
         return Vector2.one;
     }

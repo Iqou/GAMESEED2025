@@ -122,7 +122,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   aoePrefab: {fileID: 8565532337906063679, guid: 211f2bf3927fc434788e4f4b996425e0, type: 3}
-  dugemSound:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  iconTexture: {fileID: 2800000, guid: 7d05284b03a39fb46a34d6228260488c, type: 3}

@@ -29,6 +29,30 @@ public class RealHoreg : MonoBehaviour
     private GameObject aoeInstance;
     
     public GameObject aoePrefab;
+    public Texture2D iconTexture; // Assign this in the Inspector
+
+    public Texture2D GetIconTexture()
+    {
+        return iconTexture;
+    }
+
+    public float GetCurrentCooldown(PlayerStats playerStats)
+    {
+        float cooldownReduction = playerStats != null ? playerStats.cooldownReduction : 0f;
+        return Mathf.Max(0.1f, (3f - (cooldownLevel - 1) * 0.5f) * (1 - cooldownReduction));
+    }
+
+    public float GetMaxCooldown(PlayerStats playerStats)
+    {
+        float cooldownReduction = playerStats != null ? playerStats.cooldownReduction : 0f;
+        return Mathf.Max(0.1f, (3f - (cooldownLevel - 1) * 0.5f) * (1 - cooldownReduction));
+    }
+
+    public float GetRemainingCooldown()
+    {
+        float currentCooldown = GetCurrentCooldown(FindObjectOfType<PlayerStats>()); // This might be problematic if PlayerStats isn't found
+        return Mathf.Max(0f, (lastActiveTime + currentCooldown) - Time.time);
+    }
 
     public void Use(Transform owner, PlayerStats playerStats)
     {
@@ -80,6 +104,7 @@ public class RealHoreg : MonoBehaviour
             attackPos = spawnPos;
             lastActiveTime = Time.time;
             Destroy(aoeInstance, duration);
+            GameHUD.Instance.UpdateWeaponSlot(3, GetIconTexture(), GetRemainingCooldown(), GetMaxCooldown(playerStats)); // Update UI for slot 3
         } 
         else
         {

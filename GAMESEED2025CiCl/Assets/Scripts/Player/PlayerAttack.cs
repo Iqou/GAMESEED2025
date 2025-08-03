@@ -63,6 +63,31 @@ public class PlayerAttack : MonoBehaviour
 
         // Re-assign all weapon references
         AssignHoregsFromPrefabs();
+
+        // Update HUD
+        if (GameHUD.Instance != null)
+        {
+            // Get the component from the newHoregPrefab
+            MonoBehaviour horegComponent = newHoregPrefab.GetComponent<ToaRW>();
+            if (horegComponent == null) horegComponent = newHoregPrefab.GetComponent<BassKondangan>();
+            if (horegComponent == null) horegComponent = newHoregPrefab.GetComponent<SubwooferDugem>();
+            if (horegComponent == null) horegComponent = newHoregPrefab.GetComponent<RealHoreg>();
+
+            
+
+            Texture2D icon = null;
+            float currentCooldown = 0f;
+            float maxCooldown = 0f; // Default value
+
+            if (horegComponent != null && playerStats != null)
+            {
+                if (horegComponent is ToaRW toa) { icon = toa.GetIconTexture(); currentCooldown = toa.GetRemainingCooldown(); maxCooldown = toa.GetMaxCooldown(playerStats); }
+                else if (horegComponent is BassKondangan bass) { icon = bass.GetIconTexture(); currentCooldown = bass.GetRemainingCooldown(); maxCooldown = bass.GetMaxCooldown(playerStats); }
+                else if (horegComponent is SubwooferDugem sub) { icon = sub.GetIconTexture(); currentCooldown = sub.GetRemainingCooldown(); maxCooldown = sub.GetMaxCooldown(playerStats); }
+                else if (horegComponent is RealHoreg real) { icon = real.GetIconTexture(); currentCooldown = real.GetRemainingCooldown(); maxCooldown = real.GetMaxCooldown(playerStats); }
+            }
+            GameHUD.Instance.UpdateWeaponSlot(slotIndex - 1, icon, currentCooldown, maxCooldown);
+        }
     }
 
     // Update is called once per frame
@@ -70,30 +95,79 @@ public class PlayerAttack : MonoBehaviour
     {
         Metronome();
 
-        bool isOnBeat = Mathf.Abs(Time.time - nextBeatTime) <= beatWindow;
+        // Update UI for all slots continuously
+        for (int i = 0; i < horegPrefabs.Count; i++)
+        {
+            Texture2D icon = null;
+            float currentCooldown = 0f;
+            float maxCooldown = 0f;
 
-        // Slot 1 (W) is always available
+            if (i < playerStats.unlockedHoregSlots)
+            {
+                MonoBehaviour horegComponent = null;
+                if (i == 0 && toa != null) horegComponent = toa;
+                else if (i == 1 && kondangan != null) horegComponent = kondangan;
+                else if (i == 2 && dugem != null) horegComponent = dugem;
+                else if (i == 3 && superHoreg != null) horegComponent = superHoreg;
+
+                if (horegComponent != null && playerStats != null)
+                {
+                    if (horegComponent is ToaRW toaComp) { icon = toaComp.GetIconTexture(); currentCooldown = toaComp.GetRemainingCooldown(); maxCooldown = toaComp.GetMaxCooldown(playerStats); }
+                    else if (horegComponent is BassKondangan bassComp) { icon = bassComp.GetIconTexture(); currentCooldown = bassComp.GetRemainingCooldown(); maxCooldown = bassComp.GetMaxCooldown(playerStats); }
+                    else if (horegComponent is SubwooferDugem subComp) { icon = subComp.GetIconTexture(); currentCooldown = subComp.GetRemainingCooldown(); maxCooldown = subComp.GetMaxCooldown(playerStats); }
+                    else if (horegComponent is RealHoreg realComp) { icon = realComp.GetIconTexture(); currentCooldown = realComp.GetRemainingCooldown(); maxCooldown = realComp.GetMaxCooldown(playerStats); }
+                }
+            }
+            if (GameHUD.Instance != null)
+            {
+                GameHUD.Instance.UpdateWeaponSlot(i, icon, currentCooldown, maxCooldown);
+            }
+        }
+
+        // --- RHYTHM-BASED ATTACK LOGIC ---
+
+        // Slot 1 (W)
         if (toa != null && Input.GetKeyDown(KeyCode.W))
         {
-            toa.Use(transform, playerStats);
+            HitQuality quality = RhythmManager.Instance.CheckHitQuality();
+            GameHUD.Instance.ShowHitFeedback(quality);
+            if (quality != HitQuality.Miss)
+            {
+                toa.Use(transform, playerStats, quality);
+            }
         }
 
         // Slot 2 (A)
         if (playerStats.unlockedHoregSlots >= 2 && kondangan != null && Input.GetKeyDown(KeyCode.A))
         {
-            kondangan.Use(transform, playerStats);
+            HitQuality quality = RhythmManager.Instance.CheckHitQuality();
+            GameHUD.Instance.ShowHitFeedback(quality);
+            if (quality != HitQuality.Miss)
+            {
+                kondangan.Use(transform, playerStats, quality);
+            }
         }
 
         // Slot 3 (S)
         if (playerStats.unlockedHoregSlots >= 3 && dugem != null && Input.GetKeyDown(KeyCode.S))
         {
-            dugem.Use(transform, playerStats);
+            HitQuality quality = RhythmManager.Instance.CheckHitQuality();
+            GameHUD.Instance.ShowHitFeedback(quality);
+            if (quality != HitQuality.Miss)
+            {
+                dugem.Use(transform, playerStats, quality);
+            }
         }
 
         // Slot 4 (D)
         if (playerStats.unlockedHoregSlots >= 4 && superHoreg != null && Input.GetKeyDown(KeyCode.D))
         {
-            superHoreg.Use(transform, playerStats);
+            HitQuality quality = RhythmManager.Instance.CheckHitQuality();
+            GameHUD.Instance.ShowHitFeedback(quality);
+            if (quality != HitQuality.Miss)
+            {
+                superHoreg.Use(transform, playerStats, quality);
+            }
         }
     }
 

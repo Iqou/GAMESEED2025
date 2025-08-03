@@ -122,3 +122,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   aoePrefab: {fileID: 3326086064895215845, guid: 1e993de55a82f6e4eaf1e34367032100, type: 3}
+  iconTexture: {fileID: 2800000, guid: d8e3a65fcc7e99f4b9fcc56d1fb5e574, type: 3}

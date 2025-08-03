@@ -29,6 +29,36 @@ public class BassKondangan : MonoBehaviour
 
     private GameObject aoeInstance;
     public GameObject aoePrefab;
+    public Texture2D iconTexture; // Assign this in the Inspector
+
+    public Texture2D GetIconTexture()
+    {
+        return iconTexture;
+    }
+
+    public float GetCurrentCooldown(PlayerStats playerStats)
+    {
+        float cooldownReduction = playerStats != null ? playerStats.cooldownReduction : 0f;
+        return Mathf.Max(0.1f, (1.5f - (cooldownLevel - 1) * 0.5f) * (1 - cooldownReduction));
+    }
+
+    public float GetMaxCooldown(PlayerStats playerStats)
+    {
+        float cooldownReduction = playerStats != null ? playerStats.cooldownReduction : 0f;
+        return Mathf.Max(0.1f, (1.5f - (cooldownLevel - 1) * 0.5f) * (1 - cooldownReduction));
+    }
+
+    public float GetRemainingCooldown()
+    {
+        PlayerStats playerStats = FindObjectOfType<PlayerStats>();
+        if (playerStats == null)
+        {
+            Debug.LogWarning("PlayerStats not found when trying to get remaining cooldown for BassKondangan.");
+            return 0f; // Or handle appropriately
+        }
+        float currentCooldown = GetCurrentCooldown(playerStats);
+        return Mathf.Max(0f, (lastActiveTime + currentCooldown) - Time.time);
+    }
 
     public void Use(Transform owner, PlayerStats playerStats)
     {
@@ -73,6 +103,7 @@ public class BassKondangan : MonoBehaviour
                 attackPos = spawnPos;
                 lastActiveTime = Time.time;
                 Destroy(aoeInstance, duration);
+                GameHUD.Instance.UpdateWeaponSlot(1, GetIconTexture(), GetRemainingCooldown(), GetMaxCooldown(playerStats)); // Update UI for slot 1
             }
         }
         else

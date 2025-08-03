@@ -36,42 +36,46 @@ public class BillboardRendering : MonoBehaviour
 
     void LateUpdate()
     {
-        if (Camera.main.orthographic)
+        if (Camera.main != null)
         {
-            Quaternion orthoRotation = Quaternion.Euler(80f, 0, 0);
-
-            foreach (var kvp in billboardToDataMap)
+            if (Camera.main.orthographic)
             {
-                GameObject billboardObj = kvp.Key;
-                if (billboardObj.activeInHierarchy)
+                Debug.Log("Camera is in Orthographic mode");
+                foreach (var kvp in billboardToDataMap)
                 {
-                    billboardObj.transform.rotation = orthoRotation;
-                }
-            }
-        }
-        else
-        {
-            float tiltAngle = 20f;
-            Quaternion tiltRotation = Quaternion.Euler(tiltAngle, 0, 0);
-
-            foreach (var kvp in billboardToDataMap)
-            {
-                GameObject billboardObj = kvp.Key;
-                if (billboardObj.activeInHierarchy)
-                {
-                    Vector3 lookDirection = Camera.main.transform.position - billboardObj.transform.position;
-                    lookDirection.y = 0;
-
-                    if (lookDirection != Vector3.zero)
+                    GameObject billboardObj = kvp.Key;
+                    if (billboardObj.activeInHierarchy)
                     {
-                        Quaternion faceRotation = Quaternion.LookRotation(-lookDirection);
-                        billboardObj.transform.rotation = faceRotation * tiltRotation;
+                        billboardObj.transform.rotation = Quaternion.Euler(80f, 0, 0);
+                    }
+                }
+                
+            }
+            else
+            {
+                Debug.Log("Camera is in Perspective mode");
+                Quaternion tiltRotation = Quaternion.Euler(0, 0, 0);
+
+                foreach (var kvp in billboardToDataMap)
+                {
+                    GameObject billboardObj = kvp.Key;
+                    if (billboardObj.activeInHierarchy)
+                    {
+                        Vector3 lookDirection = Camera.main.transform.position - billboardObj.transform.position;
+                        lookDirection.y = 0;
+
+                        if (lookDirection != Vector3.zero)
+                        {
+                            Quaternion faceRotation = Quaternion.LookRotation(-lookDirection);
+                            billboardObj.transform.rotation = faceRotation * tiltRotation;
+                        }
                     }
                 }
             }
         }
+        
+        
     }
-
     void InitializeBillboardPools()
     {
         foreach (var billboard in placedBillboards)

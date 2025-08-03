@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class BassKondangan : MonoBehaviour
+public class BassKondangan : MonoBehaviour, IHoregWeapon
 {
     private string namaSpeaker = "Bass Kondangan";
     private string tier = "Epic";

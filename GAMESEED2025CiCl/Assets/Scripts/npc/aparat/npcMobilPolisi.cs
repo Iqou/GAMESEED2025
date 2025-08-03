@@ -50,6 +50,7 @@ public class npcMobilPolisi : MonoBehaviour, INPCDamageable
         if (playerInSight)
         {
             HandleCombat();
+            ChasePlayer();
         }
         else
         {
@@ -124,6 +125,20 @@ public class npcMobilPolisi : MonoBehaviour, INPCDamageable
         if (!walkPointSet) searchForDest();
         if (walkPointSet) Agent.SetDestination(destPoint);
         if (Vector3.Distance(transform.position, destPoint) < 1f) walkPointSet = false;
+    }
+
+    void ChasePlayer()
+    {
+        float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
+
+        if (distanceToPlayer > stopDistance)
+        {
+            Agent.SetDestination(player.transform.position);
+        }
+        else
+        {
+            Agent.ResetPath(); // berhenti bergerak jika sudah cukup dekat
+        }
     }
 
     void searchForDest()

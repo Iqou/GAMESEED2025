@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1243933396192508748}
   - component: {fileID: 6604117668006302381}
   - component: {fileID: 834527361894042949}
-  - component: {fileID: 8578228807214141716}
+  - component: {fileID: 1778057963458232380}
   m_Layer: 0
   m_Name: Sprite
   m_TagString: Untagged
@@ -78,7 +78,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 73b69320d9e3d2a478f366032b1a5f2b, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 5f78ac4472e77cc4181313987f394553, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -111,7 +111,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &8578228807214141716
+--- !u!114 &1778057963458232380
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -137,8 +137,7 @@ GameObject:
   - component: {fileID: 6169574240742018289}
   - component: {fileID: 2102787573772941761}
   - component: {fileID: 7219591662969294766}
-  - component: {fileID: 1689941053140165378}
-  - component: {fileID: 6305635999837920244}
+  - component: {fileID: 8799924344394824234}
   m_Layer: 0
   m_Name: npcAnakKecil
   m_TagString: NPC
@@ -234,10 +233,10 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.5
-  m_Height: 2
+  m_Radius: 0.16
+  m_Height: 0.57
   m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: -0.02, y: 0, z: 0}
 --- !u!195 &7219591662969294766
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -260,26 +259,7 @@ NavMeshAgent:
   m_BaseOffset: 1
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &1689941053140165378
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3504922048683469504}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7dc8f7e66028a4e408c796f6bfbb0ce3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 72
-  playerLayer:
-    serializedVersion: 2
-    m_Bits: 128
-  range: 20
---- !u!114 &6305635999837920244
+--- !u!114 &8799924344394824234
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -293,7 +273,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   groundLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
   playerLayer:
     serializedVersion: 2
     m_Bits: 0
@@ -303,15 +283,15 @@ MonoBehaviour:
   range: 10
   sightRange: 20
   stopDistance: 3
-  sensitivitasDesibel: 100
-  currEmotion: 0
-  aggroLevel: 0
-  fearLevel: 0
-  phoneCooldown: 120
+  sensitivitasDesibel: 75
+  currEmotion: 100
+  aggroLevel: 90
+  fearLevel: 70
+  phoneCooldown: 3
   nextPhoneTime: 0
-  giveCoin: 5000
-  giveExperience: 100
+  giveCoin: 0
+  giveExperience: 0
   coinPrefab: {fileID: 0}
-  panicRadius: 10
+  panicRadius: 5
   panicEffectPercent: 0.5
   panicInterval: 3

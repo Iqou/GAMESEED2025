@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class RealHoreg : MonoBehaviour
+public class RealHoreg : MonoBehaviour, IHoregWeapon
 {
     private string namaSpeaker = "Real Horeg";
     private string tier = "Mythic";

@@ -13,8 +13,7 @@ GameObject:
   - component: {fileID: 690807223059605542}
   - component: {fileID: 4568320282802517689}
   - component: {fileID: 7270422242739389152}
-  - component: {fileID: -8498228700704209491}
-  - component: {fileID: 7222692117234280595}
+  - component: {fileID: 4943825730960761468}
   m_Layer: 6
   m_Name: npcFansFanatik
   m_TagString: NPC
@@ -136,26 +135,7 @@ NavMeshAgent:
   m_BaseOffset: 1
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &-8498228700704209491
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7708272947473252093}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7dc8f7e66028a4e408c796f6bfbb0ce3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 8
-  playerLayer:
-    serializedVersion: 2
-    m_Bits: 128
-  range: 20
---- !u!114 &7222692117234280595
+--- !u!114 &4943825730960761468
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -199,7 +179,7 @@ GameObject:
   - component: {fileID: 1379587597986487920}
   - component: {fileID: 6610706679977837479}
   - component: {fileID: 3785788276674061486}
-  - component: {fileID: 3918789476683833904}
+  - component: {fileID: 788022970232403559}
   m_Layer: 0
   m_Name: Sprite
   m_TagString: Untagged
@@ -266,7 +246,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 41c66999a97c6be47a847fe3816c7186, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 0689a62bfde932341b73d5e9a7fd35c6, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -299,7 +279,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &3918789476683833904
+--- !u!114 &788022970232403559
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

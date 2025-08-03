@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 5369536440573085775}
   - component: {fileID: 5769818381487466352}
   - component: {fileID: 7723208283274511762}
+  - component: {fileID: -2665485124005521628}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -211,6 +212,30 @@ MonoBehaviour:
   baseMaxHealth: 100
   currentHealth: 100
   maxHealth: 100
+  playerHealthBar: {fileID: 0}
+--- !u!136 &-2665485124005521628
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9087427083776352970}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 1.25
+  m_Height: 1.5
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &4880993273716259849
 PrefabInstance:
   m_ObjectHideFlags: 0

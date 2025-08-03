@@ -124,9 +124,9 @@ public class npcMobilPolisiElit : MonoBehaviour, INPCDamageable
             Vector3 dir = (player.transform.position - firePoint.position).normalized;
 
             // Set arah ke script SendalProjectile
-            bullet.GetComponent<sendalProjectile>()?.SetDirection(dir);
+            bullet.GetComponent<peluruKaretProjectile>()?.SetDirection(dir);
 
-            Debug.Log($"{gameObject.name} melempar sendal ke player!");
+            Debug.Log($"{gameObject.name} melempar peluru karet ke player!");
         }
     }
 

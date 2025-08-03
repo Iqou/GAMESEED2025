@@ -56,7 +56,7 @@ public class BassKondangan : MonoBehaviour
                 Vector3 flatMousePos = new Vector3(hit.point.x, owner.position.y, hit.point.z);
                 Vector3 shootDir = (flatMousePos - owner.position).normalized;
 
-                Vector3 spawnPos = owner.position + shootDir * 1.5f;
+                Vector3 spawnPos = owner.position + shootDir;
                 Quaternion spawnRot = Quaternion.LookRotation(shootDir, Vector3.up);
 
                 aoeInstance = Instantiate(aoePrefab, spawnPos, spawnRot);

@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
@@ -34,6 +35,18 @@ public class OverworldHealth : MonoBehaviour
         }
     }
 
+    void Update()
+    {
+        // For debug purposes: Press F4 to trigger the game over sequence.
+        if (Input.GetKeyDown(KeyCode.F4))
+        {
+            Debug.Log("F4 pressed. Forcing game over.");
+            // Set health to 0 to trigger death sequence. 
+            // We pass a large negative number to ensure health becomes 0.
+            ChangeHealth(-maxHealth);
+        }
+    }
+
     void UpdateMaxHealth()
     {
         int oldMaxHealth = maxHealth;
@@ -63,16 +76,60 @@ public class OverworldHealth : MonoBehaviour
 
     private void UpdateHealthUI()
     {
-        if (playerHealthBar != null)
+        if (GameHUD.Instance != null)
         {
-            playerHealthBar.fillAmount = (float)currentHealth / maxHealth;
+            GameHUD.Instance.SetHealth(currentHealth, maxHealth);
         }
     }
 
     private void Die()
     {
-        Debug.Log("Player has died! Reloading scene.");
-        int scene = SceneManager.GetActiveScene().buildIndex;
-        SceneManager.LoadScene(scene, LoadSceneMode.Single);
+        // Prevent the Die method from being called multiple times
+        if (currentHealth > 0) return;
+
+        Debug.Log("Player has died! Starting game over sequence.");
+
+        // --- Disable Player Controls ---
+        // Find and disable movement and attack scripts.
+        PlayerMovement movement = GetComponent<PlayerMovement>();
+        if (movement != null) movement.enabled = false;
+
+        PlayerAttack attack = GetComponent<PlayerAttack>();
+        if (attack != null) attack.enabled = false;
+
+        // Start the fade-out/fade-in sequence
+        StartCoroutine(GameOverSequence());
+    }
+
+    private IEnumerator GameOverSequence()
+    {
+        // --- Start Fades ---
+        if (GameHUD.Instance != null) StartCoroutine(GameHUD.Instance.FadeOut(3.0f));
+        if (GameOverUI.Instance != null)
+        {
+            // Calculate stats before showing the screen
+            int soundChipsEarned = 0;
+            if (GameManager.Instance != null && playerStats != null)
+            {
+                soundChipsEarned = (playerStats.money / 5000) + (playerStats.bossesKilledThisRun * 50);
+                GameManager.Instance.soundChips += soundChipsEarned;
+                GameManager.Instance.SaveProgressToSlot(GameManager.Instance.currentSlot);
+            }
+
+            GameOverUI.Instance.ShowGameOverScreen(
+                playerStats.money,
+                playerStats.bossesKilledThisRun,
+                soundChipsEarned,
+                playerStats.timePlayedThisRun,
+                playerStats.level
+            );
+        }
+
+        // Wait for the fade to complete
+        yield return new WaitForSeconds(3.0f);
+
+        // --- Pause Game ---
+        Debug.Log("Fades complete. Pausing game.");
+        Time.timeScale = 0f;
     }
 }

@@ -27,10 +27,12 @@ public class sendalProjectile : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            Debug.Log($"Player terkena sendal! Damage: {damage}");
-
-            // Kalau ada script health di player:
-            // other.GetComponent<PlayerHealth>()?.TakeDamage(damage);
+            OverworldHealth playerHealth = other.GetComponent<OverworldHealth>();
+            if (playerHealth != null)
+            {
+                playerHealth.ChangeHealth(-damage);
+                Debug.Log($"Player terkena pentungan! Damage: {damage}");
+            }
 
             Destroy(gameObject);
         }

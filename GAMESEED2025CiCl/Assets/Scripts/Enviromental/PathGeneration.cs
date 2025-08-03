@@ -434,7 +434,7 @@ public class PathGen : MonoBehaviour
 
     bool TryPlaceBuildingAtPosition(Vector2Int pos, List<BuildingOption> buildingOptions)
     {
-        Shuffle(buildingOptions);
+        ShuffleWithChance(buildingOptions, option => option.spawnChance);
         foreach (var option in buildingOptions)
         {
             if (TryFindValidPlacement(pos, option, out Vector3 finalPosition, out Quaternion finalRotation))
@@ -584,16 +584,39 @@ public class PathGen : MonoBehaviour
         }
     }
 
-    void Shuffle<T>(List<T> list)
+    public static void ShuffleWithChance<T>(List<T> originalList, System.Func<T, float> getChance)
+{
+    List<T> weightedList = new List<T>();
+
+    foreach (var item in originalList)
     {
-        for (int i = 0; i < list.Count; i++)
+        float chance = getChance(item);
+        int copies = Mathf.RoundToInt(chance * 100); // Adjust multiplier as needed (100 = 1% resolution)
+
+        for (int i = 0; i < copies; i++)
         {
-            T temp = list[i];
-            int randomIndex = Random.Range(i, list.Count);
-            list[i] = list[randomIndex];
-            list[randomIndex] = temp;
+            weightedList.Add(item);
         }
     }
+
+    // Fisher-Yates shuffle
+    for (int i = 0; i < weightedList.Count; i++)
+    {
+        int randomIndex = Random.Range(i, weightedList.Count);
+        T temp = weightedList[i];
+        weightedList[i] = weightedList[randomIndex];
+        weightedList[randomIndex] = temp;
+    }
+
+    // Replace original list with shuffled weighted selection
+    originalList.Clear();
+    foreach (var item in weightedList)
+    {
+        if (!originalList.Contains(item))
+            originalList.Add(item);
+    }
+}
+
 
 
     // INI BAGIAN UNTUK BILLBOARDS ======================================================================================================================
@@ -650,7 +673,7 @@ public class PathGen : MonoBehaviour
             return;
         }
 
-        Shuffle(billboardOptions);
+        ShuffleWithChance(billboardOptions, option => option.spawnChance);
 
         foreach (var option in billboardOptions)
         {

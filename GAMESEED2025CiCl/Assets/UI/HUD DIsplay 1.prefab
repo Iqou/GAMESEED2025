@@ -478,19 +478,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 2449136137331921649}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5feac60bd93706443bc924f9a5201e15, type: 3}
+  m_Script: {fileID: 11500000, guid: 7bf423a8065955f429d8a810a21942e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   playerInfoText: {fileID: 7540719315942491407}
   timeText: {fileID: 8877579077902467472}
-  healthBar: {fileID: 0}
+  healthBar: {fileID: 1302177504111644448}
   mamadPortrait: {fileID: 0}
-  wantedLevelText: {fileID: 4858338917883523340}
-  speakerSlotIcons:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  wantedLevelText: {fileID: 0}
+  speakerSlotIcons: []
   speakerNameTexts: []
   speakerCooldownTexts: []
   lockIcon: {fileID: 0}

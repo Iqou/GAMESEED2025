@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6207327994325048359}
   - component: {fileID: 883501755869752564}
+  - component: {fileID: 3517392492878589179}
   m_Layer: 0
   m_Name: DebugManager
   m_TagString: Untagged
@@ -41,7 +42,22 @@ MonoBehaviour:
   m_GameObject: {fileID: 8022362975082743376}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d2e3744566826574692604dcc180015a, type: 3}
+  m_Script: {fileID: 11500000, guid: eedac0168a950ab459bd1c07e07b25e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   playerStats: {fileID: 0}
+--- !u!114 &3517392492878589179
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8022362975082743376}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f24174c35af4bb46a8a024c215e23e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moneyPrefab: {fileID: 0}
+  launchForce: 10
+  moneyTexturePath: MoneyTextures

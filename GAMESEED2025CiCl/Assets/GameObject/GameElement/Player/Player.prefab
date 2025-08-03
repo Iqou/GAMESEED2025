@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 2327385446376189810}
   - component: {fileID: 5369536440573085775}
   - component: {fileID: 5769818381487466352}
+  - component: {fileID: 7723208283274511762}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -187,10 +188,29 @@ MonoBehaviour:
   beatAccuracyBonus: 0
   maxHealthBonus: 0
   moveSpeedMultiplier: 1
+  totalRupiahCollectedThisRun: 0
+  bossesKilledThisRun: 0
+  timePlayedThisRun: 0
   level: 1
   money: 0
+  unlockedHoregSlots: 1
   currentExperience: 0
   maxExperience: 150
+--- !u!114 &7723208283274511762
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9087427083776352970}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a772c72197f3eaa4f9c5b51516cc2034, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseMaxHealth: 100
+  currentHealth: 100
+  maxHealth: 100
 --- !u!1001 &4880993273716259849
 PrefabInstance:
   m_ObjectHideFlags: 0

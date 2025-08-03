@@ -68,7 +68,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: cb4967af69fde374f986f02cdd82554e, type: 2}
+  - {fileID: 2100000, guid: 4cd840fdecf79ee4a98fafd357dbc5f7, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -147,12 +147,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 5297799799834998784}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 898673ff3947cc14eaebc67caaf1319f, type: 3}
+  m_Script: {fileID: 11500000, guid: 379320dbb4d00d94eb57791e046b7ccc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   moneyValue: 10000
   collectionRadius: 2
-  collectSound: {fileID: 8300000, guid: f5e9aa3d80263794e853381d13254f52, type: 3}
+  collectSound: {fileID: 8300000, guid: 381beb062a434414eaed344e8f94de4c, type: 3}
   rotationSpeed: 100
   scaleSpeed: 1
   scaleAmount: 0.1

@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1340a5f19f9c244fb696ebc991083d4, type: 3}
+  m_Name: HoregDatabase
+  m_EditorClassIdentifier: 
+  allHoregPrefabs:
+  - {fileID: 2612908848125322223, guid: e002fe54c03e0ea4890f87cbe2e1ef48, type: 3}
+  - {fileID: 1462489726569395729, guid: 7db35e7bf081d9c4fbff237592ef006f, type: 3}
+  - {fileID: 5489858013434526524, guid: 01af53d3c73a4b945853bd300821693c, type: 3}
+  - {fileID: 7447160595838918263, guid: 3d7d065c4e17c9d4680439d2362cb7fd, type: 3}

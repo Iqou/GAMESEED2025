@@ -63,16 +63,30 @@ public class OverworldHealth : MonoBehaviour
 
     private void UpdateHealthUI()
     {
-        if (playerHealthBar != null)
+        if (GameHUD.Instance != null)
         {
-            playerHealthBar.fillAmount = (float)currentHealth / maxHealth;
+            GameHUD.Instance.SetHealth(currentHealth, maxHealth);
         }
     }
 
     private void Die()
     {
-        Debug.Log("Player has died! Reloading scene.");
-        int scene = SceneManager.GetActiveScene().buildIndex;
-        SceneManager.LoadScene(scene, LoadSceneMode.Single);
+        Debug.Log("Player has died! Calculating SoundChips and returning to menu.");
+
+        // --- End of Run Calculation ---
+        if (GameManager.Instance != null && playerStats != null)
+        {
+            // Soundchip = (Total Rupiah Terkumpul / 5000) + (Jumlah Boss Dikalahkan * 50)
+            int soundChipsEarned = (playerStats.totalRupiahCollectedThisRun / 5000) + (playerStats.bossesKilledThisRun * 50);
+            
+            Debug.Log($"Rupiah Collected: {playerStats.totalRupiahCollectedThisRun}, Bosses Killed: {playerStats.bossesKilledThisRun}");
+            Debug.Log($"SoundChips Earned: {soundChipsEarned}");
+
+            GameManager.Instance.soundChips += soundChipsEarned;
+            GameManager.Instance.SaveProgressToSlot(GameManager.Instance.currentSlot);
+        }
+
+        // Load the Main Menu scene (assuming it's at build index 0)
+        SceneManager.LoadScene(0);
     }
 }

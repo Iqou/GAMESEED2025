@@ -41,28 +41,10 @@ public class AttributeUpgradeItem : ShopItem
         return true;
     }
 
-    public override int GetCurrentCost()
+    public override int GetCurrentCost(PlayerStats playerStats)
     {
-        // TODO: implementasi exponential cost increase
-        if (GameManager.Instance != null)
-        {
-            // Bagian ini seharusnya mengambil level upgrade dari PlayerStats
-            // int baseCost = GameManager.Instance.GetBaseCost(attributeToUpgrade);
-            // int costIncreasePerLevel = GameManager.Instance.GetCostIncreasePerLevel(attributeToUpgrade);
-            // int currentLevel = PlayerStats.Instance.GetUpgradeLevel(attributeToUpgrade);
-            // return baseCost + (currentLevel * costIncreasePerLevel);
-        }
-        return baseCost; // Fallback
-    }
+        if (playerStats == null) return baseCost;
 
-    public string GetFormattedDescription(PlayerStats playerStats)
-    {
-        int currentLevel = playerStats.GetUpgradeLevel(attributeToUpgrade);
-        return $"{description}\nLevel: {currentLevel}/{maxLevel}\nCost: {GetCurrentCost(playerStats)}";
-    }
-
-    public int GetCurrentCost(PlayerStats playerStats)
-    {
         int currentLevel = playerStats.GetUpgradeLevel(attributeToUpgrade);
         return baseCost + (currentLevel * costIncreasePerLevel);
     }

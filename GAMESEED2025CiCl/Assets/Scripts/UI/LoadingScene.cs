@@ -16,7 +16,16 @@ public class LoadingScene : MonoBehaviour
         StartCoroutine(LoadSceneAsync(sceneId));
     }
 
-IEnumerator LoadSceneAsync(int sceneId)
+    public class LoadingScreenManager : MonoBehaviour
+    {
+        public GameObject loadingScreen;
+        public Image loadingBarFill;
+        public TextMeshProUGUI loadingPercentageText;
+
+}
+
+
+    IEnumerator LoadSceneAsync(int sceneId)
 {
     AsyncOperation operation = SceneManager.LoadSceneAsync(sceneId);
     operation.allowSceneActivation = false;

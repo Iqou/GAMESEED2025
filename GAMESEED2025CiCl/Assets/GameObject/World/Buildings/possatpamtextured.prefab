@@ -142,3 +142,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 100
+  NPC:
+  - prefab: {fileID: 3851010145339708242, guid: 6d9fec13a185f094c818859ee1aa2e8d, type: 3}
+    spawnChance: 1
+  spawnCount: 4

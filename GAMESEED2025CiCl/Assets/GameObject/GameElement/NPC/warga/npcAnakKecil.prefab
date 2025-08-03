@@ -137,6 +137,8 @@ GameObject:
   - component: {fileID: 6169574240742018289}
   - component: {fileID: 2102787573772941761}
   - component: {fileID: 7219591662969294766}
+  - component: {fileID: 8799924344394824234}
+  - component: {fileID: 1689941053140165378}
   m_Layer: 0
   m_Name: npcAnakKecil
   m_TagString: NPC
@@ -258,3 +260,58 @@ NavMeshAgent:
   m_BaseOffset: 1
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &8799924344394824234
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3504922048683469504}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76d91d16435a8b34582fb0fbcd02db44, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 8
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 128
+  obstacleLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  range: 10
+  sightRange: 20
+  stopDistance: 3
+  sensitivitasDesibel: 100
+  currEmotion: 0
+  aggroLevel: 0
+  fearLevel: 0
+  phoneCooldown: 120
+  nextPhoneTime: 0
+  giveCoin: 5000
+  giveExperience: 100
+  coinPrefab: {fileID: 0}
+  panicRadius: 10
+  panicEffectPercent: 0.5
+  panicInterval: 3
+--- !u!114 &1689941053140165378
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3504922048683469504}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7dc8f7e66028a4e408c796f6bfbb0ce3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 8
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 128
+  range: 20

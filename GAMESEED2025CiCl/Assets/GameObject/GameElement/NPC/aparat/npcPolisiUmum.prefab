@@ -137,6 +137,8 @@ GameObject:
   - component: {fileID: 1388273612305256677}
   - component: {fileID: 1411353444474405837}
   - component: {fileID: 6090647552489661984}
+  - component: {fileID: -8301431926349778234}
+  - component: {fileID: -5013716992274049460}
   m_Layer: 0
   m_Name: npcPolisiUmum
   m_TagString: NPC
@@ -258,3 +260,53 @@ NavMeshAgent:
   m_BaseOffset: 1
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &-8301431926349778234
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6032967875809309308}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f4e07ea595141444ac51bee971aedcd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  obstacleLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  range: 10
+  sightRange: 20
+  stopDistance: 3
+  attackRange: 2
+  attackCooldown: 2
+  attackDamage: 10
+  Tolerance: 500
+  giveExperience: 50
+  wantedLevel: 1
+  expPrefab: {fileID: 0}
+--- !u!114 &-5013716992274049460
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6032967875809309308}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7dc8f7e66028a4e408c796f6bfbb0ce3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  range: 0

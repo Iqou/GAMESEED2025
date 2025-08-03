@@ -32,7 +32,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -4.93, y: 2.03512, z: 0.51756}
-  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_LocalScale: {x: 6, y: 6, z: 6}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4185668410474330420}
@@ -187,10 +187,6 @@ MonoBehaviour:
   beatAccuracyBonus: 0
   maxHealthBonus: 0
   moveSpeedMultiplier: 1
-  level: 1
-  money: 0
-  currentExperience: 0
-  maxExperience: 150
 --- !u!1001 &4880993273716259849
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -203,17 +199,9 @@ PrefabInstance:
       propertyPath: player
       value: 
       objectReference: {fileID: 9087427083776352970}
-    - target: {fileID: 132632753543335480, guid: 6846b04982c22294ebd13a9bf1cef07a, type: 3}
-      propertyPath: offset.z
-      value: -3
-      objectReference: {fileID: 0}
     - target: {fileID: 4658446471529357537, guid: 6846b04982c22294ebd13a9bf1cef07a, type: 3}
       propertyPath: m_Name
       value: Main Camera
-      objectReference: {fileID: 0}
-    - target: {fileID: 5106033656678128732, guid: 6846b04982c22294ebd13a9bf1cef07a, type: 3}
-      propertyPath: orthographic size
-      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 8767029338069058877, guid: 6846b04982c22294ebd13a9bf1cef07a, type: 3}
       propertyPath: m_LocalScale.x

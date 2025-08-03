@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7010631231061974938}
   - component: {fileID: 9199786564904680196}
   - component: {fileID: 4926711089022828310}
-  - component: {fileID: 4904776729457793725}
+  - component: {fileID: 3326216945304622432}
   m_Layer: 0
   m_Name: Sprite
   m_TagString: Untagged
@@ -78,7 +78,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 97d44619afca07f4faae14d86c660f2e, type: 3}
+  m_Sprite: {fileID: 21300000, guid: d62dde32eacde1946aed43a4ca281592, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -99,7 +99,7 @@ Animator:
   m_GameObject: {fileID: 1003772843028023401}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 83f3998089be09c4bbba5883f074ed36, type: 2}
+  m_Controller: {fileID: 9100000, guid: 99f000f58167dcf49922ce8c22c31f65, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -111,7 +111,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &4904776729457793725
+--- !u!114 &3326216945304622432
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -120,7 +120,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1003772843028023401}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8ae01dad66124284eaaefc2f78a9f476, type: 3}
+  m_Script: {fileID: 11500000, guid: d1a5293bc80fbbe408d9ae3de0c7d9d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 4926711089022828310}
@@ -137,7 +137,7 @@ GameObject:
   - component: {fileID: 6652916812478597952}
   - component: {fileID: 2162797281532935075}
   - component: {fileID: 8038403904460371424}
-  - component: {fileID: 4268692667716973616}
+  - component: {fileID: 421628778584496225}
   - component: {fileID: -6710712501623538598}
   - component: {fileID: 2466342209481985407}
   - component: {fileID: 2751533691659690992}
@@ -195,7 +195,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 16cda194bea4892429d39f164b092b6a, type: 2}
+  - {fileID: 2100000, guid: 20d15c0ec191e54449457b1fff25b1e2, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -254,7 +254,7 @@ MonoBehaviour:
   duration: 2
   minDesibelOutput: 10
   maxDesibelOutput: 11
---- !u!114 &4268692667716973616
+--- !u!114 &421628778584496225
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -263,7 +263,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2995781848669505094}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 359c6d5ae87079e44884476673ba6a13, type: 3}
+  m_Script: {fileID: 11500000, guid: d64e0979ea271d640b1831b55b46d3be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   dugemSound:
@@ -307,7 +307,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 8300000, guid: 899b1920fccec3b48bf3126518e5361f, type: 3}
+  m_Resource: {fileID: 8300000, guid: 238e3532be2431040a08a3094692c05b, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
@@ -404,7 +404,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 0}
+  m_Resource: {fileID: 8300000, guid: 8b62ffb97cca48c4aa2753f45a9d4893, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1

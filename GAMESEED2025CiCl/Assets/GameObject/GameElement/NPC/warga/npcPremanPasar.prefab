@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8356896781317921257}
   - component: {fileID: 5333301021176012560}
   - component: {fileID: 3594247213855838984}
-  - component: {fileID: 1660853609806626912}
+  - component: {fileID: 2376955529826287804}
   m_Layer: 0
   m_Name: Sprite
   m_TagString: Untagged
@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 443882438683545048}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.082949996, z: -0.014}
+  m_LocalPosition: {x: 0.33839, y: 0.082949996, z: -0.36810002}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -78,7 +78,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: a3a304bbd4fe2694b80498d1c560508f, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 2a0f63ce7be955342bac0b419b416558, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -111,7 +111,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &1660853609806626912
+--- !u!114 &2376955529826287804
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -137,7 +137,8 @@ GameObject:
   - component: {fileID: 5167381004875581074}
   - component: {fileID: 8628131411880492450}
   - component: {fileID: 6776740988300434947}
-  - component: {fileID: 2779638999133290822}
+  - component: {fileID: 3263296868761222779}
+  - component: {fileID: 7169480380330687221}
   m_Layer: 6
   m_Name: npcPremanPasar
   m_TagString: NPC
@@ -233,10 +234,10 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.4
-  m_Height: 1.13
+  m_Radius: 0.5
+  m_Height: 2
   m_Direction: 1
-  m_Center: {x: 0, y: 0.11, z: 0}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!195 &6776740988300434947
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -259,7 +260,26 @@ NavMeshAgent:
   m_BaseOffset: 1
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &2779638999133290822
+--- !u!114 &3263296868761222779
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6199174921339498322}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7dc8f7e66028a4e408c796f6bfbb0ce3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 8
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 128
+  range: 0
+--- !u!114 &7169480380330687221
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -273,24 +293,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   groundLayer:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 0
   playerLayer:
     serializedVersion: 2
-    m_Bits: 128
+    m_Bits: 0
   obstacleLayer:
     serializedVersion: 2
     m_Bits: 0
   range: 10
-  sightRange: 13
+  sightRange: 20
   stopDistance: 3
-  sensitivitasDesibel: 80
+  sensitivitasDesibel: 100
   currEmotion: 0
-  aggroLevel: 90
-  fearLevel: 70
-  phoneCooldown: 0
+  aggroLevel: 0
+  fearLevel: 0
+  phoneCooldown: 120
   nextPhoneTime: 0
-  giveCoin: 0
-  giveExperience: 50
+  giveCoin: 5000
+  giveExperience: 100
   coinPrefab: {fileID: 0}
   copetRadius: 5
   copetDelay: 10

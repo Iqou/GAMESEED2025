@@ -18,5 +18,5 @@ MonoBehaviour:
   baseCost: 750000
   rarity: 0
   requiredLevel: 10
-  slotIndexToUnlock: 3
+  slotIndexToUnlock: 2
   horegDatabase: {fileID: 11400000, guid: 9e2f05d4bc98b6f4bb37267183bf200b, type: 2}

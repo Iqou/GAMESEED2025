@@ -13,7 +13,8 @@ GameObject:
   - component: {fileID: 7408775060312762091}
   - component: {fileID: 7180875178844023530}
   - component: {fileID: 1106235310168726617}
-  - component: {fileID: 4658001800565045977}
+  - component: {fileID: 7751852773358144058}
+  - component: {fileID: 7115173057747202690}
   m_Layer: 0
   m_Name: npcIbuIbuResah
   m_TagString: NPC
@@ -109,10 +110,10 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.32
-  m_Height: 0.93
+  m_Radius: 0.5
+  m_Height: 2
   m_Direction: 1
-  m_Center: {x: -0.04, y: 0.06, z: 0}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!195 &1106235310168726617
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -135,7 +136,26 @@ NavMeshAgent:
   m_BaseOffset: 1
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &4658001800565045977
+--- !u!114 &7751852773358144058
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1758479838046257190}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7dc8f7e66028a4e408c796f6bfbb0ce3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 8
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 128
+  range: 0
+--- !u!114 &7115173057747202690
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -159,13 +179,13 @@ MonoBehaviour:
   range: 10
   sightRange: 20
   stopDistance: 3
-  sensitivitasDesibel: 85
-  currEmotion: 100
-  aggroLevel: 50
-  fearLevel: 20
-  phoneCooldown: 60
+  sensitivitasDesibel: 100
+  currEmotion: 0
+  aggroLevel: 0
+  fearLevel: 0
+  phoneCooldown: 120
   nextPhoneTime: 0
-  giveCoin: 2000
+  giveCoin: 5000
   giveExperience: 100
   coinPrefab: {fileID: 0}
 --- !u!1 &2722363129664371348
@@ -179,7 +199,7 @@ GameObject:
   - component: {fileID: 209553253083701693}
   - component: {fileID: 1847869526853158227}
   - component: {fileID: 3718672174853453433}
-  - component: {fileID: 8580192407993877063}
+  - component: {fileID: 2550016416151346704}
   m_Layer: 0
   m_Name: Sprite
   m_TagString: Untagged
@@ -246,7 +266,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 940027d88050af64f9126b6c101f6aa1, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c4fcccf5ad37fba4fab956c1cb496be2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -279,7 +299,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &8580192407993877063
+--- !u!114 &2550016416151346704
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

@@ -7,6 +7,10 @@ public class WorldShopManager : MonoBehaviour
 {
     public static WorldShopManager Instance;
 
+    [Header("Data")]
+    public ShopItemDatabase itemDatabase;
+    public int itemsToShow = 4;
+
     [Header("UI")]
     public WorldShopUI shopUI; // Direct reference to the UI script
 
@@ -20,8 +24,6 @@ public class WorldShopManager : MonoBehaviour
     private Quaternion originalCameraRot;
     private float originalFieldOfView;
     private bool isShopOpen = false;
-    
-    private ShopTrigger currentShopTrigger; // Keep track of the currently active shop
 
     void Awake()
     {
@@ -38,7 +40,7 @@ public class WorldShopManager : MonoBehaviour
     void Start()
     {
         mainCamera = Camera.main;
-        playerStats = FindObjectOfType<PlayerStats>(); 
+        playerStats = FindObjectOfType<PlayerStats>(); // Find the player stats
 
         if (shopUI != null)
         {
@@ -50,44 +52,85 @@ public class WorldShopManager : MonoBehaviour
         }
     }
 
-    public void OpenShop(ShopTrigger shopTrigger)
+    public void OpenShop(Transform shopTarget)
     {
-        if (isShopOpen || shopUI == null || mainCamera == null) return;
+        if (isShopOpen || shopUI == null || mainCamera == null || itemDatabase == null) return;
 
-        currentShopTrigger = shopTrigger; // Set the active shop
         isShopOpen = true;
-
-        // --- Get items from the trigger and refresh UI ---
-        List<ShopItem> items = currentShopTrigger.GetOfferedItems();
-        // Pass the sold out status to the UI
-        shopUI.RefreshShop(items, playerStats, currentShopTrigger.IsSoldOut());
-
+        
+        // --- Refresh UI ---
+        List<ShopItem> randomItems = GetRandomItems();
+        shopUI.RefreshShop(randomItems, playerStats);
+        
         // --- Camera Zoom ---
         originalCameraPos = mainCamera.transform.position;
         originalCameraRot = mainCamera.transform.rotation;
         originalFieldOfView = mainCamera.fieldOfView;
 
-        StartCoroutine(ZoomToShop(shopTrigger.transform));
+        StartCoroutine(ZoomToShop(shopTarget));
     }
 
     public void CloseShop()
     {
         if (!isShopOpen || shopUI == null) return;
 
-        isShopOpen = false;
-        currentShopTrigger = null; // Clear the active shop reference
+        shopUI.gameObject.SetActive(false);
         Time.timeScale = 1f;
-        StartCoroutine(shopUI.FadeOut());
+
         StartCoroutine(ZoomToPlayer());
     }
 
-    public void NotifyPurchaseMade()
+    private List<ShopItem> GetRandomItems()
     {
-        if (currentShopTrigger != null)
+        List<ShopItem> offeredItems = new List<ShopItem>();
+        List<ShopItem> availablePool = new List<ShopItem>(itemDatabase.allItems);
+
+        // --- Special Logic for Horeg Slot Unlocks ---
+        // Check if the player is eligible for the next slot unlock and add it to the offers
+        HoregSlotItem nextSlotUnlock = GetNextEligibleSlotUnlock(availablePool);
+        if (nextSlotUnlock != null)
         {
-            currentShopTrigger.MarkAsSoldOut();
-            shopUI.SetSoldOutState();
+            offeredItems.Add(nextSlotUnlock);
+            availablePool.Remove(nextSlotUnlock); // Don't offer it twice
         }
+
+        // --- Fill the rest of the shop with random items ---
+        int itemsToFill = itemsToShow - offeredItems.Count;
+        
+        // Remove any other slot unlocks from the pool so they don't appear randomly
+        availablePool.RemoveAll(item => item is HoregSlotItem);
+
+        // Randomly select the remaining items
+        if (itemsToFill > 0 && availablePool.Count > 0)
+        {
+            offeredItems.AddRange(availablePool.OrderBy(x => Random.value).Take(itemsToFill));
+        }
+
+        return offeredItems;
+    }
+
+    private HoregSlotItem GetNextEligibleSlotUnlock(List<ShopItem> pool)
+    {
+        // Find all slot unlock items in the pool
+        var slotItems = pool.OfType<HoregSlotItem>().OrderBy(s => s.slotIndexToUnlock).ToList();
+
+        foreach (var slotItem in slotItems)
+        {
+            // If the player has already unlocked this slot, it's not the next one.
+            if (playerStats.unlockedHoregSlots >= slotItem.slotIndexToUnlock)
+            {
+                continue;
+            }
+
+            // If the player meets the level requirement for this slot, this is the one to offer.
+            if (playerStats.level >= slotItem.requiredLevel)
+            {
+                return slotItem;
+            }
+        }
+
+        // No eligible slot unlock found
+        return null;
     }
 
     private IEnumerator ZoomToShop(Transform shopTarget)
@@ -110,7 +153,6 @@ public class WorldShopManager : MonoBehaviour
         mainCamera.fieldOfView = shopFieldOfView;
         
         shopUI.gameObject.SetActive(true);
-        StartCoroutine(shopUI.FadeIn());
         Time.timeScale = 0f;
     }
 
@@ -132,6 +174,6 @@ public class WorldShopManager : MonoBehaviour
         mainCamera.transform.position = originalCameraPos;
         mainCamera.transform.rotation = originalCameraRot;
         mainCamera.fieldOfView = originalFieldOfView;
+        isShopOpen = false;
     }
 }
-

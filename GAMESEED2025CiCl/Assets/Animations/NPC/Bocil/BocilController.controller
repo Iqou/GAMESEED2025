@@ -39,7 +39,7 @@ AnimatorStateMachine:
     m_Position: {x: 400, y: 10, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 919675970848307091}
-    m_Position: {x: 470, y: 110, z: 0}
+    m_Position: {x: 470, y: 90, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 4474456749681455507}
     m_Position: {x: 290, y: 240, z: 0}
@@ -80,7 +80,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: d54d3d83f89fb90419a54c7a4ac533e8, type: 2}
+  m_Motion: {fileID: 7400000, guid: 26c75904ec92bc040bd3240509502e5e, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -92,7 +92,7 @@ AnimatorController:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: BapakPensiunController
+  m_Name: BocilController
   serializedVersion: 5
   m_AnimatorParameters:
   - m_Name: Back
@@ -152,7 +152,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: 4ebc8c36800163d4d9e89fd0f43c7e1b, type: 2}
+  m_Motion: {fileID: 7400000, guid: c34372fda96e14245ae33b03893149e5, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -178,7 +178,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: 651e718479182644e8248cb876fce5bf, type: 2}
+  m_Motion: {fileID: 7400000, guid: 0d845786718e6314f8e1f4f4b2185138, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -254,7 +254,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: 038738ce47ae5f7458c1068871f39daf, type: 2}
+  m_Motion: {fileID: 7400000, guid: 146038ffc97cced429c03c131339b6aa, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 

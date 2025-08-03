@@ -377,6 +377,38 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7238615380110732994, guid: 713e45ddcf2d1c642a238d349716fe13, type: 3}
+      propertyPath: randomNpcPrefabs.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7238615380110732994, guid: 713e45ddcf2d1c642a238d349716fe13, type: 3}
+      propertyPath: 'randomNpcPrefabs.Array.data[0]'
+      value: 
+      objectReference: {fileID: 3504922048683469504, guid: 3165bc11b34ab7c4cadbc4d0ed2f302c, type: 3}
+    - target: {fileID: 7238615380110732994, guid: 713e45ddcf2d1c642a238d349716fe13, type: 3}
+      propertyPath: 'randomNpcPrefabs.Array.data[1]'
+      value: 
+      objectReference: {fileID: 7016649551768180652, guid: 0819a64100e94274598310b7f73b8f13, type: 3}
+    - target: {fileID: 7238615380110732994, guid: 713e45ddcf2d1c642a238d349716fe13, type: 3}
+      propertyPath: 'randomNpcPrefabs.Array.data[2]'
+      value: 
+      objectReference: {fileID: 7708272947473252093, guid: f6132e34f1274134a9b8b7d191b3b4da, type: 3}
+    - target: {fileID: 7238615380110732994, guid: 713e45ddcf2d1c642a238d349716fe13, type: 3}
+      propertyPath: 'randomNpcPrefabs.Array.data[3]'
+      value: 
+      objectReference: {fileID: 6199174921339498322, guid: dccf5f2e70cd3744db44b47b6cc36e9b, type: 3}
+    - target: {fileID: 7238615380110732994, guid: 713e45ddcf2d1c642a238d349716fe13, type: 3}
+      propertyPath: 'randomNpcPrefabs.Array.data[4]'
+      value: 
+      objectReference: {fileID: 1758479838046257190, guid: 94fe7417bb8ec7b439bfbb2d5dcbe57a, type: 3}
+    - target: {fileID: 7238615380110732994, guid: 713e45ddcf2d1c642a238d349716fe13, type: 3}
+      propertyPath: 'randomNpcPrefabs.Array.data[5]'
+      value: 
+      objectReference: {fileID: 3504922048683469504, guid: 3165bc11b34ab7c4cadbc4d0ed2f302c, type: 3}
+    - target: {fileID: 7238615380110732994, guid: 713e45ddcf2d1c642a238d349716fe13, type: 3}
+      propertyPath: 'randomNpcPrefabs.Array.data[6]'
+      value: 
+      objectReference: {fileID: 3504922048683469504, guid: 3165bc11b34ab7c4cadbc4d0ed2f302c, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

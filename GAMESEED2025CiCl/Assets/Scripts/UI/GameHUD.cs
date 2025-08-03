@@ -19,9 +19,7 @@ public class GameHUD : MonoBehaviour
 
     [Header("Weapon Slots")]
     public List<Image> speakerSlotIcons;
-    public List<TextMeshProUGUI> speakerNameTexts; // To display weapon names
     public List<TextMeshProUGUI> speakerCooldownTexts;
-    public Sprite lockIcon; // Assign the lock icon in the inspector
 
     [Header("Player Level")]
     public RectTransform expBar; // Assign the RectTransform of the screen-width image
@@ -32,7 +30,6 @@ public class GameHUD : MonoBehaviour
     public GameObject pauseMenuPanel;
 
     private PlayerStats playerStats;
-    private PlayerAttack playerAttack; // Reference to PlayerAttack
     private Coroutine expAnimationCoroutine;
     private StringBuilder wantedStringBuilder = new StringBuilder();
     private CanvasGroup canvasGroup;
@@ -53,15 +50,9 @@ public class GameHUD : MonoBehaviour
     void Start()
     {
         playerStats = FindObjectOfType<PlayerStats>();
-        playerAttack = FindObjectOfType<PlayerAttack>(); // Find the PlayerAttack component
         if (playerStats == null)
         {
             Debug.LogError("PlayerStats not found in scene!");
-            return;
-        }
-        if (playerAttack == null)
-        {
-            Debug.LogError("PlayerAttack not found in scene!");
             return;
         }
 
@@ -91,8 +82,6 @@ public class GameHUD : MonoBehaviour
             int seconds = Mathf.FloorToInt(time % 60f);
             timeText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
         }
-
-        UpdateWeaponSlotsUI(); // Call the weapon slot UI update
     }
 
     public void UpdateUI()
@@ -105,48 +94,6 @@ public class GameHUD : MonoBehaviour
         // Set initial EXP bar state without animation
         float initialExpScale = (float)playerStats.currentExperience / playerStats.maxExperience;
         expBar.localScale = new Vector3(initialExpScale, 1, 1);
-    }
-
-    private void UpdateWeaponSlotsUI()
-    {
-        if (playerAttack == null || playerAttack.horegPrefabs == null) return;
-
-        for (int i = 0; i < speakerSlotIcons.Count; i++)
-        {
-            // Check if the slot is unlocked
-            if (i < playerStats.unlockedHoregSlots)
-            {
-                // Check if a weapon is equipped in this slot
-                if (i < playerAttack.horegPrefabs.Count && playerAttack.horegPrefabs[i] != null)
-                {
-                    ShopItem item = playerAttack.horegPrefabs[i].GetComponent<ShopItem>();
-                    if (item != null && item.icon != null)
-                    {
-                        speakerSlotIcons[i].sprite = item.icon;
-                        speakerSlotIcons[i].enabled = true;
-                        speakerNameTexts[i].text = item.itemName;
-                    }
-                    else
-                    {
-                        speakerSlotIcons[i].enabled = false;
-                        speakerNameTexts[i].text = playerAttack.horegPrefabs[i].name;
-                    }
-                }
-                else
-                {
-                    // Slot is unlocked but empty
-                    speakerSlotIcons[i].enabled = false;
-                    speakerNameTexts[i].text = "Empty";
-                }
-            }
-            else
-            {
-                // Slot is locked
-                speakerSlotIcons[i].sprite = lockIcon;
-                speakerSlotIcons[i].enabled = true;
-                speakerNameTexts[i].text = "Locked";
-            }
-        }
     }
 
     public void SetHealth(int currentHealth, int maxHealth)

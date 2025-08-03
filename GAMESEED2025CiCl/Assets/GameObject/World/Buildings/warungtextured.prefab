@@ -52,6 +52,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 029e1ead0c132eb4e93db3d73567f64d, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: -7972260811567515728, guid: 029e1ead0c132eb4e93db3d73567f64d, type: 3}
       propertyPath: m_LocalPosition.y
       value: 0.3919482
@@ -102,6 +106,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 029e1ead0c132eb4e93db3d73567f64d, type: 3}
       insertIndex: -1
       addedObject: {fileID: 480275002247623433}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 029e1ead0c132eb4e93db3d73567f64d, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7101890688231375656}
   m_SourcePrefab: {fileID: 100100000, guid: 029e1ead0c132eb4e93db3d73567f64d, type: 3}
 --- !u!1 &7537690295321386313 stripped
 GameObject:
@@ -142,3 +149,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 100
+  NPC:
+  - prefab: {fileID: 3504922048683469504, guid: 3165bc11b34ab7c4cadbc4d0ed2f302c, type: 3}
+    spawnChance: 0.3
+  - prefab: {fileID: 1758479838046257190, guid: 94fe7417bb8ec7b439bfbb2d5dcbe57a, type: 3}
+    spawnChance: 0.5
+  - prefab: {fileID: 6199174921339498322, guid: dccf5f2e70cd3744db44b47b6cc36e9b, type: 3}
+    spawnChance: 0.2
+  spawnCount: 4
+--- !u!114 &7101890688231375656
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7537690295321386313}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db579161e6ca3ff44b77504772602744, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  interactionRadius: 2

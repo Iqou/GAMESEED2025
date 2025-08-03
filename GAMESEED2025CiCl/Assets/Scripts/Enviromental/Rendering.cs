@@ -7,6 +7,8 @@ public class Rendering : MonoBehaviour
     public GameObject pathPrefab;
     public GameObject grassPrefab;
     public GameObject parkPrefab;
+    public GameObject fencePrefab;
+    public GameObject gatePrefab;
 
     public GameObject TopSide, BottomSide, LeftSide, RightSide;
     public GameObject outerCornerTopLeft, outerCornerTopRight, outerCornerBottomLeft, outerCornerBottomRight;
@@ -14,7 +16,8 @@ public class Rendering : MonoBehaviour
 
     [HideInInspector] public Transform tileParent;
     [HideInInspector] public List<BuildingData> placedBuildings;
-    
+    [HideInInspector] public List<FenceData> placedFences = new List<FenceData>();
+
 
     public int renderDistance = 2;
 
@@ -27,7 +30,9 @@ public class Rendering : MonoBehaviour
     private Dictionary<Vector2Int, GameObject> chunkLoaded = new Dictionary<Vector2Int, GameObject>();
     private Dictionary<Vector2Int, List<BuildingData>> activeBuildings = new Dictionary<Vector2Int, List<BuildingData>>();
     private Dictionary<string, Queue<GameObject>> buildingPools = new Dictionary<string, Queue<GameObject>>();
-    private Dictionary<GameObject, BuildingData> buildingToDataMap = new Dictionary<GameObject, BuildingData>(); 
+    private Dictionary<GameObject, BuildingData> buildingToDataMap = new Dictionary<GameObject, BuildingData>();
+    private Dictionary<Vector2Int, List<FenceData>> activeFences = new Dictionary<Vector2Int, List<FenceData>>();
+    private Dictionary<string, Queue<GameObject>> fencePools = new Dictionary<string, Queue<GameObject>>();
 
     void Start()
     {
@@ -45,9 +50,11 @@ public class Rendering : MonoBehaviour
         player = GameObject.Find("Player");
         player.transform.position = new Vector3(size / 2f, 0, size / 2f);
         placedBuildings = pathGen.PlacedBuildings;
+        placedFences = pathGen.fenceDataList;
 
         // Initialize building pools
         InitializeBuildingPools();
+        //InitializeFencePools();
 
         Debug.Log("[Rendering]Tile at (5,5): " + Grid[5, 5]);
         Debug.Log("[Rendering] World size: " + size);
@@ -106,14 +113,15 @@ public class Rendering : MonoBehaviour
                 {
                     GameObject chunkParent = new GameObject($"Chunk_{chunkCoord.x}_{chunkCoord.y}");
                     chunkParent.transform.parent = tileParent;
-                    
+
                     // Draw terrain
                     DrawPrefabsInChunk(chunkCoord, chunkSize, Grid, chunkParent.transform);
-                    
+
                     // Draw buildings
                     List<BuildingData> buildingsInChunk = GetBuildingsInChunk(chunkCoord);
                     RenderBuildingsInChunk(buildingsInChunk, chunkParent.transform);
-                    
+
+
                     GameObject mesh = CombineChunkToMesh(chunkParent, chunkParent.name);
                     chunkLoaded[chunkCoord] = mesh;
                     activeBuildings[chunkCoord] = buildingsInChunk;
@@ -121,7 +129,7 @@ public class Rendering : MonoBehaviour
                 else
                 {
                     chunkLoaded[chunkCoord].SetActive(true);
-                    
+
                     // Reactivate buildings if needed
                     foreach (var building in activeBuildings[chunkCoord])
                     {
@@ -141,7 +149,7 @@ public class Rendering : MonoBehaviour
             if (!newChunks.Contains(kvp.Key))
             {
                 kvp.Value.SetActive(false);
-                
+
                 // Return buildings to pool
                 foreach (var building in activeBuildings[kvp.Key])
                 {
@@ -151,6 +159,7 @@ public class Rendering : MonoBehaviour
                         building.isActive = false;
                     }
                 }
+
             }
         }
     }
@@ -217,7 +226,7 @@ public class Rendering : MonoBehaviour
         // Find the building instance
         string buildingName = $"{building.prefabName}_{building.coordinate.x}_{building.coordinate.y}";
         GameObject buildingObj = GameObject.Find(buildingName);
-        
+
         if (buildingObj != null)
         {
             buildingObj.SetActive(false);
@@ -363,4 +372,84 @@ public class Rendering : MonoBehaviour
 
         return combinedGO;
     }
+    
+    
+
+
+    //ENTAH EROR WAK
+    /*
+    void InitializeFencePools()
+    {
+
+        fencePools["Fence"] = new Queue<GameObject>();
+        for (int i = 0; i < 30; i++)
+        {
+            var obj = Instantiate(fencePrefab, transform);
+            obj.SetActive(false);
+            fencePools["Fence"].Enqueue(obj);
+        }
+
+        fencePools["Gate"] = new Queue<GameObject>();
+        for (int i = 0; i < 15; i++)
+        {
+            var obj = Instantiate(gatePrefab, transform);
+            obj.SetActive(false);
+            fencePools["Gate"].Enqueue(obj);
+        }
+    }
+
+    List<FenceData> GetFencesInChunk(Vector2Int chunkCoord)
+    {
+        List<FenceData> fences = new List<FenceData>();
+        int startX = chunkCoord.x * chunkSize;
+        int startZ = chunkCoord.y * chunkSize;
+        int endX = startX + chunkSize;
+        int endZ = startZ + chunkSize;
+
+        foreach (var fence in placedFences)
+        {
+            if (fence.position.x >= startX && fence.position.x < endX &&
+                fence.position.z >= startZ && fence.position.z < endZ)
+            {
+                fences.Add(fence);
+            }
+        }
+        return fences;
+    }
+
+    void RenderFencesInChunk(List<FenceData> fences, Transform parent)
+    {
+        foreach (var fence in fences)
+        {
+            string poolKey = fence.isGate ? "Gate" : "Fence";
+            GameObject prefab = fence.isGate ? gatePrefab : fencePrefab;
+            
+            if (!fencePools[poolKey].TryDequeue(out GameObject obj))
+            {
+                obj = Instantiate(prefab, parent);
+            }
+
+            obj.transform.position = fence.position;
+            obj.transform.rotation = fence.rotation;
+            obj.SetActive(true);
+            obj.name = $"{poolKey}_{fence.position.x}_{fence.position.z}";
+        }
+    }
+
+    void ReturnFencesToPool(List<FenceData> fences)
+    {
+        foreach (var fence in fences)
+        {
+            string poolKey = fence.isGate ? "Gate" : "Fence";
+            string objName = $"{poolKey}_{fence.position.x}_{fence.position.z}";
+            
+            var obj = GameObject.Find(objName);
+            if (obj != null)
+            {
+                obj.SetActive(false);
+                fencePools[poolKey].Enqueue(obj);
+            }
+        }
+    }*/
+
 }

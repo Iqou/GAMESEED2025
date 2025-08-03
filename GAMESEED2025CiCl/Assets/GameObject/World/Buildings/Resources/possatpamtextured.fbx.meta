@@ -1,9 +1,29 @@
 fileFormatVersion: 2
-guid: 55722e797f900324d90c7e2887014596
+guid: 8ad41b9e8afd37a49abab6b1fb4448ea
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Jendela v2 copy
+    second: {fileID: 2800000, guid: 8c3c1d943dd985c40b1d415a5a4d6cd5, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Pintu v2 copy
+    second: {fileID: 2800000, guid: e70c0abfa31dd8c45add33a6ade8de96, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Tembok satpam
+    second: {fileID: 2800000, guid: 73efecbc0a5404a4a83c21910a192be2, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Tembok satpam copy
+    second: {fileID: 2800000, guid: 0c0adb007658ab8428d606901aaef9cb, type: 3}
   materials:
     materialImportMode: 2
     materialName: 0

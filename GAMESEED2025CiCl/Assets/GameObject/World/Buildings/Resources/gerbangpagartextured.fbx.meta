@@ -1,9 +1,14 @@
 fileFormatVersion: 2
-guid: 55722e797f900324d90c7e2887014596
+guid: 5e27f2f32721e974f846645fdd7319c2
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Gerbang pagar
+    second: {fileID: 2800000, guid: 1f615437f1eee2a4b9e271a34476f45b, type: 3}
   materials:
     materialImportMode: 2
     materialName: 0

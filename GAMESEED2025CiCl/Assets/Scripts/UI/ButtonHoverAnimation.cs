@@ -17,7 +17,6 @@ public class ButtonHoverAnimation : MonoBehaviour, IPointerEnterHandler, IPointe
     public float animationDuration = 0.1f;
     private Coroutine _currentAnimationCoroutine;
 
-    // Tambahkan referensi untuk audio
     public AudioSource audioSource;
     public AudioClip hoverSfx;
 
@@ -45,7 +44,6 @@ public class ButtonHoverAnimation : MonoBehaviour, IPointerEnterHandler, IPointe
     
     public void OnSelect()
     {
-        // Putar efek suara saat tombol dipilih
         if (audioSource != null && hoverSfx != null)
         {
             audioSource.PlayOneShot(hoverSfx);

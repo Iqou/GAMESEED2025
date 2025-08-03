@@ -48,7 +48,6 @@ public class PlayerDebugUI : MonoBehaviour
         sb.AppendLine($"Level: {playerStats.level}");
         sb.AppendLine($"EXP: {playerStats.currentExperience} / {playerStats.maxExperience}");
         sb.AppendLine($"Money: {playerStats.money}");
-        sb.AppendLine($"Weapon Slots: {playerStats.unlockedHoregSlots}");
         sb.AppendLine("--------------------");
         sb.AppendLine($"Damage Multiplier: {playerStats.damageMultiplier:F2}");
         sb.AppendLine($"Cooldown Reduction: {playerStats.cooldownReduction:P0}"); // Show as percentage

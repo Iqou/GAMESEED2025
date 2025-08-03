@@ -45,6 +45,4 @@ IEnumerator LoadSceneAsync(int sceneId)
     operation.allowSceneActivation = true;
 }
 
-
-
 }

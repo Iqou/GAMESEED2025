@@ -213,9 +213,10 @@ public class npcFansFanatik : MonoBehaviour, INPCDamageable
 
         if (distanceToPlayer <= sightRange)
         {
-            Ray ray = new Ray(transform.position + Vector3.up, directionToPlayer.normalized); // +Vector3.up supaya ray keluar dari kepala NPC
+            Ray ray = new Ray(transform.position + Vector3.up*0.5f, directionToPlayer.normalized); // +Vector3.up supaya ray keluar dari kepala NPC
             if (Physics.Raycast(ray, out RaycastHit hit, sightRange, ~obstacleLayer)) // obstacleLayer diatur agar mengandung layer yang memblokir pandangan
             {
+                Debug.DrawRay(ray.origin, ray.direction * hit.distance, Color.yellow);
                 if (hit.collider.gameObject == player)
                 {
                     playerInSight = true;

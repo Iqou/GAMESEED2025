@@ -1,10 +1,12 @@
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.SceneManagement;
 
-public class npcPolisiUmum : MonoBehaviour, INPCDamageable
+
+
+public class npcWIlliamShakeSpeaker : MonoBehaviour
 {
     GameObject player;
-    OverworldHealth playerHealth;
     NavMeshAgent Agent;
 
     [Header("Layer Settings")]
@@ -18,31 +20,29 @@ public class npcPolisiUmum : MonoBehaviour, INPCDamageable
     //chase
     [SerializeField] float sightRange = 20f;
     [SerializeField] float stopDistance = 3f;
-    [SerializeField] float attackRange = 2f;      // Melee
-    [SerializeField] float attackCooldown = 2f;
-    [Range(10, 40)] public int attackDamage = 10;
-    float nextAttackTime = 0f;
+    bool playerInSight;
 
-    //atribut npc
-    [Range(500, 1000)] public int Tolerance = 500;
-    [Range(50, 500)] public int giveExperience = 50;
-    public int wantedLevel = 1;
+    //Atribut boss
+    [Range(500, 10000)] public int Tolerance = 500;
+
+    public int giveCoin = 5000;
+
+    [Range(50, 50000)] public int giveExperience = 100;
 
     [Header("Reward Prefabs")]
-    public GameObject expPrefab;
+    public GameObject coinPrefab;
 
-    bool playerInSight;
+    [Header("Battle Settings")]
+    public string battleSceneName = "BeatScene"; // Nama scene pertarungan 2D
+    public float triggerBattleDistance = 2f;        // Jarak minimal untuk transisi
+
     bool isDead = false;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         Agent = GetComponent<NavMeshAgent>();
         player = GameObject.Find("Player");
-
-        if (player != null)
-        {
-            playerHealth = player.GetComponent<OverworldHealth>();
-        }
     }
 
     // Update is called once per frame
@@ -54,14 +54,22 @@ public class npcPolisiUmum : MonoBehaviour, INPCDamageable
 
         if (playerInSight)
         {
-            HandleCombat();
+            ChasePlayer();
+            float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
+            if (distanceToPlayer <= triggerBattleDistance)
+            {
+                TransitionToBattle();
+            }
         }
         else
         {
             Patrol();
         }
+
+        
     }
 
+    //emotionBar dan sesitivitasDesibel
     public void TakeDamage(float desibelDamage)
     {
         if (isDead) return;
@@ -71,43 +79,22 @@ public class npcPolisiUmum : MonoBehaviour, INPCDamageable
         Tolerance -= finalDamage;
         Debug.Log($"{gameObject.name} terkena serangan {finalDamage}! Sisa Tolerance: {Tolerance}");
 
-
         if (Tolerance <= 0)
         {
             Die();
         }
     }
 
-    //combat
-    void HandleCombat()
+    void spawnReward()
     {
-        float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
 
-        if (distanceToPlayer > attackRange)
+        if (UniversalMoneySpawner.Instance != null)
         {
-            Agent.SetDestination(player.transform.position);
+            UniversalMoneySpawner.Instance.SpawnMoney(transform.position, giveCoin);
         }
-        else
-        {
-            Agent.ResetPath();
-            TryMeleeAttack();
-        }
+
+        Debug.Log($"{gameObject.name} gave {giveExperience} EXP and dropped {giveCoin} money!");
     }
-
-    void TryMeleeAttack()
-    {
-        if (Time.time >= nextAttackTime)
-        {
-            nextAttackTime = Time.time + attackCooldown;
-            Debug.Log($"{gameObject.name} menyerang melee player dengan damage {attackDamage}!");
-            // player.GetComponent<PlayerHealth>()?.TakeDamage(attackDamage);
-            if (playerHealth != null)
-            {
-                playerHealth.ChangeHealth(-attackDamage);
-            }
-        }
-    }
-
 
     void Die()
     {
@@ -119,7 +106,9 @@ public class npcPolisiUmum : MonoBehaviour, INPCDamageable
             if (playerStats != null)
             {
                 playerStats.AddExperience(giveExperience);
+                spawnReward();
             }
+            
         }
         Destroy(gameObject, 0.5f);
     }
@@ -146,6 +135,20 @@ public class npcPolisiUmum : MonoBehaviour, INPCDamageable
         }
     }
 
+    void ChasePlayer()
+    {
+        float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
+
+        if (distanceToPlayer > stopDistance)
+        {
+            Agent.SetDestination(player.transform.position);
+        }
+        else
+        {
+            Agent.ResetPath(); // berhenti bergerak jika sudah cukup dekat
+        }
+    }
+
     void CheckLineOfSight()
     {
         Vector3 directionToPlayer = player.transform.position - transform.position;
@@ -153,8 +156,8 @@ public class npcPolisiUmum : MonoBehaviour, INPCDamageable
 
         if (distanceToPlayer <= sightRange)
         {
-            Ray ray = new Ray(transform.position + Vector3.up*0.5f, directionToPlayer.normalized); // +Vector3.up supaya ray keluar dari kepala NPC
-            if (Physics.Raycast(ray, out RaycastHit hit, sightRange, ~obstacleLayer)) // obstacleLayer diatur agar mengandung layer yang memblokir pandangan
+            Ray ray = new Ray(transform.position + Vector3.up*0.5f, directionToPlayer.normalized);
+            if (Physics.Raycast(ray, out RaycastHit hit, sightRange, ~obstacleLayer))
             {
                 Debug.DrawRay(ray.origin, ray.direction * hit.distance, Color.yellow);
                 if (hit.collider.gameObject == player)
@@ -166,5 +169,11 @@ public class npcPolisiUmum : MonoBehaviour, INPCDamageable
         }
 
         playerInSight = false;
+    }
+    
+    void TransitionToBattle()
+    {
+        Debug.Log($"{gameObject.name} memulai pertarungan boss!");
+        SceneManager.LoadScene(battleSceneName);
     }
 }

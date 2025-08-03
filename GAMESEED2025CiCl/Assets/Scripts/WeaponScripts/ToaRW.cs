@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class ToaRW : MonoBehaviour
+public class ToaRW : MonoBehaviour, IHoregWeapon
 {
     private string namaSpeaker = "Toa RW";
     private string tier = "Common";

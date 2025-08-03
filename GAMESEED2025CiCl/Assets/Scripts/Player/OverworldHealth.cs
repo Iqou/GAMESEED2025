@@ -12,7 +12,8 @@ public class OverworldHealth : MonoBehaviour
     public int maxHealth;
 
     [Header("UI References")]
-    public Image playerHealthBar; // Buat UI
+    // The health bar is now managed by GameHUD using UI Toolkit.
+    // Ensure your UIDocument has a VisualElement named "HealthBar_Fill".
 
     private PlayerStats playerStats;
 
@@ -37,6 +38,13 @@ public class OverworldHealth : MonoBehaviour
 
     void Update()
     {
+        // For debug purposes: Press F3 to decrease health by 5%.
+        if (Input.GetKeyDown(KeyCode.F3))
+        {
+            Debug.Log("F3 pressed. Decreasing health by 5%.");
+            ChangeHealth(-maxHealth / 20);
+        }
+
         // For debug purposes: Press F4 to trigger the game over sequence.
         if (Input.GetKeyDown(KeyCode.F4))
         {

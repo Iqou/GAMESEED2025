@@ -7,7 +7,6 @@ TagManager:
   - MovingArrow
   - Note
   - NPC
-  - SoundWave
   layers:
   - Default
   - TransparentFX

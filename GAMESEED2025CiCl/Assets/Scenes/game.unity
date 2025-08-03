@@ -129,6 +129,7 @@ GameObject:
   m_Component:
   - component: {fileID: 236023592}
   - component: {fileID: 236023591}
+  - component: {fileID: 236023593}
   m_Layer: 0
   m_Name: LoadingScene
   m_TagString: Untagged
@@ -148,8 +149,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1fe3167b5e565cf49a18099a3d2a0bf1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  LoadingScreen: {fileID: 2017095346}
-  LoadingBarFill: {fileID: 1338284308}
 --- !u!4 &236023592
 Transform:
   m_ObjectHideFlags: 0
@@ -165,6 +164,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &236023593
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 236023590}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03ebfc158524e524bbcdd4d743baf0bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  LoadingScreen: {fileID: 2017095346}
+  LoadingBarFill: {fileID: 1338284308}
 --- !u!1 &349474944
 GameObject:
   m_ObjectHideFlags: 0

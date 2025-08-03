@@ -1,10 +1,10 @@
 using UnityEngine;
 
-public class sendalProjectile : MonoBehaviour
+public class peluruKaretProjectile : MonoBehaviour
 {
     public int damage = 10;
     public float lifeTime = 5f;
-    public float moveSpeed = 10f;
+    public float moveSpeed = 15f;
     private Vector3 moveDirection;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -25,23 +25,26 @@ public class sendalProjectile : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        // Jika kena Player, berikan damage
         if (other.CompareTag("Player"))
         {
             OverworldHealth playerHealth = other.GetComponent<OverworldHealth>();
             if (playerHealth != null)
             {
                 playerHealth.ChangeHealth(-damage);
-                Debug.Log($"Player terkena pentungan! Damage: {damage}");
+                Debug.Log($"Player terkena peluru karet! Damage: {damage}");
             }
 
-            Destroy(gameObject);
+            // Jika Player punya script health
+
+
+                Destroy(gameObject);
         }
 
+        // Hancur saat menabrak apa pun selain NPC
         if (!other.CompareTag("NPC"))
         {
             Destroy(gameObject);
         }
     }
-
-
 }

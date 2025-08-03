@@ -36,27 +36,42 @@ public class BillboardRendering : MonoBehaviour
 
     void LateUpdate()
     {
-        if (Camera.main == null) return;
-        
-        float tiltAngle = 20f;
-        Quaternion tiltRotation = Quaternion.Euler(tiltAngle, 0, 0);
-        
-        foreach (var kvp in billboardToDataMap)
+        if (Camera.main.orthographic)
         {
-            GameObject billboardObj = kvp.Key;
-            if (billboardObj.activeInHierarchy)
+            Quaternion orthoRotation = Quaternion.Euler(80f, 0, 0);
+
+            foreach (var kvp in billboardToDataMap)
             {
-                Vector3 lookDirection = Camera.main.transform.position - billboardObj.transform.position;
-                lookDirection.y = 0;
-                
-                if (lookDirection != Vector3.zero)
+                GameObject billboardObj = kvp.Key;
+                if (billboardObj.activeInHierarchy)
                 {
-                    Quaternion faceRotation = Quaternion.LookRotation(-lookDirection);
-                    billboardObj.transform.rotation = faceRotation * tiltRotation;
+                    billboardObj.transform.rotation = orthoRotation;
+                }
+            }
+        }
+        else
+        {
+            float tiltAngle = 20f;
+            Quaternion tiltRotation = Quaternion.Euler(tiltAngle, 0, 0);
+
+            foreach (var kvp in billboardToDataMap)
+            {
+                GameObject billboardObj = kvp.Key;
+                if (billboardObj.activeInHierarchy)
+                {
+                    Vector3 lookDirection = Camera.main.transform.position - billboardObj.transform.position;
+                    lookDirection.y = 0;
+
+                    if (lookDirection != Vector3.zero)
+                    {
+                        Quaternion faceRotation = Quaternion.LookRotation(-lookDirection);
+                        billboardObj.transform.rotation = faceRotation * tiltRotation;
+                    }
                 }
             }
         }
     }
+
     void InitializeBillboardPools()
     {
         foreach (var billboard in placedBillboards)

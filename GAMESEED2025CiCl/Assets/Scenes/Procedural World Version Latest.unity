@@ -242,7 +242,7 @@ MonoBehaviour:
   innerCornerBottomRight: {fileID: 7669440989393352458, guid: 104ed4291b24d614c9c08c878c1d8ed6, type: 3}
   tileParent: {fileID: 0}
   placedBuildings: []
-  renderDistance: 2
+  renderDistance: 3
 --- !u!4 &691642798
 Transform:
   m_ObjectHideFlags: 0
@@ -324,11 +324,15 @@ MonoBehaviour:
   Type1:
   - prefab: {fileID: 919132149155446097, guid: d544af463c3cd8c4fa96fa2d7b528012, type: 3}
     destroyedPrefab: {fileID: 0}
-    spawnChance: 0.02
+    spawnChance: 0.42
     footprintSize: {x: 4, y: 3}
   - prefab: {fileID: 919132149155446097, guid: 542a011b9bf72234497a49875fd9aa89, type: 3}
     destroyedPrefab: {fileID: 0}
-    spawnChance: 0.08
+    spawnChance: 0.417
+    footprintSize: {x: 3, y: 3}
+  - prefab: {fileID: 919132149155446097, guid: 9e7a12176cb8ac44d9b7e88491786a74, type: 3}
+    destroyedPrefab: {fileID: 0}
+    spawnChance: 0.038
     footprintSize: {x: 3, y: 3}
   Type2: []
   Type3: []
@@ -25064,7 +25068,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ec1ee15ef7eea943ae5005e707c815c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  npcBossPrefabs: []
+  npcBossPrefabs:
+  - {fileID: 3504922048683469504, guid: ecde88de2341d4440a2483c5dcb4eb24, type: 3}
   randomNpcPrefabs:
   - {fileID: 3504922048683469504, guid: d73179253e809ae4f82a1f21004ede1d, type: 3}
   maxBossParks: 4
@@ -25084,29 +25089,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1866618648 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8091212531136478734, guid: b5d07810aeeff3143b73716d7a3af07b, type: 3}
-  m_PrefabInstance: {fileID: 1926464730}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1866618649
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1866618648}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 39ee9dad821f270409686ffba0b86fe4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  damageMultiplier: 1
-  cooldownReduction: 0
-  areaOfEffectBonus: 1
-  beatAccuracyBonus: 0
-  maxHealthBonus: 0
-  moveSpeedMultiplier: 1
 --- !u!1001 &1871929288
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -25115,6 +25097,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 132632753543335480, guid: 6846b04982c22294ebd13a9bf1cef07a, type: 3}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 1900844901}
+    - target: {fileID: 132632753543335480, guid: 6846b04982c22294ebd13a9bf1cef07a, type: 3}
+      propertyPath: offset.y
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 132632753543335480, guid: 6846b04982c22294ebd13a9bf1cef07a, type: 3}
+      propertyPath: offset.z
+      value: -4
+      objectReference: {fileID: 0}
     - target: {fileID: 1039427342546739392, guid: 6846b04982c22294ebd13a9bf1cef07a, type: 3}
       propertyPath: m_Name
       value: Main Camera
@@ -25122,7 +25116,7 @@ PrefabInstance:
     - target: {fileID: 5602996273788127723, guid: 6846b04982c22294ebd13a9bf1cef07a, type: 3}
       propertyPath: player
       value: 
-      objectReference: {fileID: 1866618648}
+      objectReference: {fileID: 0}
     - target: {fileID: 6507974337187310460, guid: 6846b04982c22294ebd13a9bf1cef07a, type: 3}
       propertyPath: m_LocalPosition.x
       value: 94.12559
@@ -25168,6 +25162,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6846b04982c22294ebd13a9bf1cef07a, type: 3}
+--- !u!1 &1900844901 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 9087427083776352970, guid: b5d07810aeeff3143b73716d7a3af07b, type: 3}
+  m_PrefabInstance: {fileID: 1926464730}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1926464730
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -25176,6 +25175,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 976871594111945604, guid: b5d07810aeeff3143b73716d7a3af07b, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 976871594111945604, guid: b5d07810aeeff3143b73716d7a3af07b, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 976871594111945604, guid: b5d07810aeeff3143b73716d7a3af07b, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 976871594111945604, guid: b5d07810aeeff3143b73716d7a3af07b, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 8091212531136478734, guid: b5d07810aeeff3143b73716d7a3af07b, type: 3}
       propertyPath: m_Name
       value: Player
@@ -25223,10 +25238,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 8091212531136478734, guid: b5d07810aeeff3143b73716d7a3af07b, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1866618649}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b5d07810aeeff3143b73716d7a3af07b, type: 3}
 --- !u!1 &2005156111
 GameObject:

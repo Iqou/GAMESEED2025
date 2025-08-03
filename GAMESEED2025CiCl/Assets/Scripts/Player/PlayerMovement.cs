@@ -17,11 +17,14 @@ public class PlayerMovement : MonoBehaviour
             Debug.LogError("PlayerStats component not found on the player!");
         }
     }
+
     public Animator animator;
     public SpriteRenderer playerRenderer;
 
     void Update()
     {
+        Vector3 startPos = transform.position;
+        transform.position = new Vector3(startPos.x, 0.2f, startPos.z);
         HandleClick();
         MoveToTarget();
     }
@@ -60,12 +63,13 @@ public class PlayerMovement : MonoBehaviour
         // Implementasi upgrade player speed
         float finalSpeed = speed * playerStats.moveSpeedMultiplier;
 
-        Vector3 direction = (targetPosition - transform.position).normalized;
+        Vector3 target = new Vector3(targetPosition.x, transform.position.y, targetPosition.z);
+        Vector3 direction = (target - transform.position).normalized;
         transform.position += direction * finalSpeed * Time.deltaTime;
 
         AnimationHandler(direction);
 
-        if (Vector3.Distance(transform.position, targetPosition) < 0.1f)
+        if (Vector3.Distance(transform.position, target) < 0.1f)
         {
             isMoving = false;
             animator.SetBool("Moving", false);

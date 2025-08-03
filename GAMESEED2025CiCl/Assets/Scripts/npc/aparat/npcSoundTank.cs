@@ -1,9 +1,10 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-public class npcSatpamKomplek : MonoBehaviour, INPCDamageable
+public class npcSoundTank : MonoBehaviour
 {
     GameObject player;
+    OverworldHealth playerHealth;
     NavMeshAgent Agent;
 
     [Header("Layer Settings")]
@@ -17,10 +18,9 @@ public class npcSatpamKomplek : MonoBehaviour, INPCDamageable
     //chase
     [SerializeField] float sightRange = 20f;
     [SerializeField] float stopDistance = 3f;
-    [SerializeField] float attackRange = 2f;      // Melee
     [SerializeField] float rangedRange = 10f;     // Ranged mulai menyerang
     [SerializeField] float attackCooldown = 2f;
-    [Range(10, 40)] public int attackDamage = 10;
+    [Range(10, 100)] public int attackDamage = 10;
     float nextAttackTime = 0f;
 
     //atribut npc
@@ -32,12 +32,12 @@ public class npcSatpamKomplek : MonoBehaviour, INPCDamageable
     public GameObject expPrefab;
 
     [Header("Attack Prefabs")]
-    public GameObject sendalPrefab;
+    public GameObject sonicWavePrefab;
     public Transform firePoint;
 
     bool playerInSight;
     bool isDead = false;
-    // Start is called once before the first execution of Update after the MonoBehaviour is createdd
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         Agent = GetComponent<NavMeshAgent>();
@@ -81,41 +81,29 @@ public class npcSatpamKomplek : MonoBehaviour, INPCDamageable
     {
         float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
 
-        if (distanceToPlayer > attackRange)
+        // Selalu bergerak mendekati player sampai dalam jarak rangedRange
+        if (distanceToPlayer > stopDistance)
         {
             Agent.SetDestination(player.transform.position);
-
-            // 🔹 Ranged attack jika dalam jarak tertentu
-            if (distanceToPlayer <= rangedRange)
-            {
-                TryRangedAttack();
-            }
         }
         else
         {
             Agent.ResetPath();
-            TryMeleeAttack();
         }
-    }
-
-    void TryMeleeAttack()
-    {
-        if (Time.time >= nextAttackTime)
+        if (distanceToPlayer <= rangedRange)
         {
-            nextAttackTime = Time.time + attackCooldown;
-            Debug.Log($"{gameObject.name} menyerang melee player dengan damage {attackDamage}!");
-            player.GetComponent<OverworldHealth>()?.ChangeHealth(-attackDamage);
+            TryRangedAttack();
         }
     }
 
     void TryRangedAttack()
     {
-        if (Time.time >= nextAttackTime && sendalPrefab != null && firePoint != null)
+        if (Time.time >= nextAttackTime && sonicWavePrefab != null && firePoint != null)
         {
             nextAttackTime = Time.time + attackCooldown;
 
             // Spawn sendal
-            GameObject bullet = Instantiate(sendalPrefab, firePoint.position, firePoint.rotation);
+            GameObject bullet = Instantiate(sonicWavePrefab, firePoint.position, firePoint.rotation);
             Vector3 dir = (player.transform.position - firePoint.position).normalized;
 
             // Set arah ke script SendalProjectile
@@ -129,7 +117,7 @@ public class npcSatpamKomplek : MonoBehaviour, INPCDamageable
     void Die()
     {
         isDead = true;
-        Debug.Log($"{gameObject.name} mati dan memberikan {giveExperience} EXP!");
+        Debug.Log($"{gameObject.name} mati dan drop exp {giveExperience}!");
         if (player != null)
         {
             PlayerStats playerStats = player.GetComponent<PlayerStats>();
@@ -184,5 +172,4 @@ public class npcSatpamKomplek : MonoBehaviour, INPCDamageable
 
         playerInSight = false;
     }
-
 }

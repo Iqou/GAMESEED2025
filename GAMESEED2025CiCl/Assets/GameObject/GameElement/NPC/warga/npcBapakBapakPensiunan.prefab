@@ -266,10 +266,10 @@ MonoBehaviour:
     m_Bits: 0
   range: 10
   sightRange: 13
-  stopDistance: 3
+  stopDistance: 1
   attackRange: 2
-  attackCooldown: 3
-  attackDamage: 10
+  attackCooldown: 1.5
+  attackDamage: 5
   sensitivitasDesibel: 110
   currEmotion: 100
   aggroLevel: 30
@@ -279,4 +279,3 @@ MonoBehaviour:
   giveCoin: 3000
   giveExperience: 100
   coinPrefab: {fileID: 9206503487750994625, guid: 17b5c74cbc8df124aa640b1ea0777240, type: 3}
-  expPrefab: {fileID: 771062891091849834, guid: 2f69958459b6ac14082ab0bead613853, type: 3}

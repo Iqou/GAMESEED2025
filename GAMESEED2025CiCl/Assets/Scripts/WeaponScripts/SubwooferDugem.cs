@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class SubwooferDugem : MonoBehaviour
+public class SubwooferDugem : MonoBehaviour, IHoregWeapon
 {
 
     private string namaSpeaker = "Subwoofer Dugem";

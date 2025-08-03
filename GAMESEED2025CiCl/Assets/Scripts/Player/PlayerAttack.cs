@@ -14,10 +14,7 @@ public class PlayerAttack : MonoBehaviour
     private float nextBeatTime = 0.0f;
 
 
-    private ToaRW toa;
-    private BassKondangan kondangan;
-    private SubwooferDugem dugem;
-    private RealHoreg superHoreg;
+    private List<IHoregWeapon> equippedWeapons;
     private PlayerStats playerStats;
 
 
@@ -25,8 +22,8 @@ public class PlayerAttack : MonoBehaviour
     void Start()
     {
         nextBeatTime = Time.time * beatInterval;
-        activeHoregs = new List<GameObject>();
         playerStats = GetComponent<PlayerStats>();
+        equippedWeapons = new List<IHoregWeapon>();
 
         // Initial setup from the prefab list
         AssignHoregsFromPrefabs();
@@ -34,10 +31,27 @@ public class PlayerAttack : MonoBehaviour
 
     private void AssignHoregsFromPrefabs()
     {
-        if (horegPrefabs.Count > 0 && horegPrefabs[0] != null) toa = horegPrefabs[0].GetComponent<ToaRW>();
-        if (horegPrefabs.Count > 1 && horegPrefabs[1] != null) kondangan = horegPrefabs[1].GetComponent<BassKondangan>();
-        if (horegPrefabs.Count > 2 && horegPrefabs[2] != null) dugem = horegPrefabs[2].GetComponent<SubwooferDugem>();
-        if (horegPrefabs.Count > 3 && horegPrefabs[3] != null) superHoreg = horegPrefabs[3].GetComponent<RealHoreg>();
+        equippedWeapons.Clear();
+        foreach (var prefab in horegPrefabs)
+        {
+            if (prefab != null)
+            {
+                IHoregWeapon weapon = prefab.GetComponent<IHoregWeapon>();
+                if (weapon != null)
+                {
+                    equippedWeapons.Add(weapon);
+                }
+                else
+                {
+                    equippedWeapons.Add(null);
+                    Debug.LogWarning($"Prefab {prefab.name} does not have a component that implements IHoregWeapon.");
+                }
+            }
+            else
+            {
+                equippedWeapons.Add(null);
+            }
+        }
     }
 
     public List<GameObject> GetEquippedHoregPrefabs()
@@ -74,27 +88,27 @@ public class PlayerAttack : MonoBehaviour
         bool isOnBeat = Mathf.Abs(Time.time - nextBeatTime) <= beatWindow;
 
         // Slot 1 (W) is always available
-        if (toa != null && Input.GetKeyDown(KeyCode.W))
+        if (Input.GetKeyDown(KeyCode.W) && equippedWeapons.Count > 0 && equippedWeapons[0] != null)
         {
-            toa.Use(transform, playerStats);
+            equippedWeapons[0].Use(transform, playerStats);
         }
 
         // Slot 2 (A)
-        if (playerStats.unlockedHoregSlots >= 2 && kondangan != null && Input.GetKeyDown(KeyCode.A))
+        if (playerStats.unlockedHoregSlots >= 2 && Input.GetKeyDown(KeyCode.A) && equippedWeapons.Count > 1 && equippedWeapons[1] != null)
         {
-            kondangan.Use(transform, playerStats);
+            equippedWeapons[1].Use(transform, playerStats);
         }
 
         // Slot 3 (S)
-        if (playerStats.unlockedHoregSlots >= 3 && dugem != null && Input.GetKeyDown(KeyCode.S))
+        if (playerStats.unlockedHoregSlots >= 3 && Input.GetKeyDown(KeyCode.S) && equippedWeapons.Count > 2 && equippedWeapons[2] != null)
         {
-            dugem.Use(transform, playerStats);
+            equippedWeapons[2].Use(transform, playerStats);
         }
 
         // Slot 4 (D)
-        if (playerStats.unlockedHoregSlots >= 4 && superHoreg != null && Input.GetKeyDown(KeyCode.D))
+        if (playerStats.unlockedHoregSlots >= 4 && Input.GetKeyDown(KeyCode.D) && equippedWeapons.Count > 3 && equippedWeapons[3] != null)
         {
-            superHoreg.Use(transform, playerStats);
+            equippedWeapons[3].Use(transform, playerStats);
         }
     }
 

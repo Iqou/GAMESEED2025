@@ -1,9 +1,20 @@
 using UnityEngine;
+using System.Collections.Generic;
+using System.Linq;
 
 public class ShopTrigger : MonoBehaviour
 {
     [Header("Interaction Settings")]
     public float interactionRadius = 5f;
+    public int itemsToShow = 3;
+
+    [Header("Data")]
+    public ShopItemDatabase itemDatabase;
+
+    // --- Per-Shop State ---
+    private List<ShopItem> offeredItems;
+    private bool isSoldOut = false;
+    // --------------------
 
     private Transform playerTransform;
 
@@ -14,6 +25,30 @@ public class ShopTrigger : MonoBehaviour
         {
             playerTransform = player.transform;
         }
+        
+        // Generate this shop's unique, persistent inventory ONCE.
+        GenerateInventory();
+    }
+
+    private void GenerateInventory()
+    {
+        offeredItems = new List<ShopItem>();
+        if (itemDatabase == null || itemDatabase.allItems == null || itemDatabase.allItems.Count == 0)
+        {
+            Debug.LogError("Item Database is not assigned or is empty!", this);
+            return;
+        }
+
+        List<ShopItem> availablePool = new List<ShopItem>(itemDatabase.allItems);
+        
+        // For now, we'll just pick randomly. This could be expanded with rarity later.
+        for (int i = 0; i < itemsToShow && availablePool.Count > 0; i++)
+        {
+            int randomIndex = Random.Range(0, availablePool.Count);
+            offeredItems.Add(availablePool[randomIndex]);
+            availablePool.RemoveAt(randomIndex);
+        }
+        Debug.Log($"Shop {gameObject.name} generated inventory with {offeredItems.Count} items.");
     }
 
     void OnMouseDown()
@@ -24,26 +59,42 @@ public class ShopTrigger : MonoBehaviour
             return;
         }
 
-        // Check if the player is within the interaction radius
         if (Vector3.Distance(transform.position, playerTransform.position) <= interactionRadius)
         {
-            // Tell the manager to open the shop, passing this shop's transform for the camera to focus on
             if (WorldShopManager.Instance != null)
             {
-                WorldShopManager.Instance.OpenShop(transform);
+                // Pass this specific shop trigger to the manager.
+                WorldShopManager.Instance.OpenShop(this);
             }
         }
         else
         {
             Debug.Log("Player is too far away to interact with the shop.");
-            // Optional: Add a UI message here to inform the player
         }
     }
 
-    // Draw a visual representation of the interaction radius in the editor
+    // --- Public methods for the Manager to use ---
+    public List<ShopItem> GetOfferedItems()
+    {
+        return offeredItems;
+    }
+
+    public bool IsSoldOut()
+    {
+        return isSoldOut;
+    }
+
+    public void MarkAsSoldOut()
+    {
+        isSoldOut = true;
+        Debug.Log($"Shop {gameObject.name} is now sold out.");
+    }
+    // -----------------------------------------
+
     void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, interactionRadius);
     }
 }
+

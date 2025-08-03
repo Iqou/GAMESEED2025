@@ -38,6 +38,16 @@ public class PlayerMovement : MonoBehaviour
 
             if (Physics.Raycast(ray, out hit, 100f))
             {
+                // --- Interaction Check ---
+                // Check if the object we clicked on has a ShopTrigger.
+                if (hit.collider.GetComponent<ShopTrigger>() != null)
+                {
+                    // If it's a shop, do not move. Let the ShopTrigger handle it.
+                    isMoving = false;
+                    return; 
+                }
+
+                // --- Movement Logic ---
                 // Check if the direct path is blocked
                 Vector3 direction = (hit.point - transform.position).normalized;
                 float distance = Vector3.Distance(transform.position, hit.point);
@@ -50,7 +60,7 @@ public class PlayerMovement : MonoBehaviour
                 else
                 {
                     Debug.Log("Path blocked by obstacle.");
-                    //isMoving = false;
+                    isMoving = false;
                 }
             }
         }

@@ -726,15 +726,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b59234f899acee544ad0647cc05af2b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-<<<<<<< HEAD
   homescreenPanel: {fileID: 1769336751}
   mainMenuPanel: {fileID: 827070737}
   upgradePanel: {fileID: 974899490}
   optionsPanel: {fileID: 1220061390}
   creditsPanel: {fileID: 2006979432}
   menuKeyboardNavigation: {fileID: 135830383}
-=======
->>>>>>> 23a61cbe62afba3de716e91d34055eacc5a708ed
 --- !u!4 &135830382
 Transform:
   m_ObjectHideFlags: 0
@@ -762,7 +759,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1279763645d28b846ae09b547c27016e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-<<<<<<< HEAD
   menuButtons:
   - {fileID: 806982470}
   - {fileID: 678005913}
@@ -771,17 +767,12 @@ MonoBehaviour:
   - {fileID: 840756745}
 --- !u!82 &135830384
 AudioSource:
-=======
---- !u!114 &135830384
-MonoBehaviour:
->>>>>>> 23a61cbe62afba3de716e91d34055eacc5a708ed
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 135830380}
   m_Enabled: 1
-<<<<<<< HEAD
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
@@ -1000,16 +991,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-=======
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe1c7a084497b3740a58d9dd3820b9a6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  mainMenuPanel: {fileID: 827070737}
-  upgradePanel: {fileID: 974899490}
-  optionsPanel: {fileID: 1391218492}
-  creditsPanel: {fileID: 2006979432}
->>>>>>> 23a61cbe62afba3de716e91d34055eacc5a708ed
 --- !u!1 &409717111
 GameObject:
   m_ObjectHideFlags: 0
@@ -1814,7 +1795,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 827070737}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0d366b963accfb4cb9cda9a2d63ea14, type: 3}
+  m_Script: {fileID: 11500000, guid: d0820342badc7ad4d83e4147196a05c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &840756743

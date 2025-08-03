@@ -137,6 +137,8 @@ GameObject:
   - component: {fileID: 7332414709915592345}
   - component: {fileID: 7296920133790097597}
   - component: {fileID: 1881719245481747099}
+  - component: {fileID: 8322790072016077457}
+  - component: {fileID: -4171950877754260102}
   m_Layer: 0
   m_Name: npcMobilPolisi
   m_TagString: NPC
@@ -258,3 +260,53 @@ NavMeshAgent:
   m_BaseOffset: 1
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &8322790072016077457
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2140502122584070692}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5761eaae0a60fa48b7918c1887e7307, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 8
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 128
+  obstacleLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  range: 10
+  sightRange: 20
+  stopDistance: 3
+  attackRange: 2
+  attackCooldown: 2
+  attackDamage: 10
+  Tolerance: 500
+  giveExperience: 50
+  wantedLevel: 1
+  expPrefab: {fileID: 0}
+--- !u!114 &-4171950877754260102
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2140502122584070692}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7dc8f7e66028a4e408c796f6bfbb0ce3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 8
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 128
+  range: 0

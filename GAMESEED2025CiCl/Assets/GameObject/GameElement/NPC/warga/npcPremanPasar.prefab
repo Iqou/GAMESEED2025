@@ -137,6 +137,8 @@ GameObject:
   - component: {fileID: 5167381004875581074}
   - component: {fileID: 8628131411880492450}
   - component: {fileID: 6776740988300434947}
+  - component: {fileID: 2779638999133290822}
+  - component: {fileID: 3263296868761222779}
   m_Layer: 6
   m_Name: npcPremanPasar
   m_TagString: NPC
@@ -258,3 +260,58 @@ NavMeshAgent:
   m_BaseOffset: 1
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &2779638999133290822
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6199174921339498322}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b15bea4420121e54a8d95c2950fe19f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 8
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 128
+  obstacleLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  range: 10
+  sightRange: 20
+  stopDistance: 3
+  sensitivitasDesibel: 100
+  currEmotion: 0
+  aggroLevel: 0
+  fearLevel: 0
+  phoneCooldown: 120
+  nextPhoneTime: 0
+  giveCoin: 5000
+  giveExperience: 100
+  coinPrefab: {fileID: 0}
+  copetRadius: 5
+  copetDelay: 10
+  copetAmountPerSecond: 100
+--- !u!114 &3263296868761222779
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6199174921339498322}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7dc8f7e66028a4e408c796f6bfbb0ce3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 8
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 128
+  range: 0

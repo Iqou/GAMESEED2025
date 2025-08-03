@@ -49,7 +49,7 @@ public class SubwooferDugem : MonoBehaviour
 
         if (Time.time >= lastActiveTime + currentCooldown)
         {
-            Vector3 spawnPos = owner.position + owner.forward * 1.5f;
+            Vector3 spawnPos = owner.position;
             Quaternion spawnRot = Quaternion.LookRotation(owner.forward);
             aoeInstance = GameObject.Instantiate(aoePrefab, spawnPos, spawnRot);
             aoeInstance.transform.localScale = new Vector3(currentArea, 1f, currentArea);

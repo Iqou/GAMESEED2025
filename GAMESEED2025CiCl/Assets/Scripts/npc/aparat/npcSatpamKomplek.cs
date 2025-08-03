@@ -17,7 +17,8 @@ public class npcSatpamKomplek : MonoBehaviour, INPCDamageable
     //chase
     [SerializeField] float sightRange = 20f;
     [SerializeField] float stopDistance = 3f;
-    [SerializeField] float attackRange = 2f;      // Melee
+    [SerializeField] float attackRange = 3f;      // Melee
+    float meleeStopRange = 3.5f;
     [SerializeField] float rangedRange = 10f;     // Ranged mulai menyerang
     [SerializeField] float attackCooldown = 2f;
     [Range(10, 40)] public int attackDamage = 10;
@@ -37,6 +38,7 @@ public class npcSatpamKomplek : MonoBehaviour, INPCDamageable
 
     bool playerInSight;
     bool isDead = false;
+    bool isMeleeMode = false;
     // Start is called once before the first execution of Update after the MonoBehaviour is createdd
     void Start()
     {
@@ -50,6 +52,9 @@ public class npcSatpamKomplek : MonoBehaviour, INPCDamageable
         if (isDead) return;
 
         CheckLineOfSight();
+
+        Debug.DrawLine(transform.position, player.transform.position, Color.cyan); // Tambahan debug
+        Debug.Log($"Jarak ke player: {Vector3.Distance(transform.position, player.transform.position)}");
 
         if (playerInSight)
         {
@@ -80,21 +85,28 @@ public class npcSatpamKomplek : MonoBehaviour, INPCDamageable
     void HandleCombat()
     {
         float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
+        
+        if (!isMeleeMode && distanceToPlayer <= attackRange)
+        isMeleeMode = true;
+        else if (isMeleeMode && distanceToPlayer >= meleeStopRange)
+        isMeleeMode = false;
 
-        if (distanceToPlayer > attackRange)
-        {
-            Agent.SetDestination(player.transform.position);
-
-            // 🔹 Ranged attack jika dalam jarak tertentu
-            if (distanceToPlayer <= rangedRange)
-            {
-                TryRangedAttack();
-            }
-        }
-        else
+        if (isMeleeMode)
         {
             Agent.ResetPath();
             TryMeleeAttack();
+        }
+
+        else if (distanceToPlayer <= rangedRange)
+        {
+            Agent.stoppingDistance = stopDistance;
+            Agent.SetDestination(player.transform.position);
+            TryRangedAttack();
+        }
+        else
+        {
+            Agent.stoppingDistance = stopDistance;
+            Agent.SetDestination(player.transform.position);
         }
     }
 

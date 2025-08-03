@@ -80,6 +80,7 @@ public class npcAnakKecil : MonoBehaviour, INPCDamageable
         else if (playerInSight)
         {
             ChasePlayer();
+            HandlePanicChainReaction();
         }
         else
         {

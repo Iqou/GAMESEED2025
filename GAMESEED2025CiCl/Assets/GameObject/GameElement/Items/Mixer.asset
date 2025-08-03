@@ -9,14 +9,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2e1c66401a83caf459eead0c936215dc, type: 3}
-  m_Name: UnlockSlot4
+  m_Script: {fileID: 11500000, guid: 39f7b91e563694e4f9b53ec7d0fa1b04, type: 3}
+  m_Name: Mixer
   m_EditorClassIdentifier: 
-  itemName: Truk Ashoy
-  description: Anjay, ada empat speaker
+  itemName: MIxer Paling OP sedunia
+  description: Sengan ini Attack kamu nambah 100%
   icon: {fileID: 0}
-  baseCost: 1500000
+  baseCost: 400000
   rarity: 0
-  requiredLevel: 15
-  slotIndexToUnlock: 4
-  horegDatabase: {fileID: 11400000, guid: 9e2f05d4bc98b6f4bb37267183bf200b, type: 2}
+  attributeToUpgrade: 0
+  upgradeValue: 1
+  maxLevel: 10
+  costIncreasePerLevel: 2400

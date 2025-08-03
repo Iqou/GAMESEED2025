@@ -159,8 +159,8 @@ MonoBehaviour:
   range: 10
   sightRange: 13
   stopDistance: 0
-  attackRange: 2
-  attackCooldown: 2
+  attackRange: 8
+  attackCooldown: 6
   attackDamage: 25
   Tolerance: 780
   giveExperience: 150

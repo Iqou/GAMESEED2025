@@ -266,9 +266,9 @@ MonoBehaviour:
     m_Bits: 0
   range: 10
   sightRange: 13
-  stopDistance: 3
+  stopDistance: 1
   attackRange: 2
-  attackCooldown: 2
+  attackCooldown: 1
   attackDamage: 20
   Tolerance: 625
   giveExperience: 100

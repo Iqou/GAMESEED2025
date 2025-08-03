@@ -136,7 +136,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 135.6001, y: -45.400024}
+  m_AnchoredPosition: {x: 132.49, y: -81.5}
   m_SizeDelta: {x: 410.3791, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7057167530757537485
@@ -408,7 +408,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 135.6001, y: 31.600098}
+  m_AnchoredPosition: {x: 132.89998, y: 3.499998}
   m_SizeDelta: {x: 410.3791, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4846908681164122791
@@ -544,7 +544,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 135.6001, y: -76.400024}
+  m_AnchoredPosition: {x: 132.89998, y: -104.50012}
   m_SizeDelta: {x: 410.3791, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4799444429735139537
@@ -680,7 +680,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 135.6001, y: 6.6000977}
+  m_AnchoredPosition: {x: 132.89998, y: -21.500002}
   m_SizeDelta: {x: 410.3791, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8780101636731832232
@@ -794,7 +794,7 @@ GameObject:
   - component: {fileID: 7490099436499167244}
   - component: {fileID: 6056862366170941067}
   m_Layer: 5
-  m_Name: GameOverPanel
+  m_Name: WinGamePanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -847,7 +847,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 0, g: 0.5566038, b: 0.12124139, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -898,7 +898,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 135.6001, y: -22.400024}
+  m_AnchoredPosition: {x: 132.89998, y: -50.500122}
   m_SizeDelta: {x: 410.3791, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4820407022704861492
@@ -1034,7 +1034,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 22.000122, y: 134.00012}
+  m_AnchoredPosition: {x: 19.3, y: 105.9}
   m_SizeDelta: {x: 336.5479, y: 119.3577}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &951664386682357829
@@ -1065,7 +1065,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Permainan Berakhir!
+  m_text: Kamu Menang!
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: b1ded5ca5c6f6e447874751df44a675c, type: 2}
   m_sharedMaterial: {fileID: 4135140005667580158, guid: b1ded5ca5c6f6e447874751df44a675c, type: 2}
@@ -1148,7 +1148,7 @@ GameObject:
   - component: {fileID: 8989161022050635979}
   - component: {fileID: 3461210553692287677}
   m_Layer: 0
-  m_Name: GameOverManager 1
+  m_Name: WinGameManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1237,7 +1237,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 10.000061, y: -101}
+  m_AnchoredPosition: {x: 7.299942, y: -129.1001}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8383631166104029222

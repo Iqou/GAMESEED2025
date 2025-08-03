@@ -135,11 +135,6 @@ public class npcAnakKecil : MonoBehaviour, INPCDamageable
         }
 
         UpdateNPCState();
-
-        if (isFan)
-        {
-            spawnReward();
-        }
     }
 
     void UpdateNPCState()

@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 7180875178844023530}
   - component: {fileID: 1106235310168726617}
   - component: {fileID: 7115173057747202690}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: npcIbuIbuResah
   m_TagString: NPC
   m_Icon: {fileID: 0}
@@ -180,7 +180,7 @@ GameObject:
   - component: {fileID: 1847869526853158227}
   - component: {fileID: 3718672174853453433}
   - component: {fileID: 2550016416151346704}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}

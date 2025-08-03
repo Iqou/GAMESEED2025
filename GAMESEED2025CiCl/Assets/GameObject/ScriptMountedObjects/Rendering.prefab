@@ -1,0 +1,79 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3987184256345235746
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8476232248087121672}
+  - component: {fileID: 661674622172346470}
+  - component: {fileID: 5990542230202610376}
+  m_Layer: 0
+  m_Name: Rendering
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8476232248087121672
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3987184256345235746}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 94.12559, y: 66.42946, z: 68.31306}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &661674622172346470
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3987184256345235746}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b20345628849aab4c94a0d7902fe7c6b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pathPrefab: {fileID: 8630812286694514106, guid: 95ff0a1d4f2614f4f94a6f613aee4423, type: 3}
+  grassPrefab: {fileID: 3813798717350770074, guid: 18b5bd1b878d5b04184bba4ae3d9c672, type: 3}
+  parkPrefab: {fileID: 8630812286694514106, guid: 95ff0a1d4f2614f4f94a6f613aee4423, type: 3}
+  TopSide: {fileID: 3303418350018707228, guid: 19e905d9057838b46916b14d1f6d82d5, type: 3}
+  BottomSide: {fileID: 2328477906736654622, guid: d45c04e7ce824a3488c738927cd6e96f, type: 3}
+  LeftSide: {fileID: 5090368154814902691, guid: f6d448489ce2f4e40957c47869f99bc3, type: 3}
+  RightSide: {fileID: 6640159354006813149, guid: b78e5c57b1f4cea41b73f025aa8ac647, type: 3}
+  outerCornerTopLeft: {fileID: 3813798717350770074, guid: 18b5bd1b878d5b04184bba4ae3d9c672, type: 3}
+  outerCornerTopRight: {fileID: 3813798717350770074, guid: 18b5bd1b878d5b04184bba4ae3d9c672, type: 3}
+  outerCornerBottomLeft: {fileID: 3813798717350770074, guid: 18b5bd1b878d5b04184bba4ae3d9c672, type: 3}
+  outerCornerBottomRight: {fileID: 3813798717350770074, guid: 18b5bd1b878d5b04184bba4ae3d9c672, type: 3}
+  innerCornerTopLeft: {fileID: 4733220704621332211, guid: e1b5ea0f49a49354484ce4f334f0104e, type: 3}
+  innerCornerTopRight: {fileID: 8366297736361560625, guid: 3824a37bff22f6944a3b0f628354a6b6, type: 3}
+  innerCornerBottomLeft: {fileID: 4336138236539719504, guid: a8003a163adb8324390d4fc83db96376, type: 3}
+  innerCornerBottomRight: {fileID: 7669440989393352458, guid: 104ed4291b24d614c9c08c878c1d8ed6, type: 3}
+  tileParent: {fileID: 0}
+  placedBuildings: []
+  renderDistance: 3
+--- !u!114 &5990542230202610376
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3987184256345235746}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ad83908f5f6b974d9139837576c5aca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  placedBillboards: []
+  renderDistance: 2

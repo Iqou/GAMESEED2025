@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 5868581938006353677}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.3351097, y: 0.083629966, z: -0.37107998}
+  m_LocalPosition: {x: 0.072, y: 0.083629966, z: -0.37107998}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -78,7 +78,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 7befc79c0d3621d43b2c6b9eae403198, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 36a280f82b9b44c4890bcc1dbcf5f2ee, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -138,7 +138,6 @@ GameObject:
   - component: {fileID: 1411353444474405837}
   - component: {fileID: 6090647552489661984}
   - component: {fileID: 4398857254768702032}
-  - component: {fileID: -5013716992274049460}
   m_Layer: 0
   m_Name: npcPolisiUmum
   m_TagString: NPC
@@ -234,10 +233,10 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.5
-  m_Height: 2
+  m_Radius: 0.36
+  m_Height: 1.14
   m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: 0.1, z: 0}
 --- !u!195 &6090647552489661984
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -274,39 +273,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   groundLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
   playerLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
   obstacleLayer:
     serializedVersion: 2
     m_Bits: 0
   range: 10
-  sightRange: 20
-  stopDistance: 3
-  attackRange: 2
-  attackCooldown: 2
-  attackDamage: 10
-  Tolerance: 500
-  giveExperience: 50
-  wantedLevel: 1
+  sightRange: 13
+  stopDistance: 2
+  attackRange: 3
+  attackCooldown: 1
+  attackDamage: 20
+  Tolerance: 625
+  giveExperience: 100
+  wantedLevel: 2
   expPrefab: {fileID: 0}
---- !u!114 &-5013716992274049460
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6032967875809309308}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7dc8f7e66028a4e408c796f6bfbb0ce3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 0
-  playerLayer:
-    serializedVersion: 2
-    m_Bits: 0
-  range: 0

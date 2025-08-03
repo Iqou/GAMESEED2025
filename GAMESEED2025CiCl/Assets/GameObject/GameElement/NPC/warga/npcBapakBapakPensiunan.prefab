@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 4505513606880990139}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.01342976, z: -0.126238}
+  m_LocalPosition: {x: 0.022, y: 0.01342976, z: -0.126238}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -137,7 +137,6 @@ GameObject:
   - component: {fileID: 619645625456651903}
   - component: {fileID: 3535325712837792311}
   - component: {fileID: 3263900859651175519}
-  - component: {fileID: 3094185103682114492}
   - component: {fileID: 7424158631330121833}
   m_Layer: 0
   m_Name: npcBapakBapakPensiunan
@@ -189,10 +188,10 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.41379827
-  m_Height: 1.4783874
+  m_Radius: 0.29
+  m_Height: 0.87
   m_Direction: 1
-  m_Center: {x: -0.04003626, y: -0.011843681, z: -0.12623793}
+  m_Center: {x: -0.04003626, y: 0.08, z: -0.12623793}
 --- !u!195 &3535325712837792311
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -260,25 +259,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &3094185103682114492
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7016649551768180652}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7dc8f7e66028a4e408c796f6bfbb0ce3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 8
-  playerLayer:
-    serializedVersion: 2
-    m_Bits: 128
-  range: 20
 --- !u!114 &7424158631330121833
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -293,25 +273,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   groundLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
   playerLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
   obstacleLayer:
     serializedVersion: 2
     m_Bits: 0
   range: 10
-  sightRange: 20
-  stopDistance: 3
+  sightRange: 13
+  stopDistance: 2
   attackRange: 2
-  attackCooldown: 2
+  attackCooldown: 3
   attackDamage: 10
-  sensitivitasDesibel: 100
-  currEmotion: 0
-  aggroLevel: 0
-  fearLevel: 0
-  phoneCooldown: 120
+  sensitivitasDesibel: 110
+  currEmotion: 100
+  aggroLevel: 30
+  fearLevel: 20
+  phoneCooldown: 40
   nextPhoneTime: 0
-  giveCoin: 5000
+  giveCoin: 3000
   giveExperience: 100
   coinPrefab: {fileID: 0}

@@ -24,7 +24,7 @@ public class npcSoundTank : MonoBehaviour
     float nextAttackTime = 0f;
 
     //atribut npc
-    [Range(500, 1000)] public int Tolerance = 500;
+    [Range(500, 1250)] public int Tolerance = 500;
     [Range(50, 500)] public int giveExperience = 50;
     public int wantedLevel = 1;
 
@@ -102,14 +102,15 @@ public class npcSoundTank : MonoBehaviour
         {
             nextAttackTime = Time.time + attackCooldown;
 
-            // Spawn sendal
+            // Spawn bullet
             GameObject bullet = Instantiate(sonicWavePrefab, firePoint.position, firePoint.rotation);
             Vector3 dir = (player.transform.position - firePoint.position).normalized;
 
             // Set arah ke script SendalProjectile
-            bullet.GetComponent<sendalProjectile>()?.SetDirection(dir);
+            //bullet.GetComponent<sendalProjectile>()?.SetDirection(dir);
+            bullet.GetComponent<soundBulletforSoundTank>()?.SetDirection(dir);
 
-            Debug.Log($"{gameObject.name} melempar sendal ke player!");
+            Debug.Log($"{gameObject.name} melempar soundwave ke player!");
         }
     }
 

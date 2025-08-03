@@ -122,3 +122,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 100
+  NPC:
+  - prefab: {fileID: 3504922048683469504, guid: 3165bc11b34ab7c4cadbc4d0ed2f302c, type: 3}
+    spawnChance: 0.49
+  - prefab: {fileID: 7016649551768180652, guid: 0819a64100e94274598310b7f73b8f13, type: 3}
+    spawnChance: 0.25
+  - prefab: {fileID: 1758479838046257190, guid: 94fe7417bb8ec7b439bfbb2d5dcbe57a, type: 3}
+    spawnChance: 0.25
+  - prefab: {fileID: 7708272947473252093, guid: f6132e34f1274134a9b8b7d191b3b4da, type: 3}
+    spawnChance: 0.01
+  spawnCount: 5

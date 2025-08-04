@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 70fbd1d55a857f74ca86a0e472d747f0
+guid: 06b4fbef8cd56ae4fa097f04a2fc061a
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -34,7 +34,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 0
+    filterMode: 1
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -97,23 +97,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: UPGRADE MENU_0
+      name: SPLASH_ART_TRUCK_0
       rect:
         serializedVersion: 2
-        x: 0
+        x: 820
         y: 0
-        width: 2051
-        height: 2539
+        width: 2849
+        height: 3149
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: fd738cf1b11a81d4fa95e46c467266e1
-      internalID: -1589608385
+      spriteID: 4d8b86b1eee8f244ea122ea25f974994
+      internalID: -1481281815
       vertices: []
       indices: 
       edges: []
@@ -122,7 +122,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 5e97eb03825dee720800000000000000
+    spriteID: 9c750fd903fecf04b89a4f0f5a0f2163
     internalID: 0
     vertices: []
     indices: 
@@ -134,7 +134,7 @@ TextureImporter:
       - key: SpriteEditor.SliceSettings
         value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":64.0,"y":64.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"slicingType":0,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
-      UPGRADE MENU_0: -1589608385
+      SPLASH_ART_TRUCK_0: -1481281815
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

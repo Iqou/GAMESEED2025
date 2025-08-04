@@ -3,6 +3,9 @@ using UnityEngine.AI;
 
 public class npcSatpamKomplek : MonoBehaviour, INPCDamageable
 {
+    enum State { Patrol, Chase, MeleeAttack, RangedAttack }
+    State currentState = State.Patrol;
+
     GameObject player;
     NavMeshAgent Agent;
 
@@ -18,7 +21,7 @@ public class npcSatpamKomplek : MonoBehaviour, INPCDamageable
     [SerializeField] float sightRange = 20f;
     [SerializeField] float stopDistance = 3f;
     [SerializeField] float attackRange = 3f;      // Melee
-    float meleeStopRange = 3.5f;
+    [SerializeField] float meleeStopRange = 3.5f;
     [SerializeField] float rangedRange = 10f;     // Ranged mulai menyerang
     [SerializeField] float attackCooldown = 2f;
     [Range(10, 40)] public int attackDamage = 10;
@@ -38,7 +41,6 @@ public class npcSatpamKomplek : MonoBehaviour, INPCDamageable
 
     bool playerInSight;
     bool isDead = false;
-    bool isMeleeMode = false;
     // Start is called once before the first execution of Update after the MonoBehaviour is createdd
     void Start()
     {
@@ -52,17 +54,23 @@ public class npcSatpamKomplek : MonoBehaviour, INPCDamageable
         if (isDead) return;
 
         CheckLineOfSight();
+        float dist = Vector3.Distance(transform.position, player.transform.position);
 
-        Debug.DrawLine(transform.position, player.transform.position, Color.cyan); // Tambahan debug
-        Debug.Log($"Jarak ke player: {Vector3.Distance(transform.position, player.transform.position)}");
+       switch (currentState)
+        {
+            case State.Patrol:
+                Patrol();
+                if (playerInSight) currentState = State.Chase;
+                break;
 
-        if (playerInSight)
-        {
-            HandleCombat();
-        }
-        else
-        {
-            Patrol();
+            case State.Chase:
+                ChasePlayer(dist);
+                break;
+
+            case State.MeleeAttack:
+                TryMeleeAttack();
+                if (dist > meleeStopRange) currentState = State.Chase;
+                break;
         }
     }
 
@@ -75,39 +83,31 @@ public class npcSatpamKomplek : MonoBehaviour, INPCDamageable
         Tolerance -= finalDamage;
         Debug.Log($"{gameObject.name} terkena serangan {finalDamage}! Sisa Tolerance: {Tolerance}");
 
-        if (Tolerance <= 0)
-        {
-            Die();
-        }
+        if (Tolerance <= 0) Die();
     }
 
     //combat
-    void HandleCombat()
+    void ChasePlayer(float dist)
     {
-        float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
-        
-        if (!isMeleeMode && distanceToPlayer <= attackRange)
-        isMeleeMode = true;
-        else if (isMeleeMode && distanceToPlayer >= meleeStopRange)
-        isMeleeMode = false;
+        Agent.stoppingDistance = stopDistance;
+        Agent.SetDestination(player.transform.position);
 
-        if (isMeleeMode)
+        if (dist <= attackRange)
         {
-            Agent.ResetPath();
-            TryMeleeAttack();
-        }
-
-        else if (distanceToPlayer <= rangedRange)
-        {
-            Agent.stoppingDistance = stopDistance;
-            Agent.SetDestination(player.transform.position);
-            TryRangedAttack();
+            currentState = State.MeleeAttack;
         }
         else
         {
-            Agent.stoppingDistance = stopDistance;
-            Agent.SetDestination(player.transform.position);
+            if (dist <= rangedRange)
+            {
+                TryRangedAttack();
+            }
         }
+        
+        if (!playerInSight)
+        {
+            currentState = State.Patrol;
+        } 
     }
 
     void TryMeleeAttack()
@@ -122,21 +122,17 @@ public class npcSatpamKomplek : MonoBehaviour, INPCDamageable
 
     void TryRangedAttack()
     {
-        if (Time.time >= nextAttackTime && sendalPrefab != null && firePoint != null)
+        if (Time.time >= nextAttackTime && sendalPrefab && firePoint)
         {
             nextAttackTime = Time.time + attackCooldown;
 
-            // Spawn sendal
             GameObject bullet = Instantiate(sendalPrefab, firePoint.position, firePoint.rotation);
             Vector3 dir = (player.transform.position - firePoint.position).normalized;
-
-            // Set arah ke script SendalProjectile
             bullet.GetComponent<sendalProjectile>()?.SetDirection(dir);
 
-            Debug.Log($"{gameObject.name} melempar sendal ke player!");
+            Debug.Log($"{gameObject.name} melempar sendal!");
         }
     }
-
 
     void Die()
     {

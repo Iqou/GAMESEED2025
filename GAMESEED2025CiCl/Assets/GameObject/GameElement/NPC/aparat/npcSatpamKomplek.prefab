@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1106027682191813792}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: firePoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -43,7 +43,7 @@ GameObject:
   - component: {fileID: 3011384688728568993}
   - component: {fileID: 4954217945080051014}
   - component: {fileID: 673319379167634334}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -169,7 +169,7 @@ GameObject:
   - component: {fileID: 2840639631591792999}
   - component: {fileID: 4898246971411587218}
   - component: {fileID: 3937649363757027186}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: npcSatpamKomplek
   m_TagString: NPC
   m_Icon: {fileID: 0}

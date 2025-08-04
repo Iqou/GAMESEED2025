@@ -12,8 +12,8 @@ public class GameHUD : MonoBehaviour
 
     [Header("Player Info")]
     public TextMeshProUGUI playerInfoText; // For "Rp. xxx Lv. xxx"
+    public TextMeshProUGUI playerHP; // For "Rp. xxx Lv. xxx"
     public TextMeshProUGUI timeText;
-    public Image healthBar;
     public Image mamadPortrait;
     public TextMeshProUGUI wantedLevelText; // Using text for angry emotes
 
@@ -30,6 +30,7 @@ public class GameHUD : MonoBehaviour
     public GameObject pauseMenuPanel;
 
     private PlayerStats playerStats;
+    private OverworldHealth health;
     private Coroutine expAnimationCoroutine;
     private StringBuilder wantedStringBuilder = new StringBuilder();
     private CanvasGroup canvasGroup;
@@ -90,6 +91,7 @@ public class GameHUD : MonoBehaviour
 
         // Combined Player Info Text
         playerInfoText.text = $"Rp. {playerStats.money}  Lv. {playerStats.level}";
+        playerHP.text = $"HP: {health.currentHealth}";
 
         // Set initial EXP bar state without animation
         float initialExpScale = (float)playerStats.currentExperience / playerStats.maxExperience;
@@ -98,7 +100,7 @@ public class GameHUD : MonoBehaviour
 
     public void SetHealth(int currentHealth, int maxHealth)
     {
-        healthBar.fillAmount = (float)currentHealth / maxHealth;
+        return;
     }
 
     public void SetWantedLevel(int level)
@@ -110,7 +112,7 @@ public class GameHUD : MonoBehaviour
         }
         wantedLevelText.text = wantedStringBuilder.ToString();
     }
-    
+
     public void AnimateExperienceBar(int fromExp, int toExp, int maxExp)
     {
         float fromScale = (float)fromExp / maxExp;
@@ -151,7 +153,7 @@ public class GameHUD : MonoBehaviour
     {
         // Animate from current fill to full
         yield return AnimateExpBarCoroutine(expBar.localScale.x, 1f, levelUpAnimationDuration);
-        
+
         // Wait a moment
         yield return new WaitForSeconds(0.2f);
 

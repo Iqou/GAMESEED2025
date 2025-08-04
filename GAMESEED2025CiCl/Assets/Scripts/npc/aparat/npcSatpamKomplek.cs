@@ -3,6 +3,9 @@ using UnityEngine.AI;
 
 public class npcSatpamKomplek : MonoBehaviour, INPCDamageable
 {
+    enum State { Patrol, Chase, MeleeAttack, RangedAttack }
+    State currentState = State.Patrol;
+
     GameObject player;
     NavMeshAgent Agent;
 
@@ -17,7 +20,8 @@ public class npcSatpamKomplek : MonoBehaviour, INPCDamageable
     //chase
     [SerializeField] float sightRange = 20f;
     [SerializeField] float stopDistance = 3f;
-    [SerializeField] float attackRange = 2f;      // Melee
+    [SerializeField] float attackRange = 3f;      // Melee
+    [SerializeField] float meleeStopRange = 3.5f;
     [SerializeField] float rangedRange = 10f;     // Ranged mulai menyerang
     [SerializeField] float attackCooldown = 2f;
     [Range(10, 40)] public int attackDamage = 10;
@@ -50,14 +54,23 @@ public class npcSatpamKomplek : MonoBehaviour, INPCDamageable
         if (isDead) return;
 
         CheckLineOfSight();
+        float dist = Vector3.Distance(transform.position, player.transform.position);
 
-        if (playerInSight)
+       switch (currentState)
         {
-            HandleCombat();
-        }
-        else
-        {
-            Patrol();
+            case State.Patrol:
+                Patrol();
+                if (playerInSight) currentState = State.Chase;
+                break;
+
+            case State.Chase:
+                ChasePlayer(dist);
+                break;
+
+            case State.MeleeAttack:
+                TryMeleeAttack();
+                if (dist > meleeStopRange) currentState = State.Chase;
+                break;
         }
     }
 
@@ -70,32 +83,31 @@ public class npcSatpamKomplek : MonoBehaviour, INPCDamageable
         Tolerance -= finalDamage;
         Debug.Log($"{gameObject.name} terkena serangan {finalDamage}! Sisa Tolerance: {Tolerance}");
 
-        if (Tolerance <= 0)
-        {
-            Die();
-        }
+        if (Tolerance <= 0) Die();
     }
 
     //combat
-    void HandleCombat()
+    void ChasePlayer(float dist)
     {
-        float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
+        Agent.stoppingDistance = stopDistance;
+        Agent.SetDestination(player.transform.position);
 
-        if (distanceToPlayer > attackRange)
+        if (dist <= attackRange)
         {
-            Agent.SetDestination(player.transform.position);
-
-            // 🔹 Ranged attack jika dalam jarak tertentu
-            if (distanceToPlayer <= rangedRange)
+            currentState = State.MeleeAttack;
+        }
+        else
+        {
+            if (dist <= rangedRange)
             {
                 TryRangedAttack();
             }
         }
-        else
+        
+        if (!playerInSight)
         {
-            Agent.ResetPath();
-            TryMeleeAttack();
-        }
+            currentState = State.Patrol;
+        } 
     }
 
     void TryMeleeAttack()
@@ -110,21 +122,17 @@ public class npcSatpamKomplek : MonoBehaviour, INPCDamageable
 
     void TryRangedAttack()
     {
-        if (Time.time >= nextAttackTime && sendalPrefab != null && firePoint != null)
+        if (Time.time >= nextAttackTime && sendalPrefab && firePoint)
         {
             nextAttackTime = Time.time + attackCooldown;
 
-            // Spawn sendal
             GameObject bullet = Instantiate(sendalPrefab, firePoint.position, firePoint.rotation);
             Vector3 dir = (player.transform.position - firePoint.position).normalized;
-
-            // Set arah ke script SendalProjectile
             bullet.GetComponent<sendalProjectile>()?.SetDirection(dir);
 
-            Debug.Log($"{gameObject.name} melempar sendal ke player!");
+            Debug.Log($"{gameObject.name} melempar sendal!");
         }
     }
-
 
     void Die()
     {
@@ -171,9 +179,10 @@ public class npcSatpamKomplek : MonoBehaviour, INPCDamageable
 
         if (distanceToPlayer <= sightRange)
         {
-            Ray ray = new Ray(transform.position + Vector3.up, directionToPlayer.normalized); // +Vector3.up supaya ray keluar dari kepala NPC
+            Ray ray = new Ray(transform.position + Vector3.up*0.5f, directionToPlayer.normalized); // +Vector3.up supaya ray keluar dari kepala NPC
             if (Physics.Raycast(ray, out RaycastHit hit, sightRange, ~obstacleLayer)) // obstacleLayer diatur agar mengandung layer yang memblokir pandangan
             {
+                Debug.DrawRay(ray.origin, ray.direction * hit.distance, Color.yellow);
                 if (hit.collider.gameObject == player)
                 {
                     playerInSight = true;

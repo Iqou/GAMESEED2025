@@ -1,21 +1,8 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class ToaRW : MonoBehaviour, IWeaponCooldown
+public class ToaRW : MonoBehaviour
 {
-    private PlayerStats _playerStats;
-
-    public float LastActiveTime => lastActiveTime;
-    public float CurrentCooldown
-    {
-        get
-        {
-            float cooldownReduction = _playerStats != null ? _playerStats.cooldownReduction : 0f;
-            return Mathf.Max(0.1f, (1f - (cooldownLevel - 1) * 0.5f) * (1 - cooldownReduction));
-        }
-    }
-    public bool IsOnCooldown => Time.time < lastActiveTime + CurrentCooldown;
-
     private string namaSpeaker = "Toa RW";
     private string tier = "Common";
 
@@ -49,8 +36,6 @@ public class ToaRW : MonoBehaviour, IWeaponCooldown
 
     public void Use(Transform owner, PlayerStats playerStats)
     {
-        _playerStats = playerStats;
-
         // Dynamic Stat Calculation
         float damageMultiplier = playerStats != null ? playerStats.damageMultiplier : 1f;
         float areaMultiplier = playerStats != null ? playerStats.areaOfEffectBonus : 1f;

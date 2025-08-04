@@ -3,10 +3,8 @@ using UnityEngine.AI;
 
 public class npcMobilPolisiElit : MonoBehaviour, INPCDamageable
 {
-    enum State { Patrol, Chase, MeleeAttack, RangedAttack }
-    State currentState = State.Patrol;
-
     GameObject player;
+    OverworldHealth playerHealth;
     NavMeshAgent Agent;
 
     [Header("Layer Settings")]
@@ -20,8 +18,7 @@ public class npcMobilPolisiElit : MonoBehaviour, INPCDamageable
     //chase
     [SerializeField] float sightRange = 20f;
     [SerializeField] float stopDistance = 3f;
-    [SerializeField] float attackRange = 3f;      // Melee
-    [SerializeField] float meleeStopRange = 3.5f;
+    [SerializeField] float attackRange = 2f;      // Melee
     [SerializeField] float rangedRange = 10f;     // Ranged mulai menyerang
     [SerializeField] float attackCooldown = 2f;
     [Range(10, 40)] public int attackDamage = 10;
@@ -41,7 +38,7 @@ public class npcMobilPolisiElit : MonoBehaviour, INPCDamageable
 
     bool playerInSight;
     bool isDead = false;
-    // Start is called once before the first execution of Update after the MonoBehaviour is createdd
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         Agent = GetComponent<NavMeshAgent>();
@@ -54,23 +51,14 @@ public class npcMobilPolisiElit : MonoBehaviour, INPCDamageable
         if (isDead) return;
 
         CheckLineOfSight();
-        float dist = Vector3.Distance(transform.position, player.transform.position);
 
-       switch (currentState)
+        if (playerInSight)
         {
-            case State.Patrol:
-                Patrol();
-                if (playerInSight) currentState = State.Chase;
-                break;
-
-            case State.Chase:
-                ChasePlayer(dist);
-                break;
-
-            case State.MeleeAttack:
-                TryMeleeAttack();
-                if (dist > meleeStopRange) currentState = State.Chase;
-                break;
+            HandleCombat();
+        }
+        else
+        {
+            Patrol();
         }
     }
 
@@ -83,31 +71,32 @@ public class npcMobilPolisiElit : MonoBehaviour, INPCDamageable
         Tolerance -= finalDamage;
         Debug.Log($"{gameObject.name} terkena serangan {finalDamage}! Sisa Tolerance: {Tolerance}");
 
-        if (Tolerance <= 0) Die();
+        if (Tolerance <= 0)
+        {
+            Die();
+        }
     }
 
     //combat
-    void ChasePlayer(float dist)
+    void HandleCombat()
     {
-        Agent.stoppingDistance = stopDistance;
-        Agent.SetDestination(player.transform.position);
+        float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
 
-        if (dist <= attackRange)
+        if (distanceToPlayer > attackRange)
         {
-            currentState = State.MeleeAttack;
-        }
-        else
-        {
-            if (dist <= rangedRange)
+            Agent.SetDestination(player.transform.position);
+
+            // 🔹 Ranged attack jika dalam jarak tertentu
+            if (distanceToPlayer <= rangedRange)
             {
                 TryRangedAttack();
             }
         }
-        
-        if (!playerInSight)
+        else
         {
-            currentState = State.Patrol;
-        } 
+            Agent.ResetPath();
+            TryMeleeAttack();
+        }
     }
 
     void TryMeleeAttack()
@@ -116,28 +105,36 @@ public class npcMobilPolisiElit : MonoBehaviour, INPCDamageable
         {
             nextAttackTime = Time.time + attackCooldown;
             Debug.Log($"{gameObject.name} menyerang melee player dengan damage {attackDamage}!");
-            player.GetComponent<OverworldHealth>()?.ChangeHealth(-attackDamage);
+            // player.GetComponent<PlayerHealth>()?.TakeDamage(attackDamage);
+            if (playerHealth != null)
+            {
+                playerHealth.ChangeHealth(-attackDamage);
+            }
         }
     }
 
     void TryRangedAttack()
     {
-        if (Time.time >= nextAttackTime && sendalPrefab && firePoint)
+        if (Time.time >= nextAttackTime && sendalPrefab != null && firePoint != null)
         {
             nextAttackTime = Time.time + attackCooldown;
 
+            // Spawn sendal
             GameObject bullet = Instantiate(sendalPrefab, firePoint.position, firePoint.rotation);
             Vector3 dir = (player.transform.position - firePoint.position).normalized;
+
+            // Set arah ke script SendalProjectile
             bullet.GetComponent<peluruKaretProjectile>()?.SetDirection(dir);
 
-            Debug.Log($"{gameObject.name} melempar peluru karet!");
+            Debug.Log($"{gameObject.name} melempar peluru karet ke player!");
         }
     }
+
 
     void Die()
     {
         isDead = true;
-        Debug.Log($"{gameObject.name} mati dan memberikan {giveExperience} EXP!");
+        Debug.Log($"{gameObject.name} mati dan drop exp {giveExperience}!");
         if (player != null)
         {
             PlayerStats playerStats = player.GetComponent<PlayerStats>();

@@ -1,7 +1,19 @@
 using UnityEngine;
 
-public class SubwooferDugem : MonoBehaviour
+public class SubwooferDugem : MonoBehaviour, IWeaponCooldown
 {
+    private PlayerStats _playerStats;
+
+    public float LastActiveTime => lastActiveTime;
+    public float CurrentCooldown
+    {
+        get
+        {
+            float cooldownReduction = _playerStats != null ? _playerStats.cooldownReduction : 0f;
+            return Mathf.Max(0.1f, (2f - (cooldownLevel - 1) * 0.5f) * (1 - cooldownReduction));
+        }
+    }
+    public bool IsOnCooldown => Time.time < lastActiveTime + CurrentCooldown;
 
     private string namaSpeaker = "Subwoofer Dugem";
     private string tier = "Mythic";
@@ -31,6 +43,8 @@ public class SubwooferDugem : MonoBehaviour
 
     public void Use(Transform owner, PlayerStats playerStats)
     {
+        _playerStats = playerStats;
+
         // Dynamic Stat Calculation
         float damageMultiplier = playerStats != null ? playerStats.damageMultiplier : 1f;
         float areaMultiplier = playerStats != null ? playerStats.areaOfEffectBonus : 1f;

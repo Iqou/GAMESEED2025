@@ -1,7 +1,19 @@
 using UnityEngine;
 
-public class RealHoreg : MonoBehaviour
+public class RealHoreg : MonoBehaviour, IWeaponCooldown
 {
+    private PlayerStats _playerStats;
+
+    public float LastActiveTime => lastActiveTime;
+    public float CurrentCooldown
+    {
+        get
+        {
+            float cooldownReduction = _playerStats != null ? _playerStats.cooldownReduction : 0f;
+            return Mathf.Max(0.1f, (3f - (cooldownLevel - 1) * 0.5f) * (1 - cooldownReduction));
+        }
+    }
+    public bool IsOnCooldown => Time.time < lastActiveTime + CurrentCooldown;
     private string namaSpeaker = "Real Horeg";
     private string tier = "Mythic";
 
@@ -31,6 +43,8 @@ public class RealHoreg : MonoBehaviour
     public GameObject aoePrefab;
 
     public void Use(Transform owner, PlayerStats playerStats)
+    {
+        _playerStats = playerStats;
     {
         // Dynamic Stat Calculation
         float damageMultiplier = playerStats != null ? playerStats.damageMultiplier : 1f;
@@ -83,7 +97,7 @@ public class RealHoreg : MonoBehaviour
         } 
         else
         {
-            Debug.Log($"Masih cooldown sisa {(lastActiveTime + currentCooldown) - Time.time} lagi, waktu saat ini {Time.time}");
+                return;
         }
     }
 }

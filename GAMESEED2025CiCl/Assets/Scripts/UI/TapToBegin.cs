@@ -5,50 +5,52 @@ using System.Collections;
 
 public class TapToBegin : MonoBehaviour
 {
-    // Tambahkan referensi ke MainMenuManager
     public MainMenuManager mainMenuManager;
     
-    public float blinkInterval = 0.5f;
+    public AudioSource audioSource;
+    public AudioClip tapSfx;
+
+    public float pulseSpeed = 1f;
     private TextMeshProUGUI _tapText;
+    private Color _originalColor;
 
     void Start()
     {
-        _tapText = GetComponent<TextMeshProUGUI>();
+        // Gunakan GetComponentInChildren() untuk mencari di objek anak
+        _tapText = GetComponentInChildren<TextMeshProUGUI>();
+        
         if (_tapText != null)
         {
-            StartCoroutine(BlinkText());
+            _originalColor = _tapText.color;
+            StartCoroutine(PulseText());
         }
         else
         {
-            Debug.LogError("TextMeshProUGUI component not found on this GameObject! Disabling script.");
+            Debug.LogError("TextMeshProUGUI component not found in children! Disabling script.");
             enabled = false;
         }
     }
     
-    // Metode ini akan dipanggil oleh Button On Click()
     public void OnTapToBeginClicked()
     {
         if (mainMenuManager != null)
         {
+            if (audioSource != null && tapSfx != null)
+            {
+                audioSource.PlayOneShot(tapSfx);
+            }
+            
             mainMenuManager.ShowMainMenuWithFade();
         }
     }
 
-    IEnumerator BlinkText()
+    IEnumerator PulseText()
     {
         while (true)
         {
-            if (_tapText != null)
-            {
-                _tapText.enabled = true;
-                yield return new WaitForSeconds(blinkInterval);
-                _tapText.enabled = false;
-                yield return new WaitForSeconds(blinkInterval);
-            }
-            else
-            {
-                yield break;
-            }
+            float alpha = Mathf.PingPong(Time.time * pulseSpeed, 1f);
+            _tapText.color = new Color(_originalColor.r, _originalColor.g, _originalColor.b, alpha);
+            yield return null;
         }
     }
 }

@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 70fbd1d55a857f74ca86a0e472d747f0
+guid: 9b39064cfdbec464180b76f37dd1aeff
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -34,7 +34,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 0
+    filterMode: 1
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -97,23 +97,45 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: UPGRADE MENU_0
+      name: SPLASH_ART_MAMAD_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 2051
-        height: 2539
+        x: 2569
+        y: 214
+        width: 17
+        height: 24
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: fd738cf1b11a81d4fa95e46c467266e1
-      internalID: -1589608385
+      spriteID: f6bbb9ad328cfea40bb97f4471d98fc5
+      internalID: -2301465
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SPLASH_ART_MAMAD_1
+      rect:
+        serializedVersion: 2
+        x: 2574
+        y: 0
+        width: 1741
+        height: 2809
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0d005f8ab000e6546804497f245d05ec
+      internalID: 1912276935
       vertices: []
       indices: 
       edges: []
@@ -122,7 +144,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 5e97eb03825dee720800000000000000
+    spriteID: 20b22629dca5ea54fa4311a5de91095e
     internalID: 0
     vertices: []
     indices: 
@@ -134,7 +156,8 @@ TextureImporter:
       - key: SpriteEditor.SliceSettings
         value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":64.0,"y":64.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"slicingType":0,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
-      UPGRADE MENU_0: -1589608385
+      SPLASH_ART_MAMAD_0: -2301465
+      SPLASH_ART_MAMAD_1: 1912276935
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
